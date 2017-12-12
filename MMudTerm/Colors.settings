@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="GMudTerm" GeneratedClassName="Colors">
+  <Profiles />
+  <Settings>
+    <Setting Name="black" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="red" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8388608</Value>
+    </Setting>
+    <Setting Name="green" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">32768</Value>
+    </Setting>
+    <Setting Name="yellow" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">8421376</Value>
+    </Setting>
+    <Setting Name="blue" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">128</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
