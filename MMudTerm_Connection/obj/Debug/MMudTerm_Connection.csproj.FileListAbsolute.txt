@@ -1,0 +1,10 @@
+C:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\bin\Debug\MMudTerm_Connection.dll
+C:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\bin\Debug\MMudTerm_Connection.pdb
+C:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\MMudTerm_Connection.dll
+C:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\MMudTerm_Connection.pdb
+D:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\bin\Debug\MMudTerm_Connection.dll
+D:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\bin\Debug\MMudTerm_Connection.pdb
+D:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\MMudTerm_Connection.dll
+D:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\MMudTerm_Connection.pdb
+D:\Documents and Settings\Abe\My Documents\Visual Studio 2008\Projects\MudTerm\MMudTerm_Connection\obj\Debug\MMudTerm_Connection.csprojResolveAssemblyReference.cache
