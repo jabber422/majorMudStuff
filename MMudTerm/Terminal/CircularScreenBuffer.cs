@@ -59,8 +59,6 @@ namespace MMudTerm.Terminal
         /// <param name="maxCol">max cols to display</param>
         public CircularScreenBuffer(int maxRow, int maxCol)
         {
-            GMudTermColors g = new GMudTermColors();
-            
             this._maxRow = maxRow;
             this._maxCol = maxCol;
             //windows XP version of this CP is wrong!  find the right one

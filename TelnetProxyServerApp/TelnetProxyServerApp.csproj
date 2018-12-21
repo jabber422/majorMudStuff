@@ -48,13 +48,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TelnetClientRecorder\TelnetProxyServerLib.csproj">
-      <Project>{9C59B4E6-2A2D-46BC-9882-57D78490DD94}</Project>
-      <Name>TelnetProxyServerLib</Name>
-    </ProjectReference>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\TelnetProxyServerLib\TelnetProxyServerLib.csproj">
+      <Project>{9c59b4e6-2a2d-46bc-9882-57d78490dd94}</Project>
+      <Name>TelnetProxyServerLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

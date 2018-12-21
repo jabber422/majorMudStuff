@@ -620,7 +620,7 @@ namespace MMudTerm.Session.SessionStateData
                     }
                     else if (Regex.Match(msg, @"ID\?").Success)
                     {
-                        this.m_controller.Send("ID,2,43");
+                        this.m_controller.Send("ID,2,42");
                     }
                 }
             }
