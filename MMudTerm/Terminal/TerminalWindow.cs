@@ -218,9 +218,6 @@ namespace MMudTerm.Terminal
                 while (queue.Count > 0)
                 {
                     TermCmd cmd = queue.Dequeue();
-                    if (cmd is TermStringDataCmd)
-                    {
-                    }
                     cmd.DoCommand(this.grid);
                 }
             }

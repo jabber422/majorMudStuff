@@ -73,7 +73,7 @@ namespace MMudTerm.Connection
             }
         }
 
-        internal void Send(byte[] buffer)
+        public void Send(byte[] buffer)
         {
             Console.WriteLine("{0} -> Send()", this.Name);
             SocketHandler.Send(this, buffer);
