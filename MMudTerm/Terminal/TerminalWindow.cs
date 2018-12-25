@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using MMudTerm_Protocols.AnsiProtocolCmds;
 using MMudTerm_Protocols;
 using MMudTerm.Session;
+using System.Diagnostics;
 
 namespace MMudTerm.Terminal
 {
@@ -239,20 +240,20 @@ namespace MMudTerm.Terminal
         //TODO: removable
         internal void DoGridDebugDump()
         {
-            Console.WriteLine("Start dump...");
+            Debug.WriteLine("Start dump...");
             int cnt = grid.Count;
             for (int i = 0; i <= grid.Count; ++i)
             {
                 for (int j = 0; j < grid.MaxColCount; ++j)
                 {
                     TermChar c = grid.GetValue(i, j);
-                    if (c.Char == '\0'.ToString()) Console.Write(Encoding.ASCII.GetString(new byte[] { 157 }));
-                    Console.Write(c.Char);
-                    Console.Write("-");
+                    if (c.Char == '\0'.ToString()) Debug.Write(Encoding.ASCII.GetString(new byte[] { 157 }));
+                    Debug.Write(c.Char);
+                    Debug.Write("-");
                 }
                 Console.Write("\r\n");
             }
-            Console.WriteLine("End");
+            Debug.WriteLine("End");
         }
     }
 }

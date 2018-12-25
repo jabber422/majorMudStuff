@@ -9,7 +9,7 @@ namespace MMudTerm_Protocols
     //decodes basic telnet protocols, insert standard here[..|.,]
     public class TelnetProtocolDecoder : ProtocolDecoder
     {
-        public override Queue<TermCmd> DecodeBuffer(byte[] buffer)
+        public override ProtocolCommand DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
             Debug.WriteLine("ENTER: " +
@@ -25,11 +25,11 @@ namespace MMudTerm_Protocols
             switch (cmd)
             {
                 case TERM_CMD.DATA: //aiString += Encoding.ASCII.GetString(values[0]);
-                    commandsForTheTerminalScreen.Enqueue(new TermStringDataCmd(values));
+                    OneLineOfTermCommands.Enqueue(new TermStringDataCmd(values));
                     break;
-                case TERM_CMD.NL: commandsForTheTerminalScreen.Enqueue(new TermNewLineCmd());
+                case TERM_CMD.NL: OneLineOfTermCommands.Enqueue(new TermNewLineCmd());
                     break;
-                case TERM_CMD.CR: commandsForTheTerminalScreen.Enqueue(new TermCarrigeReturnCmd());
+                case TERM_CMD.CR: OneLineOfTermCommands.Enqueue(new TermCarrigeReturnCmd());
                     break;
                 default:
 #if DEBUG

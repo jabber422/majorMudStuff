@@ -66,8 +66,8 @@ namespace MMudTerm.Session
             if (buffer.Length == 0)
                 return; //TODO: buffer of zero means a disconnect?
             //decode the byte[]
-            Queue<TermCmd> cmds = m_decoder.DecodeBuffer(buffer);
-            foreach (TermCmd c in cmds)
+            ProtocolCommand cmd = m_decoder.DecodeBuffer(buffer);
+            foreach (TermCmd c in cmd.Fragments)
             {
                 Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
                 sessionsCmds.Enqueue(c);

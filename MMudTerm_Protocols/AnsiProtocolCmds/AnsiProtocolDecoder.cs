@@ -12,7 +12,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     /// </summary>
     public class AnsiProtocolDecoder : TelnetProtocolDecoder
     {
-        public override Queue<TermCmd> DecodeBuffer(byte[] buffer)
+        public override ProtocolCommand DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
 
@@ -21,12 +21,12 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     this.GetType().Namespace);
             Debug.Indent();
 #endif
-            lock (commandsForTheTerminalScreen)
+            lock (OneLineOfTermCommands)
             {
                 //append the saved buffer if any
                 buffer = ConcatBuffers(buffer);
 
-                commandsForTheTerminalScreen.Clear();
+                OneLineOfTermCommands.Clear();
                 values.Clear();
                 pieces.Clear();
 
@@ -64,7 +64,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #if DEBUG_2
             Debug.Unindent();
 #endif
-            return commandsForTheTerminalScreen;
+            return new ProtocolCommand(OneLineOfTermCommands);
         }
 
         /// <summary>
@@ -198,20 +198,20 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             {
                 switch (cmd)
                 {
-                    case ANSI_ESC.Graphics: commandsForTheTerminalScreen.Enqueue(new AnsiGraphicsCmd(values));
+                    case ANSI_ESC.Graphics: OneLineOfTermCommands.Enqueue(new AnsiGraphicsCmd(values));
                         break;
-                    case ANSI_ESC.CursorBkwd: commandsForTheTerminalScreen.Enqueue(new AnsiCursorBkwdCmd(values[0]));
+                    case ANSI_ESC.CursorBkwd: OneLineOfTermCommands.Enqueue(new AnsiCursorBkwdCmd(values[0]));
                         break;
-                    case ANSI_ESC.EraseDisplay: commandsForTheTerminalScreen.Enqueue(new AnsiEraseDisplayCmd());
+                    case ANSI_ESC.EraseDisplay: OneLineOfTermCommands.Enqueue(new AnsiEraseDisplayCmd());
                         break;
-                    case ANSI_ESC.EraseLine: commandsForTheTerminalScreen.Enqueue(new AnsiEraseLineCmd());
+                    case ANSI_ESC.EraseLine: OneLineOfTermCommands.Enqueue(new AnsiEraseLineCmd());
                         break;
                     case ANSI_ESC.CursorPosition:
-                    case ANSI_ESC.CursorPositionf: commandsForTheTerminalScreen.Enqueue(new AnsiCursorPosition(values));
+                    case ANSI_ESC.CursorPositionf: OneLineOfTermCommands.Enqueue(new AnsiCursorPosition(values));
                         break;
-                    case ANSI_ESC.CursorUp: commandsForTheTerminalScreen.Enqueue(new AnsiCursorUpCmd(values[0]));
+                    case ANSI_ESC.CursorUp: OneLineOfTermCommands.Enqueue(new AnsiCursorUpCmd(values[0]));
                         break;
-                    case ANSI_ESC.CursorFwd: commandsForTheTerminalScreen.Enqueue(new AnsiCursorFwdCmd(values[0]));
+                    case ANSI_ESC.CursorFwd: OneLineOfTermCommands.Enqueue(new AnsiCursorFwdCmd(values[0]));
                         break;
                     case ANSI_ESC.noIdea: break;
                     default:

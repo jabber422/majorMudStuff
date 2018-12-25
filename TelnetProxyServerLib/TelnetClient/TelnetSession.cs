@@ -165,7 +165,14 @@ namespace TelnetProxyServer.TelnetClient
             //this.m_Id = Guid.NewGuid();
             //this.EndClientReadCallback = new AsyncCallback(EndRead);
             //this.TcpClientReadBuffer = new MyBuffer();
-            this.SetTcpClient(new TcpClient(remoteIp, remotePort));
+            try
+            {
+                this.SetTcpClient(new TcpClient(remoteIp, remotePort));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public TelnetSession()

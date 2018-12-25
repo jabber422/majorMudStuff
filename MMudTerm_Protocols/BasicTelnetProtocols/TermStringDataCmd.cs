@@ -31,5 +31,10 @@ namespace MMudTerm_Protocols
         {
             return Encoding.ASCII.GetString(this.str);
         }
+
+        public override string ToString()
+        {
+            return this.GetValue();
+        }
     }
 }

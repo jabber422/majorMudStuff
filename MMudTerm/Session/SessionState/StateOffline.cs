@@ -126,7 +126,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    Debug.WriteLine(msg);
                     foreach (Regex r in this.LogonStrings_Regex.Keys)
                     {
                         Match m = r.Match(msg);
@@ -207,7 +207,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    Debug.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
                         this.m_controller.Send("N");
@@ -295,7 +295,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    Debug.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
                         this.m_controller.Send("N");
@@ -434,7 +434,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    Debug.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
                         this.m_controller.Send("N");
@@ -605,7 +605,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    Debug.WriteLine(msg);
                     if (Regex.Match(msg, @"\*Combat Engaged\*").Success)
                     {
                         idleTimer.Stop();

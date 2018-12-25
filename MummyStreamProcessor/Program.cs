@@ -17,7 +17,7 @@ namespace MummyStreamProcessor
         {
             Debug.AutoFlush = true;
             ConsoleTraceListener ctl = new ConsoleTraceListener();
-            Debug.Listeners.Add(ctl);
+            //Debug.Listeners.Add(ctl);
             
 
             Application.EnableVisualStyles();

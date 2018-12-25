@@ -25,5 +25,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #endif
             (terminal as IAnsiProtocolCmds).SetCursorPosition(row, col);
         }
+
+        public override string ToString()
+        {
+            return String.Empty;
+        }
     }
 }

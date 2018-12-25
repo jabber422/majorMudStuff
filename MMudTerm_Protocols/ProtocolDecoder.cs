@@ -11,7 +11,7 @@ namespace MMudTerm_Protocols
     //base class for a protocole decoder
     public abstract class ProtocolDecoder
     {
-        protected Queue<TermCmd> commandsForTheTerminalScreen;
+        protected Queue<TermCmd> OneLineOfTermCommands;
         protected List<byte[]> values;
         protected Stack<byte> pieces;
         protected byte[] partialMsgBuffer;
@@ -26,13 +26,13 @@ namespace MMudTerm_Protocols
             Trace.AutoFlush = true;
             Trace.WriteLine("Base class Created", this.GetType().Namespace);
 #endif
-            commandsForTheTerminalScreen = new Queue<TermCmd>();
+            OneLineOfTermCommands = new Queue<TermCmd>();
             values = new List<byte[]>();
             pieces = new Stack<byte>();
             partialMsgBuffer = new byte[0];
         }
 
-        public abstract Queue<TermCmd> DecodeBuffer(byte[] buffer);
+        public abstract ProtocolCommand DecodeBuffer(byte[] buffer);
 
         /// <summary>
         /// Appends the partial msg buffer to the head of the new buffer
@@ -133,4 +133,27 @@ namespace MMudTerm_Protocols
             #endregion
         }
    }
+
+    //contains 1..n TermCmds, should always be one line of data from the server
+    public class ProtocolCommand
+    {
+        public List<TermCmd> Fragments;
+        private Queue<TermCmd> commandsForTheTerminalScreen;
+
+        public ProtocolCommand(Queue<TermCmd> commandsForTheTerminalScreen)
+        {
+            this.Fragments = new List<TermCmd>(commandsForTheTerminalScreen);
+        }
+
+        //strip out the protcol markup and return the line as text
+        public override string ToString()
+        {
+            String result = "";
+            foreach (TermCmd cmd in this.Fragments)
+            {
+                result += cmd.ToString();
+            }
+            return result;
+        }
+    }
 }

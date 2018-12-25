@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace MummyStreamProcessor
 {
@@ -30,6 +31,8 @@ namespace MummyStreamProcessor
         bool IsResting = false;
         double RestBelow = .6;
 
+        System.Timers.Timer MyIdleTimer;
+
         public Script(ConnObj connObj)
         {
             this.Messages = new Queue<string>();
@@ -38,6 +41,8 @@ namespace MummyStreamProcessor
             this.Worker = new BackgroundWorker();
             this.Worker.DoWork += Worker_DoWork;
             this.Worker.RunWorkerAsync();
+            this.MyIdleTimer = new System.Timers.Timer(5 * 1000);
+            this.MyIdleTimer.Elapsed += MyIdleTimer_Elapsed;
         }
 
         private void Worker_DoWork(object sender, DoWorkEventArgs e)
@@ -60,30 +65,51 @@ namespace MummyStreamProcessor
             Debug.WriteLine("Worker thread is stopping");
         }
 
+        String[] delim = new string[] { "\r\n" };
+
         internal void DoWork(string text)
         {
-            Console.WriteLine("-> " + text + " <-");
-            if (text.Contains("ID?"))
-            {
-                Send("ID,2,42");
-            }
+            Console.WriteLine(text);
 
-            if (text.Contains("*Combat Engaged*"))
+            String[] lines = text.Split(delim, StringSplitOptions.RemoveEmptyEntries);
+            foreach (String line in lines)
             {
-                this.IsInCombat = true;
-            } else if (text.Contains("*Combat Off *")) {
-                this.IsInCombat = false;
-            }
-
-            Regex isMummyHere = new Regex(@"Also here:.*mummy\.|\,");
-
-            foreach(Match match in isMummyHere.Matches(text))
-            {
-                if(match.Success && !this.IsInCombat)
+                if (line.Contains("ID?"))
                 {
-                    Send("aa mummy");
+                    Send("ID,2,42");
+                }
+
+                if (line.Contains("*Combat Engaged*"))
+                {
+                    this.IsInCombat = true;
+                    this.MyIdleTimer.Enabled = false;
+                } else if (line.Contains("*Combat Off*")) {
+                    this.IsInCombat = false;
+                    this.MyIdleTimer.Enabled = true;
+                }
+
+                Regex isMummyHere = new Regex(@".*(mummy|ghoul|shade|skeleton|zombie).");
+
+
+       
+                foreach (Match match in isMummyHere.Matches(line))
+                {
+                    if (match.Success && !this.IsInCombat)
+                    {
+                        if (line.Contains("aa " + match.Groups[1].Value))
+                        { continue; }
+                        String monster = match.Groups[1].Value;
+                        Send(string.Format("aa {0}\n", monster));
+                        Send(string.Format("/caslus @do aa {0}\n", monster));
+                    }
                 }
             }
+        }
+
+        private void MyIdleTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            this.Send("s\n");
+            this.Send("n\n");
         }
 
         private void Send(string v)
@@ -96,17 +122,14 @@ namespace MummyStreamProcessor
             if (buffer.Length == 0)
                 return; //TODO: buffer of zero means a disconnect?
             this.myDecoder = new AnsiProtocolDecoder();
-            Queue<TermCmd> cmds = this.myDecoder.DecodeBuffer(buffer);
-            foreach (TermCmd c in cmds)
-            {
-                if (c is TermStringDataCmd)
-                {
-                    if (!(c is TermStringDataCmd)) continue;
+            ProtocolCommand cmd = this.myDecoder.DecodeBuffer(buffer);
+            String text = cmd.ToString();
 
-                    String text = (c as TermStringDataCmd).GetValue();
-                    lock (this.MessageLock) {
-                        this.Messages.Enqueue(text);
-                    }
+            if (!text.Equals(String.Empty))
+            {
+                lock (this.MessageLock)
+                {
+                    this.Messages.Enqueue(text);
                 }
             }
         }

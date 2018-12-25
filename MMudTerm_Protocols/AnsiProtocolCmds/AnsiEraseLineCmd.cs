@@ -11,5 +11,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             //Console.WriteLine("EraseLine cmd");
             (terminal as IAnsiProtocolCmds).DoEraseLine();
         }
+
+        public override string ToString()
+        {
+            return String.Empty;
+        }
     }
 }

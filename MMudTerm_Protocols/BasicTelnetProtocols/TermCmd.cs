@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 namespace MMudTerm_Protocols
 {
@@ -10,7 +11,6 @@ namespace MMudTerm_Protocols
     public abstract class TermCmd
     {
         public abstract void DoCommand(ITermProtocolCmds terminal);
-        //public abstract void DoAiUpdate(IAiTermCmdHandler terminal);
 
         protected int customAtoi(byte[] b)
         {
@@ -29,5 +29,7 @@ namespace MMudTerm_Protocols
         {
             Debug.WriteLine(o, _dbg);
         }
+
+        public abstract override string ToString();
     }
 }

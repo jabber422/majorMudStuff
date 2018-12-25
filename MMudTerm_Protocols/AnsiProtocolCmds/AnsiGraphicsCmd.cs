@@ -42,7 +42,8 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             }
             else
             {
-                Console.WriteLine("Not a valid ANSI color/attrib value: " + val);
+                
+                Debug.WriteLine("Not a valid ANSI color/attrib value: " + val);
             }
         }
 
@@ -56,6 +57,9 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             (terminal as IAnsiProtocolCmds).SetCurGraphics(vals.ToArray());
         }
 
-        
+        public override string ToString()
+        {
+            return String.Empty;
+        }
     }
 }

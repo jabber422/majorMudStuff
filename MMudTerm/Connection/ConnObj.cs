@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using System.Diagnostics;
 
 namespace MMudTerm.Connection
 {
@@ -59,7 +60,7 @@ namespace MMudTerm.Connection
         {
             if (Rcvr != null)
             {
-                Console.WriteLine("{0} -> Send()", this.Name);
+                Debug.WriteLine("{0} -> Send()", this.Name);
                 Rcvr(buffer);
             }
         }
@@ -75,7 +76,7 @@ namespace MMudTerm.Connection
 
         public void Send(byte[] buffer)
         {
-            Console.WriteLine("{0} -> Send()", this.Name);
+            Debug.WriteLine("{0} -> Send()", this.Name);
             SocketHandler.Send(this, buffer);
         }
 

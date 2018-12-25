@@ -20,5 +20,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #endif
             (terminal as IAnsiProtocolCmds).DoEraseDisplay();
         }
+
+        public override string ToString()
+        {
+            return String.Empty;
+        }
     }
 }

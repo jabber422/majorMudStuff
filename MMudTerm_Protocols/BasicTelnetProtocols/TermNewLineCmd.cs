@@ -20,6 +20,11 @@ namespace MMudTerm_Protocols
 #endif
             terminal.DoNewLine();
         }
+
+        public override string ToString()
+        {
+            return "\n";
+        }
     }
 
     public class TermCarrigeReturnCmd : TermCmd
@@ -32,6 +37,11 @@ namespace MMudTerm_Protocols
                     this.GetType().Namespace);
 #endif
             terminal.DoCarrigeReturn();
+        }
+
+        public override string ToString()
+        {
+            return "\r";
         }
     }
 }

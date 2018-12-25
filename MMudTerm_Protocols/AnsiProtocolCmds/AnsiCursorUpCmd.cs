@@ -22,5 +22,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #endif
             (terminal as IAnsiProtocolCmds).DoCursorUp(rows);
         }
+
+        public override string ToString()
+        {
+            return String.Empty;
+        }
     }
 }
