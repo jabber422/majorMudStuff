@@ -4,22 +4,22 @@ namespace MMudObjects
 {
     public class PlayableRace
     {
-        int Id { get; set; }
-        int Name { get; set; }
-        double Exp { get; set; }
-        int Health { get; set; }
-        List<ItemAbility> Abilities { get; set; }
-        int StrengthMin { get; set; }
-        int StrengthMax { get; set; }
-        int IntelMin { get; set; }
-        int IntelMax { get; set; }
-        int WisdomMin { get; set; }
-        int WisdomMax { get; set; }
-        int AgilityMin { get; set; }
-        int AgilityMax { get; set; }
-        int HealthMin { get; set; }
-        int HealthMax { get; set; }
-        int CharmMin { get; set; }
-        int CharmMax { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Exp { get; set; }
+        public int Health { get; set; }
+        public List<ItemAbility> Abilities { get; set; }
+        public int StrengthMin { get; set; }
+        public int StrengthMax { get; set; }
+        public int IntelMin { get; set; }
+        public int IntelMax { get; set; }
+        public int WisdomMin { get; set; }
+        public int WisdomMax { get; set; }
+        public int AgilityMin { get; set; }
+        public int AgilityMax { get; set; }
+        public int HealthMin { get; set; }
+        public int HealthMax { get; set; }
+        public int CharmMin { get; set; }
+        public int CharmMax { get; set; }
     }
 }

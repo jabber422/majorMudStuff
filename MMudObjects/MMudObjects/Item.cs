@@ -1,12 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MMudObjects
 {
-    public abstract class Item
+    public abstract class Item : IComparable
     {
         string Name { get; set; } 
         int Id { get; set; }
         int Limit { get; set; }
+
+        public int CompareTo(object obj)
+        {
+            return this.Name == (obj as Item).Name ? 1 : 0;
+        }
 
         public override string ToString()
         {

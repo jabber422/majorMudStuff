@@ -12,6 +12,7 @@ namespace MMudTerm_Protocols
     {
         public abstract void DoCommand(ITermProtocolCmds terminal);
 
+        //wtf did i do here?
         protected int customAtoi(byte[] b)
         {
             switch (b.Length)
@@ -19,6 +20,8 @@ namespace MMudTerm_Protocols
                 case 1: return (b[0] & 0x0f);
                 case 2: return (((b[0] & 0x0f) * 10) + (b[1] & 0x0f));
                 case 3: return (((b[0] & 0x0f) * 100) + ((b[1] & 0x0f) *10)+ (b[0] & 0x0f));
+                case 4: //random failures? 
+                    return 0;
                 default: throw new NotSupportedException("CustomAtoi does not support buffers of length: "+ b.Length);
             }
         }

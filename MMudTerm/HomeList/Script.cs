@@ -6,21 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
+using System.Linq;
 
 namespace HomeList
 {
     internal class Script : ScriptBase
     {
-        public event EventHandler NewWhoInfo;
-        public Dictionary<string, Player> Players = new Dictionary<string, Player>();
-
-        
-
+        public Dictionary<string, TrackedPlayer> Players = new Dictionary<string, TrackedPlayer>();
         Regex whoLine = new Regex(@"(Good|Lawful|Saint|Seedy|Villain|Outlaw|Fiend)? (\w+) (\w+) *-  (\w+)(  of(.*))?");
-        private string fName;
+        Regex topLine = new Regex(@"\s\s?(\d+)\. (\w+)(\s\w+)?\s+(\w+)\s+(\w+ )+(\s+)?(\d+)");
 
         public Script(ConnObj connObj) : base(connObj)
         {
@@ -50,44 +48,100 @@ namespace HomeList
                             Send("ID,2,42");
                         }
 
-                        MatchCollection mc = whoLine.Matches(text);
-                        if (mc.Count == 0) continue;
-                        else if (mc.Count > 1)
+                        if (whoLine.IsMatch(text))
                         {
-                            Trace.WriteLine("Script - Regex match has more that 1 match, should be 1", "HomeList.Script");
+                            HandleNewWhoLineData(text);
+                            IsNewData = true;
                         }
-
-                        Match m = mc[0];
-                        if (!m.Success)
+                        else if (topLine.IsMatch(text))
                         {
-                            Trace.WriteLine("Script - have match but not success?? wtf does that even mean?");
+                            HandleNewTopLineData(text);
+                            IsNewData = true;
                         }
-
-                        string Alignment = m.Groups[1].Value;
-                        string fName = m.Groups[2].Value;
-                        string lName = m.Groups[3].Value;
-                        string Title = m.Groups[4].Value;
-                        string Gang = m.Groups[5].Value;
-
-                        if (!this.Players.ContainsKey(fName))
-                        {
-                            this.Players.Add(fName, new Player(fName));
-                        }
-                        this.Players[fName].Alignment = Alignment;
-                        this.Players[fName].LastName = lName;
-                        this.Players[fName].Title = Title;
-                        this.Players[fName].GangName = Gang;
-
-                        IsNewData = true;
                     }
 
                     if (IsNewData)
                     {
-                        Dictionary<string, Player> PlayerCopy = new Dictionary<string, Player>(Players);
+                        Dictionary<string, TrackedPlayer> PlayerCopy = new Dictionary<string, TrackedPlayer>(this.Players);
                         this.m_workerThread.ReportProgress(1, PlayerCopy);
                     }
                 }
             }
+        }
+
+        private void HandleNewWhoLineData(string text)
+        {
+            MatchCollection mc = whoLine.Matches(text);
+            if (mc.Count > 1)
+            {
+                Trace.WriteLine("Script - Regex match has more that 1 match, should be 1", "HomeList.Script");
+                throw new NotImplementedException("fix this, will it even happen?");
+            }
+
+            Match m = mc[0];
+            if (!m.Success)
+            {
+                Trace.WriteLine("Script - have match but not success?? wtf does that even mean?");
+                throw new NotImplementedException("--fix this, will it even happen?");
+            }
+
+            Player playerInfo = new Player(m.Groups[2].Value)
+            {
+                Alignment = m.Groups[1].Value,
+                Title = m.Groups[4].Value,
+                GangName = m.Groups[6].Value,
+                LastName = m.Groups[3].Value
+            };
+
+            TrackedPlayer trackedPlayerInfo = GetPlayerInfo(playerInfo.FirstName);
+            trackedPlayerInfo.UpdateTrackedPlayer(playerInfo);
+        }
+
+        private void HandleNewTopLineData(string text)
+        {
+            MatchCollection mc = topLine.Matches(text);
+            if (mc.Count > 1)
+            {
+                string msg = "Script.HandleNewTopLineData - Regex match has more that 1 match, should be 1";
+                Trace.WriteLine(msg);
+                throw new NotImplementedException(msg);
+            }
+
+            Match m = mc[0];
+            if (!m.Success)
+            {
+                string msg = "Script.HandleNewTopLineData - have match but not success?? wtf does that even mean?";
+                Trace.WriteLine(msg);
+                throw new NotImplementedException(msg);
+            }
+         
+            Player playerInfo = new Player(m.Groups[2].Value)
+            {
+                Class = PlayableClassFactory.CreteClassFromName(m.Groups[4].Value),
+                Rank = int.Parse(m.Groups[1].Value),
+                GangName = m.Groups[5].Value,
+                Exp = double.Parse(m.Groups[7].Value),
+                LastName = m.Groups[3].Value
+            };
+
+            TrackedPlayer trackedPlayerInfo = GetPlayerInfo(playerInfo.FirstName);
+            trackedPlayerInfo.UpdateTrackedPlayer(playerInfo);
+        }
+
+        private TrackedPlayer GetPlayerInfo(string firstName)
+        {
+            TrackedPlayer player = null;
+            if (this.Players.ContainsKey(firstName))
+            {
+                player = this.Players[firstName];
+            }
+            else
+            {
+                player = new TrackedPlayer(firstName);
+                this.Players.Add(firstName, player);
+            }
+
+            return player;
         }
     }
 }

@@ -21,11 +21,8 @@ namespace HomeList
 
         Script myScript = null;
 
-        delegate void UpdateData(Dictionary<string, Player> data);
+        delegate void UpdateData(Dictionary<string, TrackedPlayer> data);
         UpdateData DataHandler_Delegate;
-
-        DataTable myData;
-        BindingSource myDataSource;
 
         public Form1()
         {
@@ -43,23 +40,16 @@ namespace HomeList
         {
             if (this.button1.Text == "Start")
             {
-                this.myScript.NewWhoInfo += MyScript_NewWhoInfo;
                 this.myScript.Start();
                 this.button1.Text = "Stop";
             }
             else
             {
                 this.myScript.Stop();
-                this.myScript.NewWhoInfo -= MyScript_NewWhoInfo;
                 this.m_connObj.Disconnect();
                 this.m_connObj = null;
                 this.button1.Text = "Start";
             }
-        }
-
-        private void MyScript_NewWhoInfo(object sender, EventArgs e)
-        {
-            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -98,20 +88,20 @@ namespace HomeList
         //fires when the who data is updated
         private void scriptWorkerThread_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            Dictionary<string, Player> NewPlayersData = (e.UserState as Dictionary<string, Player>);
+            Dictionary<string, TrackedPlayer> NewPlayersData = (e.UserState as Dictionary<string, TrackedPlayer>);
             this.Invoke(DataHandler_Delegate, NewPlayersData);
         }
 
-        private void UpdateDataHandler(Dictionary<string, Player> data)
+        private void UpdateDataHandler(Dictionary<string, TrackedPlayer> data)
         {
-            foreach (Player p in data.Values)
+            foreach (TrackedPlayer p in data.Values)
             {
                 DataGridViewRow row = FindRowByPlayerName(p);
                 UpdateRowWithPlayerData(row, p);
             }
         }
 
-        private DataGridViewRow FindRowByPlayerName(Player player)
+        private DataGridViewRow FindRowByPlayerName(TrackedPlayer player)
         {
             DataGridViewRow result = null;
             foreach (DataGridViewRow row in this.dataGridView1.Rows)
@@ -124,17 +114,35 @@ namespace HomeList
             if(result == null)
             {
                 int idx = this.dataGridView1.Rows.Add();
+                this.dataGridView1.Rows[idx].Cells["fName"].Value = player.FirstName;
                 result = this.dataGridView1.Rows[idx];
             }
             return result;
         }
 
-        private void UpdateRowWithPlayerData(DataGridViewRow row, Player p)
+        private void UpdateRowWithPlayerData(DataGridViewRow row, TrackedPlayer p)
+
         {
-            row.Cells["lName"].Value = p.LastName != null ? p.LastName : "";
-            row.Cells["Alignment"].Value = p.Alignment != null ? p.LastName : "";
-            row.Cells["Title"].Value = p.Title != null ? p.LastName : "";
-            row.Cells["Gang"].Value = p.GangName != null ? p.LastName : "";
+            row.Cells["lName"].Value = p.LastName ?? "";
+            row.Cells["Alignment"].Value = p.Alignment ?? "";
+            row.Cells["Title"].Value = p.Title ?? "";
+            row.Cells["Gang"].Value = p.GangName ?? "";
+            row.Cells["LevelRange"].Value = p.LevelRange ?? "";
+            row.Cells["Level"].Value = p.Level;
+            row.Cells["InitExp"].Value = p.InitialExp;
+            row.Cells["Exp"].Value = p.Exp;
+            row.Cells["Rank"].Value = p.Rank;
+            row.Cells["Class"].Value = p.Class != null ? p.Class.Name : "";
+            row.Cells["Race"].Value = p.Race != null ? p.Race.Name : "";
+            row.Cells["LastExpGain"].Value = p.LastExpGained;
+            row.Cells["LastExpRate"].Value = p.LastExpRate;
+            row.Cells["TotalExpGain"].Value = p.TotalExpGained;
+            row.Cells["TotalExpRate"].Value = p.TotalExpRate;
+        }
+
+        private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MMudObjects;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -19,8 +20,8 @@ namespace MMudObjects
         string Id { get; set; }
         int Exp { get; set; }
         int Regen { get; set; }
-        EnumNpcType Type {get;set;}
-        EnumAlignment Alignment { get; set; }
+        EnumNpcType Type { get; set; }
+        EnumNpcAlignment Alignment { get; set; }
         int Health { get; set; }
         int HealthRegen { get; set; }
         int AC { get; set; }
@@ -44,12 +45,13 @@ namespace MMudObjects
             this.FirstName = firstName;
         }
         public List<CarryableItem> Inventory { get; set; }
-        public EquippedItemsInfo Equipped { get; set; }
+        public virtual EquippedItemsInfo Equipped { get; set; }
 
         public PlayableClass Class { get; set; }
         public PlayableRace Race { get; set; }
-
-        public int Level { get; set; }
+        public virtual int Rank { get; set; }
+        public virtual double Exp { get; set; }
+        public virtual int Level { get; set; }
 
         public List<ItemAbility> Abilities { get; set; }
 
@@ -63,23 +65,25 @@ namespace MMudObjects
         public int ManaRegenResting { get; set; }
 
         public int Strength { get; set; }
-        public int Intel {get;set;}
+        public int Intel { get; set; }
         public int Wisdom { get; set; }
         public int Agility { get; set; }
         public int Health { get; set; }
         public int Charm { get; set; }
-        public string LastName { get; set; }
-        public string GangName { get; set; }
-        public string Title { get; set; }
-        public string Alignment { get; set; }
+        public virtual string LastName { get; set; }
+        public virtual string GangName { get; set; }
+        public virtual string Title { get; set; }
+        public virtual string Alignment { get; set; }
+        public virtual string LevelRange { get; set; }
         public string FirstName { get; }
     }
+}
+
 
 public enum EnumNpcType
 {
     Leader, Solo, Follower, Stationary,
 }
 
-    public enum EnumAlignment
-    { C_EVIL, L_EVIL, NEUTRAL, GOOD, L_GOOD}
-}
+public enum EnumNpcAlignment
+{ C_EVIL, L_EVIL, NEUTRAL, GOOD, L_GOOD}

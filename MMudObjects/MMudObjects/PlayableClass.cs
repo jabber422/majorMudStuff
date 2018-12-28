@@ -4,18 +4,29 @@ namespace MMudObjects
 {
     public class PlayableClass
     {
-        string Name { get; set; }
-        int Id { get; set; }
-        int Exp { get; set; }
-        List<EnumWeaponType> AllowedWeaponTypes { get; set; }
-        EnumArmorType AllowedArmorType { get; set; }
-        EnumMagicType MagicType {get;set;}
-        int Combat { get; set; }
-        int MinHealth { get; set; }
-        int MaxHealth { get; set; }
-        List<ItemAbility> Abilities { get; set; }
+        public string Name { get; set; }
+        public int Id { get; set; }
+        public int Exp { get; set; }
+        public List<EnumWeaponType> AllowedWeaponTypes { get; set; }
+        public EnumArmorType AllowedArmorType { get; set; }
+        public EnumMagicType MagicType {get;set;}
+        public int Combat { get; set; }
+        public int MinHealth { get; set; }
+        public int MaxHealth { get; set; }
+        public List<ItemAbility> Abilities { get; set; }
 
+        public PlayableClass(string className)
+        {
+            //TODO: Authenticate this vs DB list. load stats on creation?
+            this.Name = className;
+        }
+    }
 
-
+    public static class PlayableClassFactory
+    {
+        public static PlayableClass CreteClassFromName(string className)
+        {
+            return new PlayableClass(className);
+        }
     }
 }

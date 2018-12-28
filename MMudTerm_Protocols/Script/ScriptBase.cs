@@ -35,7 +35,9 @@ namespace MMudTerm_Protocols.Script
             this.mre = new ManualResetEvent(true);
             this.m_workerThread = new BackgroundWorker();
             this.m_workerThread.WorkerReportsProgress = true;
-            
+            this.m_workerThread.WorkerSupportsCancellation = true;
+
+
         }
 
         //The worker loop that processes incoming messages in the queue, your script implements this
@@ -48,6 +50,7 @@ namespace MMudTerm_Protocols.Script
             {
                 throw new ArgumentNullException("No decoder was created for the script");
             }
+            if (buffer.Length == 0) return;
 
             ProtocolCommands cmds = this.decoder.DecodeBuffer(buffer);
             foreach (ProtocolCommand cmd in cmds.Lines)
