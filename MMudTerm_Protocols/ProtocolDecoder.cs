@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MMudTerm_Protocols.AnsiProtocolCmds;
 using System.Diagnostics;
-using System.Text;
 
 namespace MMudTerm_Protocols
 {
@@ -11,10 +9,11 @@ namespace MMudTerm_Protocols
     //base class for a protocole decoder
     public abstract class ProtocolDecoder
     {
-        protected Queue<TermCmd> OneLineOfTermCommands;
+        protected Queue<TermCmd> TermCmdsQueue;
         protected List<byte[]> values;
         protected Stack<byte> pieces;
         protected byte[] partialMsgBuffer;
+        private ConnObj m_connObj;
 
         //ctor
         protected ProtocolDecoder()
@@ -26,13 +25,13 @@ namespace MMudTerm_Protocols
             Trace.AutoFlush = true;
             Trace.WriteLine("Base class Created", this.GetType().Namespace);
 #endif
-            OneLineOfTermCommands = new Queue<TermCmd>();
+            TermCmdsQueue = new Queue<TermCmd>();
             values = new List<byte[]>();
             pieces = new Stack<byte>();
             partialMsgBuffer = new byte[0];
         }
 
-        public abstract ProtocolCommand DecodeBuffer(byte[] buffer);
+        public abstract ProtocolCommands DecodeBuffer(byte[] buffer);
 
         /// <summary>
         /// Appends the partial msg buffer to the head of the new buffer
@@ -134,15 +133,42 @@ namespace MMudTerm_Protocols
         }
    }
 
-    //contains 1..n TermCmds, should always be one line of data from the server
-    public class ProtocolCommand
+    //contains all of the term cmds that came in a buffer from the ser
+    public class ProtocolCommands
     {
-        public List<TermCmd> Fragments;
-        private Queue<TermCmd> commandsForTheTerminalScreen;
+        public List<ProtocolCommand> Lines;
 
-        public ProtocolCommand(Queue<TermCmd> commandsForTheTerminalScreen)
+        public ProtocolCommands(Queue<TermCmd> termCmdsQueue)
         {
-            this.Fragments = new List<TermCmd>(commandsForTheTerminalScreen);
+            this.Lines = new List<ProtocolCommand>();
+            Queue<TermCmd> Fragments = new Queue<TermCmd>();
+            lock (termCmdsQueue)
+            {
+                while(termCmdsQueue.Count > 0)
+                {
+                    TermCmd cmd = termCmdsQueue.Dequeue();
+                    Fragments.Enqueue(cmd);
+
+                    if(cmd is TermNewLineCmd)
+                    {
+                        Lines.Add(new ProtocolCommand(Fragments));
+                        Fragments = new Queue<TermCmd>();
+                    }
+
+                    
+                }
+                if(Fragments.Count > 0) Lines.Add(new ProtocolCommand(Fragments));
+            }
+        }
+    }
+
+    //contains all the TermCmd that make up one line
+    public class ProtocolCommand {
+        public List<TermCmd> Fragments;
+
+        public ProtocolCommand(Queue<TermCmd> fragments)
+        {
+            this.Fragments = new List<TermCmd>(fragments);
         }
 
         //strip out the protcol markup and return the line as text

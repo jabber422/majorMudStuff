@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using MMudTerm.Connection;
 using MMudTerm_Protocols;
 using MMudTerm.Session.SessionStateData;
 using System.Collections.Generic;
@@ -66,17 +65,20 @@ namespace MMudTerm.Session
             if (buffer.Length == 0)
                 return; //TODO: buffer of zero means a disconnect?
             //decode the byte[]
-            ProtocolCommand cmd = m_decoder.DecodeBuffer(buffer);
-            foreach (TermCmd c in cmd.Fragments)
+            ProtocolCommands cmds = m_decoder.DecodeBuffer(buffer);
+            foreach (ProtocolCommand cmd in cmds.Lines)
             {
-                Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
-                sessionsCmds.Enqueue(c);
-                //depends on our state depends on how we process data from the server
-                this.m_currentSessionState.HandleCommands(sessionsCmds);
-                //send cmds to terminal for drawing
-                Queue<TermCmd> termCmds = new Queue<TermCmd>();
-                termCmds.Enqueue(c);
-                this.m_sessionForm.Terminal.HandleCommands(termCmds);
+                foreach (TermCmd c in cmd.Fragments)
+                {
+                    Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
+                    sessionsCmds.Enqueue(c);
+                    //depends on our state depends on how we process data from the server
+                    this.m_currentSessionState.HandleCommands(sessionsCmds);
+                    //send cmds to terminal for drawing
+                    Queue<TermCmd> termCmds = new Queue<TermCmd>();
+                    termCmds.Enqueue(c);
+                    this.m_sessionForm.Terminal.HandleCommands(termCmds);
+                }
             }
 
         }

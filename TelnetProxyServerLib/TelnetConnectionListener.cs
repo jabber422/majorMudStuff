@@ -33,7 +33,7 @@ namespace TelnetProxyServer
 
             if (NewClientConnectEvent == null)
             {
-                Debug.WriteLine("There is no one using OnClientConnect event", this.ToString());
+                Trace.WriteLine("There is no one using OnClientConnect event", this.ToString());
                 return retVal;
             }
 
@@ -45,7 +45,7 @@ namespace TelnetProxyServer
             }
             catch (SocketException ex)
             {
-                Debug.WriteLine("TelnetConnectListener.Start() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
+                Trace.WriteLine("TelnetConnectListener.Start() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
                 retVal = false;
             }
             return retVal;
@@ -62,7 +62,7 @@ namespace TelnetProxyServer
             }
             catch (SocketException ex)
             {
-                Debug.WriteLine("TelnetConnectListener.Stop() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
+                Trace.WriteLine("TelnetConnectListener.Stop() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -71,11 +71,11 @@ namespace TelnetProxyServer
             TcpClient newClient = null;
             try{
                 newClient = this.m_listener.EndAcceptTcpClient(ar);
-                Debug.WriteLine("New Client Connected: " + newClient.Client.RemoteEndPoint.ToString(), this.ToString());
+                Trace.WriteLine("New Client Connected: " + newClient.Client.RemoteEndPoint.ToString(), this.ToString());
                 OnNewClientConnectEvent(newClient);
                 this.m_listener.BeginAcceptSocket(AcceptNewClientMethod, null);
             }catch(SocketException ex){
-                Debug.WriteLine("AcceptNewClient.Start() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
+                Trace.WriteLine("AcceptNewClient.Start() threw an Exception: " + ex.Message + "\r\n" + ex.StackTrace);
             }
         }
 
@@ -83,7 +83,7 @@ namespace TelnetProxyServer
         {
             if (this.NewClientConnectEvent == null)
             {
-                Debug.WriteLine("NewClientConnectEvent has no listeners", this.ToString());
+                Trace.WriteLine("NewClientConnectEvent has no listeners", this.ToString());
                 return;
             }
 

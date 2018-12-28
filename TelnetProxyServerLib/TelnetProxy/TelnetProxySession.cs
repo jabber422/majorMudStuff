@@ -76,7 +76,7 @@ namespace TelnetProxyServer.TelnetProxy
         /// <param name="e">nothing</param>
         void ClientSessionDisconnect(object sender, EventArgs e)
         {
-            Debug.WriteLine("TPS, Id=" + this.GetId + " Client Disconnect event fired", this);
+            Trace.WriteLine("TPS, Id=" + this.GetId + " Client Disconnect event fired", this.ToString());
             if (this.DisconnectEvent != null)
             {
                 this.DisconnectEvent.Invoke(this, new SessionsDisconnectEvent("Client"));
@@ -87,7 +87,7 @@ namespace TelnetProxyServer.TelnetProxy
         
         void RemoteSessionDisconnect(object sender, EventArgs e)
         {
-            Debug.WriteLine("TPS, Id=" + this.GetId + " Remote Client Disconnect event fired", this);
+            Trace.WriteLine("TPS, Id=" + this.GetId + " Remote Client Disconnect event fired", this.ToString());
             if (this.DisconnectEvent != null)
             {
                 this.DisconnectEvent.Invoke(this, new SessionsDisconnectEvent("Remote"));
@@ -98,7 +98,7 @@ namespace TelnetProxyServer.TelnetProxy
 
         void TapSessionDisconnect(object sender, EventArgs e)
         {
-            Debug.WriteLine("TPS, Id=" + this.GetId + " Tap Session Disconnect event fired", this);
+            Trace.WriteLine("TPS, Id=" + this.GetId + " Tap Session Disconnect event fired", this.ToString());
             if (this.DisconnectEvent != null)
             {
                 this.DisconnectEvent.Invoke(this, e);
@@ -182,22 +182,22 @@ namespace TelnetProxyServer.TelnetProxy
 
         private void Disconnect(ITelnetSessionControl telnetSession)
         {
-            Debug.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session: " + telnetSession.Name);
+            Trace.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session: " + telnetSession.Name);
             try
             {
                 if (telnetSession.IsConnected)
                 {
-                    Debug.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session - client was connected still");
+                    Trace.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session - client was connected still");
                     telnetSession.Disconnect();
                 }
                 else
                 {
-                    Debug.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session - client was not connected");
+                    Trace.WriteLine("TPS, Id=" + this.GetId + " Disconnect Session - client was not connected");
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TPS, Id=" + this.GetId + " DisconnectRemote Session with ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TPS, Id=" + this.GetId + " DisconnectRemote Session with ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
                 return;
             }
         }
@@ -281,7 +281,7 @@ namespace TelnetProxyServer.TelnetProxy
             if (size == buffer.Length)
                 return size;
 
-            Debug.WriteLine("Failed to write a buffer to the " + eClientType.ToString() + " client", this);
+            Trace.WriteLine("Failed to write a buffer to the " + eClientType.ToString() + " client", this.ToString());
             return size;
         }
 

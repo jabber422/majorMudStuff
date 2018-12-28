@@ -13,10 +13,10 @@ namespace ConsoleApplication1
         {
             try
             {
-                Debug.AutoFlush = true;
+                Trace.AutoFlush = true;
                 //aceListener tl = Trace.
                 ConsoleTraceListener ctl = new ConsoleTraceListener();
-                Debug.Listeners.Add(ctl);
+                Trace.Listeners.Add(ctl);
 
                 TelnetProxyServerMain foo = new TelnetProxyServerMain(IPAddress.Any, 12345);
                 foo.Start();

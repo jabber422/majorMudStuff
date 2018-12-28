@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MMudTerm.Connection;
 using System.Drawing;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;

@@ -53,13 +53,13 @@ namespace TelnetProxyServer.TelnetClient
         {
             if (this.TcpClient == null)
             {
-                Debug.WriteLine("Attempt to write to a null TcpClient, bad juju", this);
+                Trace.WriteLine("Attempt to write to a null TcpClient, bad juju", this.ToString());
                 return -1;
             }
 
             if (!this.TcpClient.Connected)
             {
-                Debug.WriteLine("Attempt to write to disconnected TcpClient, bad kuku", this);
+                Trace.WriteLine("Attempt to write to disconnected TcpClient, bad kuku", this.ToString());
                 return -1;
             }
 
@@ -69,7 +69,7 @@ namespace TelnetProxyServer.TelnetClient
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TelnetSession.Send threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.Send threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
                 return -1;
             }
             return buffer.Length;
@@ -88,7 +88,7 @@ namespace TelnetProxyServer.TelnetClient
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TelnetSession.Send threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.Send threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
                 return -1;
             }
             return buffer.Length;
@@ -106,7 +106,7 @@ namespace TelnetProxyServer.TelnetClient
         {
             if (this.TcpClient == null)
             {
-                Debug.WriteLine("Calling connect on a null TcpClient... bad juju", this);
+                Trace.WriteLine("Calling connect on a null TcpClient... bad juju", this.ToString());
                 return false;
             }
             try
@@ -117,14 +117,14 @@ namespace TelnetProxyServer.TelnetClient
                 }
                 else
                 {
-                    Debug.WriteLine("Connect called on a connected tcpclient", this);
+                    Trace.WriteLine("Connect called on a connected tcpclient", this.ToString());
                 }
                 BeginRead(new byte[8192]);
                 return this.TcpClient.Connected;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TelnetSession.Connect threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.Connect threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
             }
             return false;
         }
@@ -133,7 +133,7 @@ namespace TelnetProxyServer.TelnetClient
         {
             if (!this.TcpClient.Connected)
             {
-                Debug.WriteLine("Cannot disconnect, we are not connected", this);
+                Trace.WriteLine("Cannot disconnect, we are not connected", this.ToString());
                 return true;
             }
 
@@ -171,7 +171,7 @@ namespace TelnetProxyServer.TelnetClient
             }
             catch (Exception ex)
             {
-
+                Trace.WriteLine("TelnetSession - ctor - Caught exception - " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
             }
         }
 
@@ -192,7 +192,7 @@ namespace TelnetProxyServer.TelnetClient
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TelnetSession.BeginRead threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.BeginRead threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
             }
         }
 
@@ -201,17 +201,18 @@ namespace TelnetProxyServer.TelnetClient
             try
             {
                 byte[] buffer = (ar.AsyncState as byte[]);
-                int size = this.TcpClient.GetStream().EndRead(ar);
-                if (size <= 0)
-                {
-                    //SocketError?
-                    Debug.WriteLine("read size was <= 0", this);
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(OnDisconnect));
-                    return;
-                }
-
                 lock (buffer)
                 {
+                    int size = this.TcpClient.GetStream().EndRead(ar);
+                    if (size <= 0)
+                    {
+                        //SocketError?
+                        Trace.WriteLine("read size was <= 0", this.ToString());
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(OnDisconnect));
+                        return;
+                    }
+
+               
                     byte[] rcvdBytes = new byte[size];
                     Buffer.BlockCopy(buffer, 0, rcvdBytes, 0, size);
                     //this.TcpClientReadBuffer.Size = size;
@@ -221,12 +222,12 @@ namespace TelnetProxyServer.TelnetClient
             }
             catch (ObjectDisposedException ex)
             {
-                Debug.WriteLine("TelnetSession.EndRead threw objDisposed ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.EndRead threw objDisposed ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
                 return;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("TelnetSession.EndRead threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("TelnetSession.EndRead threw ex: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
             }
 
         }
@@ -235,7 +236,7 @@ namespace TelnetProxyServer.TelnetClient
         {
             if (m_Receive_Event == null)
             {
-                Debug.WriteLine("No rcv listeners on session reader", this);
+                Trace.WriteLine("No rcv listeners on session reader", this.ToString());
                 return;
             }
 
@@ -249,7 +250,7 @@ namespace TelnetProxyServer.TelnetClient
             {
                 if (m_Disconnect_Event == null)
                 {
-                    Debug.WriteLine("No disconnect listeners on session reader", this);
+                    Trace.WriteLine("No disconnect listeners on session reader", this.ToString());
                     return;
                 }
 

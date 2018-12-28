@@ -1,5 +1,4 @@
-﻿using MMudTerm.Connection;
-using MMudTerm_Protocols;
+﻿using MMudTerm_Protocols;
 using MMudTerm_Protocols.AnsiProtocolCmds;
 using System;
 using System.Collections.Generic;
@@ -112,24 +111,22 @@ namespace MummyStreamProcessor
             this.Send("n\n");
         }
 
-        private void Send(string v)
-        {
-            this.m_connObj.Send(ASCIIEncoding.ASCII.GetBytes(v));
-        }
-
         private void ConnHandler_Rcvr(byte[] buffer)
         {
             if (buffer.Length == 0)
                 return; //TODO: buffer of zero means a disconnect?
             this.myDecoder = new AnsiProtocolDecoder();
-            ProtocolCommand cmd = this.myDecoder.DecodeBuffer(buffer);
-            String text = cmd.ToString();
-
-            if (!text.Equals(String.Empty))
+            ProtocolCommands cmds = this.myDecoder.DecodeBuffer(buffer);
+            foreach (ProtocolCommand cmd in cmds.Lines)
             {
-                lock (this.MessageLock)
+                String text = cmd.ToString();
+
+                if (!text.Equals(String.Empty))
                 {
-                    this.Messages.Enqueue(text);
+                    lock (this.MessageLock)
+                    {
+                        this.Messages.Enqueue(text);
+                    }
                 }
             }
         }

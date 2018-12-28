@@ -54,7 +54,7 @@ namespace TelnetProxyServer
         /// <returns>int -1 fail, 0 means a lister succesfully attached to a session, > 0 is a new session id</returns>
         public int Start(ITelnetSessionControl newTelnetSession, Dictionary<int, ITelnetProxySessionControl> sessions)
         {
-            Debug.WriteLine("Starting New connection script");
+            Trace.WriteLine("Starting New connection script");
             int type, id, result = 0;
             lock(m_lock) {
                 
@@ -123,7 +123,7 @@ namespace TelnetProxyServer
                     res = BAD_ID_TYPE;
                 }
 
-                Debug.WriteLine("Start - New Telnet session - " + s);
+                Trace.WriteLine("Start - New Telnet session - " + s);
                 newTelnetSession.SendToRemote(Encoding.ASCII.GetBytes(s));
 
                 if (res < 0)
@@ -152,7 +152,7 @@ namespace TelnetProxyServer
                 case ETelnetProxySession.Tap:
                     return BlockUntilAnswered(newProxySession.TapSession, p1, csvRegex_new, p2, p3);
                 default:
-                    Debug.WriteLine("Bad switch Block Until Answered");
+                    Trace.WriteLine("Bad switch Block Until Answered");
                     break;
             }
             return Match.Empty;
@@ -188,12 +188,12 @@ namespace TelnetProxyServer
 
         //    if (!existingSession.AttachListener(ETelnetProxySession.Remote, newSession))
         //    {
-        //        Debug.WriteLine("Failed to attach listner to Session " + result, DBG_CAT);
+        //        Trace.WriteLine("Failed to attach listner to Session " + result, DBG_CAT);
         //    }
 
         //    if (!newSession.AttachListener(ETelnetProxySession.Client, existingSession))
         //    {
-        //        Debug.WriteLine("Failed to attach writer to Session " + result, DBG_CAT);
+        //        Trace.WriteLine("Failed to attach writer to Session " + result, DBG_CAT);
         //    }
 
         //    return 1;
@@ -217,14 +217,14 @@ namespace TelnetProxyServer
                 System.Net.IPHostEntry entry = System.Net.Dns.GetHostEntry(ip);
                 if (entry.AddressList.Length == 0)
                 {
-                    Debug.WriteLine("Failed to resolve: " + ip, "StartScript");
+                    Trace.WriteLine("Failed to resolve: " + ip, "StartScript");
                     return BAD_ID;
                 }
                 ip = entry.AddressList[0].ToString();
             }
             catch (Exception)
             {
-                Debug.WriteLine("Failed to parse ip or port from: " + ip + " " + port, "StartScript");
+                Trace.WriteLine("Failed to parse ip or port from: " + ip + " " + port, "StartScript");
                 return BAD_ID;
             }
 
@@ -232,7 +232,7 @@ namespace TelnetProxyServer
             remoteSession.Name = "Remote";
             if (!remoteSession.Connect())
             {
-                Debug.WriteLine("Failed to connected to Remote Server");
+                Trace.WriteLine("Failed to connected to Remote Server");
                 return BAD_REMOTE_CONNECTION;
             }
 
@@ -255,7 +255,7 @@ namespace TelnetProxyServer
                 while (rcvd.Count > 0)
                 {
                     r += rcvd.Dequeue();
-                    Debug.WriteLine("rcvd: " + r, DBG_CAT);
+                    Trace.WriteLine("rcvd: " + r, DBG_CAT);
                     m = Regex.Match(r, csvRegex);
                     if (m.Success)
                         return m;

@@ -65,6 +65,9 @@
     <Compile Include="AnsiProtocolCmds\IAnsiProtocolCmds.cs" />
     <Compile Include="BasicTelnetProtocols\ITermProtocolCmds.cs" />
     <Compile Include="BasicTelnetProtocols\TelnetProtocolDecoder.cs" />
+    <Compile Include="Connection\ConnObj.cs" />
+    <Compile Include="Connection\IConnection.cs" />
+    <Compile Include="Connection\SocketHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BasicTelnetProtocols\TermCmd.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiCursorBkwd.cs" />
@@ -72,7 +75,9 @@
     <Compile Include="BasicTelnetProtocols\TermCmdsE.cs" />
     <Compile Include="BasicTelnetProtocols\TermNewLineCmd.cs" />
     <Compile Include="BasicTelnetProtocols\TermStringDataCmd.cs" />
+    <Compile Include="ProtocolConnObj.cs" />
     <Compile Include="ProtocolDecoder.cs" />
+    <Compile Include="Script\ScriptBase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MummyStreamProcessor", "..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeList", "HomeList\HomeList.csproj", "{72120D65-7DED-4CCA-9BE7-17DA09D5A6D0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMudObjects", "..\MMudObjects\MMudObjects\MMudObjects.csproj", "{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{72120D65-7DED-4CCA-9BE7-17DA09D5A6D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72120D65-7DED-4CCA-9BE7-17DA09D5A6D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72120D65-7DED-4CCA-9BE7-17DA09D5A6D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -78,9 +78,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Colors.settings</DependentUpon>
     </Compile>
-    <Compile Include="Connection\ConnObj.cs" />
-    <Compile Include="Connection\IConnection.cs" />
-    <Compile Include="Connection\SocketHandler.cs" />
     <Compile Include="Data\DataObjects\CharacterData.cs" />
     <Compile Include="MMudTerm.cs">
       <SubType>Form</SubType>

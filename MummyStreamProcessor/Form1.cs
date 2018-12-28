@@ -1,5 +1,4 @@
 ﻿using MMudTerm;
-using MMudTerm.Connection;
 using MMudTerm_Protocols;
 using System;
 using System.Collections.Generic;

@@ -46,7 +46,7 @@ namespace TelnetProxyServer
         /// <returns></returns>
         public bool Start()
         {
-            Debug.WriteLine("Starting the proxy server listener", this);
+            Trace.WriteLine("Starting the proxy server listener", this.ToString());
             return this.m_listener.Start();
         }
 
@@ -56,14 +56,14 @@ namespace TelnetProxyServer
         /// <returns></returns>
         public bool Stop()
         {
-            Debug.WriteLine("Stopping the proxy listener", this);
+            Trace.WriteLine("Stopping the proxy listener", this.ToString());
             try
             {
                 this.m_listener.Stop();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Stop failed: " + ex.Message + "\r\n" + ex.StackTrace, this);
+                Trace.WriteLine("Stop failed: " + ex.Message + "\r\n" + ex.StackTrace, this.ToString());
                 return false;
             }
             return true;
@@ -72,7 +72,7 @@ namespace TelnetProxyServer
         //callback from the tcp listner, rcvs the local connection request from mega
         void m_listener_NewClientConnectEvent(System.Net.Sockets.TcpClient newClient)
         {
-            Debug.WriteLine("ENTER m_listener_NewClientConnectEvent");
+            Trace.WriteLine("ENTER m_listener_NewClientConnectEvent");
             //the connection to/from mega
             ITelnetSessionControl newSession = new TelnetSession(newClient);
             //wrapper to hold loval and remote connections
@@ -89,11 +89,11 @@ namespace TelnetProxyServer
             //blocks while the connection to the remote server is started
             TelnetProxySession_StartScript Script = new TelnetProxySession_StartScript();
             int retVal = Script.Start(newSession, m_sessions);
-            Debug.WriteLine("After Script retval = " + retVal);
+            Trace.WriteLine("After Script retval = " + retVal);
 
             if (retVal < 0)
             {
-                Debug.WriteLine("New Client failed to complete start script succesfully");
+                Trace.WriteLine("New Client failed to complete start script succesfully");
                 newSession.Disconnect();
             }
             else
