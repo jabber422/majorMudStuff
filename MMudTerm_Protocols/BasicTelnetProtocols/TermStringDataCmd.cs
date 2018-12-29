@@ -14,6 +14,12 @@ namespace MMudTerm_Protocols
         public TermStringDataCmd(List<byte[]> values)
         {
             str = values[0];
+            if (this.GetValue().Contains("32m") ||
+                this.GetValue().StartsWith("n") ||
+                (this.GetValue().Length <=2 && !(this.GetValue() == "]:") && !(this.GetValue() == ", ") && !(this.GetValue() == "."))
+                )
+            {
+            }
         }
 
         public override void DoCommand(ITermProtocolCmds terminal)

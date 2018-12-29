@@ -12,7 +12,9 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     /// </summary>
     public class AnsiProtocolDecoder : TelnetProtocolDecoder
     {
-        public override ProtocolCommands DecodeBuffer(byte[] buffer)
+        byte[] lastBuffer;
+        object InUse = new object();
+        protected override void DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
 
@@ -21,57 +23,66 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     this.GetType().Namespace);
             Debug.Indent();
 #endif
-            lock (TermCmdsQueue)
+            if(buffer[buffer.Length-1] != 10)
             {
-                //append the saved buffer if any
-                buffer = ConcatBuffers(buffer);
+                //is a partial buffer ending
+            }
 
-                TermCmdsQueue.Clear();
-                values.Clear();
-                pieces.Clear();
+            
 
-                if (buffer[0] == 0xff)
-                {
-                    //0xff is start of a telnet IAC cmd, ignore it
+            //append the saved buffer if any
+            buffer = ConcatBuffers(buffer);
+            values.Clear();
+            pieces.Clear();
+
+            lastBuffer = new byte[buffer.Length];
+            Buffer.BlockCopy(buffer, 0, lastBuffer, 0, buffer.Length);
+
+            if (buffer[0] == 0xff)
+            {
+                //0xff is start of a telnet IAC cmd, ignore it
 #if DEBUG_2
-                    Debug.WriteLine("Recieved telent IAC in ANSI parser, this is bad", this.GetType().Namespace);
+                Debug.WriteLine("Recieved telent IAC in ANSI parser, this is bad", this.GetType().Namespace);
 #endif
-                    //ignoreing Telnet commands at the front of a buffer
-                    if ((buffer.Length - 3) > 0)
-                    {
-                        //TODO: handle these one day
-                        byte[] buf2 = new byte[buffer.Length - 3];
-                        Buffer.BlockCopy(buffer, 3, buf2, 0, buffer.Length - 3);
-                        this.DecodeBuffer(buf2);
-                    }
-                }
-                else //if (buffer[0] == 0x1b) // 'ESC'
+                //ignoring Telnet commands at the front of a buffer
+                if ((buffer.Length - 3) > 0)
                 {
-                    int idx = this.TokenizeAnsiCommandBuffer(buffer);
-#if DEBUG_2
-                    string s = String.Format("Tokenize Completed: BufferIdx= {0}, buffer.len= {1}",
-                        idx, buffer.Length);
-                    Debug.WriteLine(s, this.GetType().Namespace);
-#endif
-                    //save off the rest
-                    if (idx != buffer.Length && idx != -1)
-                        SaveBuffer(buffer, idx);
+                    //TODO: handle these one day
+                    byte[] buf2 = new byte[buffer.Length - 3];
+                    Buffer.BlockCopy(buffer, 3, buf2, 0, buffer.Length - 3);
+                    this.DecodeBuffer(buf2);
                 }
-                //else
-                //{
-                //}
-                return new ProtocolCommands(TermCmdsQueue);
+            }
+            else //if (buffer[0] == 0x1b) // 'ESC'
+            {
+                //take the buffer and convert each iac and string to a TermCmd
+                int idx = this.TokenizeAnsiCommandBuffer(buffer);
+#if DEBUG_2
+                string s = String.Format("Tokenize Completed: BufferIdx= {0}, buffer.len= {1}",
+                    idx, buffer.Length);
+                Debug.WriteLine(s, this.GetType().Namespace);
+#endif
+                //save off the rest
+                if (idx != buffer.Length && idx != -1)
+                    SaveBuffer(buffer, idx);
             }
 #if DEBUG_2
-            Debug.Unindent();
+        Debug.Unindent();
 #endif
+        }
+
+        //internal class AnsiDecoder {
+        List<TermCmd> TermCmdList = new List<TermCmd>();
+
+        public AnsiProtocolDecoder(ConnObj connObj) : base(connObj)
+        {
         }
 
         /// <summary>
         /// Process a message from the server and turn it into TermCommands
         /// </summary>
         /// <param name="buffer">message buffer from server</param>
-        private int TokenizeAnsiCommandBuffer(byte[] buffer)
+        internal int TokenizeAnsiCommandBuffer(byte[] buffer)
         {
             //we've found a 0x1b, mark the index and handle as command
             //buffer[0] is a 0x1b, ot should be
@@ -98,9 +109,13 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                 IDX = idx;
             }
 
-            //clean up what ever is left over in the buffers
-            CreateTextCmd();
-            //this.PostToAi();
+            //no idea why i did this this way, but it had issues
+            PiecesToValues();
+            if (values.Count > 0)
+            {
+                //reset the IDX point to the start of the last block
+                IDX -= values[0].Length + 1;
+            }
             return IDX;
         }
 
@@ -271,4 +286,24 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             }
         }
     }
+
+    ////Take a stream of TermCmds and drive a state engine
+    //public class GameDecoder 
+    //{
+    //    public GameDecoder(ConnObj connObj) : base(connObj)
+    //    {
+    //    }
+
+    //    public override List<ProtocolCommandLine> GetCommandLines()
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+
+    //    protected override void DecodeBuffer(byte[] buffer)
+    //    {
+            
+            
+
+    //    }
+    //}
 }

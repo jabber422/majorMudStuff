@@ -8,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace MMudTerm_Protocols
 {
-    public class ProtocolConnObj : ConnObj
+    public class MMudStream
     {
-        public ProtocolConnObj(IPAddress ip, int port) : base(ip, port)
-        {
-        }
+        //public MMudStream
 
 
 

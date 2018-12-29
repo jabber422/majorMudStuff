@@ -23,7 +23,7 @@ namespace MMudTerm_Protocols.Script
         public ManualResetEvent mre;
 
         //sync object for incoming cmds
-        public Queue<ProtocolCommand> Cmds;
+        public Queue<ProtocolCommandLine> Cmds;
 
 
 
@@ -31,7 +31,7 @@ namespace MMudTerm_Protocols.Script
         {
             this.m_connObj = connObj;
             this.State = new WorkerState_Stopped();
-            this.Cmds = new Queue<ProtocolCommand>();
+            this.Cmds = new Queue<ProtocolCommandLine>();
             this.mre = new ManualResetEvent(true);
             this.m_workerThread = new BackgroundWorker();
             this.m_workerThread.WorkerReportsProgress = true;
@@ -52,8 +52,8 @@ namespace MMudTerm_Protocols.Script
             }
             if (buffer.Length == 0) return;
 
-            ProtocolCommands cmds = this.decoder.DecodeBuffer(buffer);
-            foreach (ProtocolCommand cmd in cmds.Lines)
+            List<ProtocolCommandLine> cmds = this.decoder.GetCommandLines();
+            foreach (ProtocolCommandLine cmd in cmds)
             {
                 this.Cmds.Enqueue(cmd);
                 mre.Set();

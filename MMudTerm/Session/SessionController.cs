@@ -59,29 +59,31 @@ namespace MMudTerm.Session
             SetState(SessionStates.OFFLINE);
         }
 
-        //handles the packet rcvd from socket
-        void ConnHandler_Rcvr(byte[] buffer)
-        {
-            if (buffer.Length == 0)
-                return; //TODO: buffer of zero means a disconnect?
-            //decode the byte[]
-            ProtocolCommands cmds = m_decoder.DecodeBuffer(buffer);
-            foreach (ProtocolCommand cmd in cmds.Lines)
-            {
-                foreach (TermCmd c in cmd.Fragments)
-                {
-                    Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
-                    sessionsCmds.Enqueue(c);
-                    //depends on our state depends on how we process data from the server
-                    this.m_currentSessionState.HandleCommands(sessionsCmds);
-                    //send cmds to terminal for drawing
-                    Queue<TermCmd> termCmds = new Queue<TermCmd>();
-                    termCmds.Enqueue(c);
-                    this.m_sessionForm.Terminal.HandleCommands(termCmds);
-                }
-            }
+        //TODO: need to add a worker or event to process when the decoder has messages
 
-        }
+        //handles the packet rcvd from socket
+        //void ConnHandler_Rcvr(byte[] buffer)
+        //{
+        //    if (buffer.Length == 0)
+        //        return; //TODO: buffer of zero means a disconnect?
+        //    //decode the byte[]
+        //    ProtocolCommands cmds = m_decoder.GetCommandLines();
+        //    foreach (ProtocolCommand cmd in cmds.Lines)
+        //    {
+        //        foreach (TermCmd c in cmd.Fragments)
+        //        {
+        //            Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
+        //            sessionsCmds.Enqueue(c);
+        //            //depends on our state depends on how we process data from the server
+        //            this.m_currentSessionState.HandleCommands(sessionsCmds);
+        //            //send cmds to terminal for drawing
+        //            Queue<TermCmd> termCmds = new Queue<TermCmd>();
+        //            termCmds.Enqueue(c);
+        //            this.m_sessionForm.Terminal.HandleCommands(termCmds);
+        //        }
+        //    }
+
+        //}
         #endregion
 
         #region Internals
@@ -170,8 +172,8 @@ namespace MMudTerm.Session
 
             if (SocketHandler.Connect(this.m_connObj))
             {
-                this.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
-                this.m_connObj.Rcvr += new RcvMsgCallback(ConnHandler_Rcvr);
+                this.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder(this.m_connObj);
+                //this.m_connObj.Rcvr += new RcvMsgCallback(ConnHandler_Rcvr);
                 this.m_connObj.Disconnected += new EventHandler(ConnHandler_Disconnected);
                 result = 2;
             }

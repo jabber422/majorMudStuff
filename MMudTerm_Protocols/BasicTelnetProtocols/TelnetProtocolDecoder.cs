@@ -9,7 +9,11 @@ namespace MMudTerm_Protocols
     //decodes basic telnet protocols, insert standard here[..|.,]
     public class TelnetProtocolDecoder : ProtocolDecoder
     {
-        public override ProtocolCommands DecodeBuffer(byte[] buffer)
+        public TelnetProtocolDecoder(ConnObj connObj) : base(connObj)
+        {
+        }
+
+        protected override void DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
             Debug.WriteLine("ENTER: " +
@@ -18,6 +22,40 @@ namespace MMudTerm_Protocols
 #endif
 
             throw new NotImplementedException("Currently only using ANSI");
+        }
+
+        public override List<ProtocolCommandLine> GetCommandLines()
+        {
+            lock (this)
+            {
+                List<ProtocolCommandLine> result = new List<ProtocolCommandLine>();
+                if (this.TermCmdsQueue.Count == 0) return result;
+
+                Queue<TermCmd> Fragments = new Queue<TermCmd>();
+
+                while (this.TermCmdsQueue.Count > 1)
+                {
+                    
+                    if(this.TermCmdsQueue.Peek() is TermNewLineCmd)
+                    {
+                        Fragments.Enqueue(this.TermCmdsQueue.Dequeue());
+                        result.Add(new ProtocolCommandLine(Fragments));
+                        Fragments = new Queue<TermCmd>();
+                    }
+                    else
+                    {
+                        Fragments.Enqueue(this.TermCmdsQueue.Dequeue());
+                    }
+                }
+
+                //put the leftovers back
+                while(Fragments.Count > 0) { 
+                    this.TermCmdsQueue.Enqueue(Fragments.Dequeue());
+                }
+
+                return result;		
+
+            }
         }
 
         protected void CreateCommand(TERM_CMD cmd)

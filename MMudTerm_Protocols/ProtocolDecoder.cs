@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace MMudTerm_Protocols
 {
@@ -15,8 +16,10 @@ namespace MMudTerm_Protocols
         protected byte[] partialMsgBuffer;
         private ConnObj m_connObj;
 
+        public ManualResetEvent mre = new ManualResetEvent(false);
+        
         //ctor
-        protected ProtocolDecoder()
+        protected ProtocolDecoder(ConnObj connObj)
         {
 #if DEBUG
             TraceListener tl = new TextWriterTraceListener("ProtocolDecoderTrace.trc");
@@ -29,9 +32,40 @@ namespace MMudTerm_Protocols
             values = new List<byte[]>();
             pieces = new Stack<byte>();
             partialMsgBuffer = new byte[0];
+
+            this.m_connObj = connObj;
+            this.m_connObj.Rcvr += connObj_Rcvr;
         }
 
-        public abstract ProtocolCommands DecodeBuffer(byte[] buffer);
+        //rcvr for the connobj.Rcvr event, use it's thread, lock the decoder, process the buffer into TermCmds
+        public void connObj_Rcvr(byte[] buffer)
+        {
+            if (buffer.Length == 0) return;
+            lock (this)
+            {
+                this.DecodeBuffer(buffer);
+            }
+            this.mre.Set();
+        }
+
+        //called by the ConnObj rcvr thread, this converts the raw byte[] to useable cmds
+        //Either a Queue of each TermCmd or a List of line of TermCmds
+        protected abstract void DecodeBuffer(byte[] buffer);
+
+        //either of these empty our queue
+        public abstract List<ProtocolCommandLine> GetCommandLines();
+        public List<TermCmd> GetTermCmds()
+        {
+            lock (this)
+            {
+                List<TermCmd> result = new List<TermCmd>();
+                while (this.TermCmdsQueue.Count > 0)
+                {
+                    result.Add(this.TermCmdsQueue.Dequeue());
+                }
+                return result;
+            }
+        }
 
         /// <summary>
         /// Appends the partial msg buffer to the head of the new buffer
@@ -132,54 +166,4 @@ namespace MMudTerm_Protocols
             #endregion
         }
    }
-
-    //contains all of the term cmds that came in a buffer from the ser
-    public class ProtocolCommands
-    {
-        public List<ProtocolCommand> Lines;
-
-        public ProtocolCommands(Queue<TermCmd> termCmdsQueue)
-        {
-            this.Lines = new List<ProtocolCommand>();
-            Queue<TermCmd> Fragments = new Queue<TermCmd>();
-            lock (termCmdsQueue)
-            {
-                while(termCmdsQueue.Count > 0)
-                {
-                    TermCmd cmd = termCmdsQueue.Dequeue();
-                    Fragments.Enqueue(cmd);
-
-                    if(cmd is TermNewLineCmd)
-                    {
-                        Lines.Add(new ProtocolCommand(Fragments));
-                        Fragments = new Queue<TermCmd>();
-                    }
-
-                    
-                }
-                if(Fragments.Count > 0) Lines.Add(new ProtocolCommand(Fragments));
-            }
-        }
-    }
-
-    //contains all the TermCmd that make up one line
-    public class ProtocolCommand {
-        public List<TermCmd> Fragments;
-
-        public ProtocolCommand(Queue<TermCmd> fragments)
-        {
-            this.Fragments = new List<TermCmd>(fragments);
-        }
-
-        //strip out the protcol markup and return the line as text
-        public override string ToString()
-        {
-            String result = "";
-            foreach (TermCmd cmd in this.Fragments)
-            {
-                result += cmd.ToString();
-            }
-            return result;
-        }
-    }
 }

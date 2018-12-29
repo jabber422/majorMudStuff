@@ -14,7 +14,6 @@ namespace MMudObjects
         public List<int> Ranks = new List<int>();
         public List<EquippedItemsInfo> Equipments = new List<EquippedItemsInfo>();
 
-
         public TrackedPlayer(string firstName) : base(firstName)
         {
         }

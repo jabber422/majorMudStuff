@@ -22,25 +22,24 @@ namespace HomeList
 
         public Script(ConnObj connObj) : base(connObj)
         {
-            this.decoder = new AnsiProtocolDecoder();
+            this.decoder = new AnsiProtocolDecoder(connObj);
         }
 
         public override void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (!this.m_workerThread.CancellationPending)
             {
-                lock (this.Cmds)
+                //block until conObj gets something
+                this.decoder.mre.WaitOne();
+                this.decoder.mre.Reset();
+                List<ProtocolCommandLine> Cmds = this.decoder.GetCommandLines();
+                //possible thread issue, we lock on cmds, so conObj reciever can not add anything while we process.  we could back up the input stream and blow up?
+                lock (Cmds)
                 {
-                    //block until conObj gets something
-                    this.mre.WaitOne();
-                    this.mre.Reset();
-                    if (this.Cmds.Count == 0) continue;
+                    if (Cmds.Count == 0) continue;
 
                     Boolean IsNewData = false;
-                    while (this.Cmds.Count > 0)
-                    {
-                        ProtocolCommand c = Cmds.Dequeue();
-
+                    foreach(ProtocolCommandLine c in Cmds){ 
                         String text = c.ToString();
 
                         if (text.Contains("ID?"))
@@ -124,6 +123,10 @@ namespace HomeList
                 LastName = m.Groups[3].Value
             };
 
+            if(playerInfo.Exp < 9999)
+            {
+
+            }
             TrackedPlayer trackedPlayerInfo = GetPlayerInfo(playerInfo.FirstName);
             trackedPlayerInfo.UpdateTrackedPlayer(playerInfo);
         }

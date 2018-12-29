@@ -78,9 +78,16 @@
     <Compile Include="BasicTelnetProtocols\TermCmdsE.cs" />
     <Compile Include="BasicTelnetProtocols\TermNewLineCmd.cs" />
     <Compile Include="BasicTelnetProtocols\TermStringDataCmd.cs" />
+    <Compile Include="ProtocolCommandLine.cs" />
     <Compile Include="ProtocolConnObj.cs" />
     <Compile Include="ProtocolDecoder.cs" />
+    <Compile Include="Engine\Engine.cs" />
     <Compile Include="Script\ScriptBase.cs" />
+    <Compile Include="Engine\WorkerState.cs" />
+    <Compile Include="Engine\WorkerState_Connected.cs" />
+    <Compile Include="Engine\WorkerState_Connecting.cs" />
+    <Compile Include="Engine\WorkerState_Running.cs" />
+    <Compile Include="Engine\WorkerState_Stopped.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

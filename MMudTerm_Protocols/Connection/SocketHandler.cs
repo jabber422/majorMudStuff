@@ -77,8 +77,10 @@ namespace MMudTerm_Protocols
                             con.Buffer, 0, con.Buffer.Length,
                             SocketFlags.None, EndRcvCB, con);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Trace.WriteLine("Ex - SocketHandler.BeginReceive");
+                Trace.WriteLine(ex.ToString());
             }
         }
 
@@ -98,6 +100,8 @@ namespace MMudTerm_Protocols
                 }
                 catch (SocketException se)
                 {
+                    Trace.WriteLine("Ex - SocketHandler.EndConnect");
+                    Trace.WriteLine(se.ToString());
                 }
             }
         }
