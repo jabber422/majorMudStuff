@@ -63,6 +63,7 @@ namespace MMudTerm_Protocols
                 {
                     result.Add(this.TermCmdsQueue.Dequeue());
                 }
+                this.mre.Reset();
                 return result;
             }
         }

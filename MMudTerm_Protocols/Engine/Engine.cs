@@ -27,8 +27,6 @@ namespace MMudTerm_Protocols.Engine
         //sync object for incoming cmds
         //public Queue<ProtocolCommandLine> Cmds;
 
-
-
         protected Engine(ConnObj connObj)
         {
             this.ConnObj = connObj;
@@ -42,6 +40,15 @@ namespace MMudTerm_Protocols.Engine
         //The worker loop that processes incoming messages in the queue, your script implements this
         public void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            while (!this.WorkerThread.CancellationPending)
+            {
+                this.Decoder.mre.WaitOne();
+                List<TermCmd> cmds = this.Decoder.GetTermCmds();
+                foreach(TermCmd cmd in cmds)
+                {
+                    this.State = this.State.HandleTermCmd(this, cmd);
+                }
+            }
         }
 
 
@@ -60,6 +67,11 @@ namespace MMudTerm_Protocols.Engine
         public void Connect()
         {
             this.State = this.State.Connect(this);
+        }
+
+        public void Disconnect()
+        {
+            this.State = this.State.Disconnect(this);
         }
 
         public void Send(string v)

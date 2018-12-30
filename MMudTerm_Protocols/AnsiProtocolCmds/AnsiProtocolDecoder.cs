@@ -14,6 +14,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     {
         byte[] lastBuffer;
         object InUse = new object();
+
         protected override void DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
@@ -23,20 +24,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     this.GetType().Namespace);
             Debug.Indent();
 #endif
-            if(buffer[buffer.Length-1] != 10)
-            {
-                //is a partial buffer ending
-            }
-
-            
-
             //append the saved buffer if any
             buffer = ConcatBuffers(buffer);
             values.Clear();
             pieces.Clear();
-
-            lastBuffer = new byte[buffer.Length];
-            Buffer.BlockCopy(buffer, 0, lastBuffer, 0, buffer.Length);
 
             if (buffer[0] == 0xff)
             {
@@ -69,6 +60,8 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #if DEBUG_2
         Debug.Unindent();
 #endif
+            lastBuffer = new byte[buffer.Length];
+            Buffer.BlockCopy(buffer, 0, lastBuffer, 0, buffer.Length);
         }
 
         //internal class AnsiDecoder {
@@ -113,8 +106,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             PiecesToValues();
             if (values.Count > 0)
             {
-                //reset the IDX point to the start of the last block
-                IDX -= values[0].Length + 1;
+                CreateTextCmd();
             }
             return IDX;
         }

@@ -71,6 +71,16 @@
     <Compile Include="Connection\ConnObj.cs" />
     <Compile Include="Connection\IConnection.cs" />
     <Compile Include="Connection\SocketHandler.cs" />
+    <Compile Include="Engine\GameProcessorState.cs" />
+    <Compile Include="Engine\GameProcessorState_WaitingForOneLine.cs" />
+    <Compile Include="Engine\LogonTranistionScript.cs" />
+    <Compile Include="Engine\MyRegex.cs" />
+    <Compile Include="Engine\RegexAndResponse.cs" />
+    <Compile Include="Engine\WorkerState_EnteringGame.cs" />
+    <Compile Include="Engine\WorkerState_GameMenu.cs" />
+    <Compile Include="Engine\WorkerState_InGame.cs" />
+    <Compile Include="Engine\WorkerState_Logon.cs" />
+    <Compile Include="Engine\WorkerState_ThreadRunning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BasicTelnetProtocols\TermCmd.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiCursorBkwd.cs" />
@@ -85,8 +95,6 @@
     <Compile Include="Script\ScriptBase.cs" />
     <Compile Include="Engine\WorkerState.cs" />
     <Compile Include="Engine\WorkerState_Connected.cs" />
-    <Compile Include="Engine\WorkerState_Connecting.cs" />
-    <Compile Include="Engine\WorkerState_Running.cs" />
     <Compile Include="Engine\WorkerState_Stopped.cs" />
   </ItemGroup>
   <ItemGroup>
