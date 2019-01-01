@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace MMudTerm_Protocols.Script
 {
+    //old not in use - delete this?
     public abstract class ScriptBase
     {
         //connection to the remote server

@@ -14,15 +14,47 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     /// </summary>
     public class AnsiGraphicsCmd : TermCmd
     {
-        List<int> vals;
+        //You can get this as a list of Ansi graphic values -> int attrib, int forground, int background
+        public List<int> vals;
+        //Or as a map of bytes 0 -> attrib [n][0]
+        public byte[][] bytes;
 
-        public AnsiGraphicsCmd(List<byte[]> values)
+        public byte[] Attrib { get { return bytes[0]; } }
+        public byte[] Forground { get { return bytes[1]; } }
+        public byte[] Background{ get { return bytes[2]; } }
+
+        public int intAttrib { get { return customAtoi(Attrib); } }
+        public int intForground { get { return customAtoi(Forground); } }
+        public int intBackground { get { return customAtoi(Background); } }
+
+        //should get [byte[, byte], ';', byte[, byte], ';'
+        public AnsiGraphicsCmd(List<byte> values)
         {
+            //bytes = new byte[3][];
+            //bytes[0] = new byte[] { 0 };
+            //bytes[1] = new byte[] { 0, 0 };
+            //bytes[2] = new byte[] { 0, 0 };
+
+            //int cnt = 0;
+            //int idx = 0;
+
             vals = new List<int>();
-            foreach (byte[] b in values)
+            List<byte> chunks = new List<byte>();
+            foreach (byte b in values)
             {
-                AddValue(customAtoi(b));
+                if (b == 59)
+                {
+                    vals.Add(customAtoi(chunks.ToArray()));
+//                    idx = 0;
+                  //  cnt++;
+                    chunks.Clear();
+                    continue;
+                }
+                chunks.Add(b);
+                //bytes[cnt][idx] = b;
+                //idx++;
             }
+            vals.Add(customAtoi(chunks.ToArray()));
         }
 
         private void AddValue(int val)
@@ -59,7 +91,14 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 
         public override string ToString()
         {
-            return String.Empty;
+            string s = "";
+            foreach (int i in this.vals)
+            {
+                s += i + ", ";
+            }
+
+            s = s.TrimEnd(new char[] { ',', ' ' });
+            return "[AnsiGraphicsCmd: " + s + "]";
         }
     }
 }

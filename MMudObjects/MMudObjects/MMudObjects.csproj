@@ -47,12 +47,14 @@
     <Compile Include="Bbs.cs" />
     <Compile Include="BbsAccount.cs" />
     <Compile Include="Buff.cs" />
+    <Compile Include="DataChangeItem.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EnumMagicType.cs" />
     <Compile Include="EquippedItemsInfo.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="ItemAbility.cs" />
     <Compile Include="ItemRegenInfo.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="MajorMudBbsGame.cs" />
     <Compile Include="MonsterAttackInfo.cs" />
     <Compile Include="PlayableClass.cs" />

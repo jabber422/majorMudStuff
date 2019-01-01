@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MMudObjects
 {
-    public abstract class Room
+    public class Room
     {
         int Map { get; set; }
         int RoomNumber { get; set; }
@@ -20,8 +20,34 @@ namespace MMudObjects
         List<Item> HiddenItems;
         List<Entity> AlsoHere;
 
-        
+
         Boolean IsSafe { get; set; }
+
+        public Room()
+        {
+            this.RoomExits = new List<RoomExit>();
+            this.VisibleItems = new List<Item>();
+            this.HiddenItems = new List<Item>();
+            this.AlsoHere = new List<Entity>();
+        }
+
+        public void Update(DataChangeItem dci)
+        {
+            switch (dci.targetProperty)
+            {
+                case "Player.Room.ObviousExits":
+                    string exits = dci.groups[1].Value;
+                    string[] tokens = exits.Split(new char[] { ',' });
+                    this.RoomExits.Clear();
+                    foreach (string t in tokens){
+                        this.RoomExits.Add(new RoomExit(t));
+                    }
+                    break;
+                case "Player.Room.ObviousItems":
+                    break;
+            }
+        }
+
     }
 
     public enum RoomLightEnum

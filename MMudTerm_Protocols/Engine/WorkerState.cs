@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using MMudObjects;
+using System.Diagnostics;
 
 namespace MMudTerm_Protocols.Engine
 {
@@ -18,29 +19,32 @@ namespace MMudTerm_Protocols.Engine
 
         internal virtual WorkerState Start(Engine eng )
         {
-           Trace.WriteLine("Invalid state change (start) called in abstract base class WorkerState", this.ToString());
+            Log.Tag("WorkerState", "Invalid state change (start) called in abstract base class WorkerState");
             return this;
         }
 
         internal virtual WorkerState Stop(Engine eng)
         {
-            Trace.WriteLine("Invalid state change (stop) called in abstract base class WorkerState", this.ToString());
+            Log.Tag("WorkerState", "Invalid state change (stop) called in abstract base class WorkerState");
             return this;
         }
 
         internal virtual WorkerState Connect(Engine eng)
         {
-            Trace.WriteLine("Invalid state change (Connect) called in abstract base class WorkerState", this.ToString());
+            Log.Tag("WorkerState", "Invalid state change (Connect) called in abstract base class WorkerState");
             return this;
         }
 
         internal virtual WorkerState HandleTermCmd(Engine eng, TermCmd cmd)
         {
+            //this is used as a catch all, if the state is 'not in game' but we see a [HP= string fly by... somehow we got in game.
+            if (this is WorkerState_InGame) return this;
+
             if (cmd is TermStringDataCmd)
             { 
                 if (MyRegex.HpEquals.IsMatch(cmd as TermStringDataCmd))
                 {
-                    Trace.WriteLine("Jumping to InGame state due to '[HP=' ");
+                    Log.Tag("WorkerState", "Jumping to InGame state due to '[HP=' ");
                     return new WorkerState_InGame();
                 }
             }
@@ -49,13 +53,13 @@ namespace MMudTerm_Protocols.Engine
 
         internal virtual WorkerState Disconnect(Engine engine)
         {
-            Trace.WriteLine("Invalid state change (Disconnect) called in abstract base class WorkerState", this.ToString());
+            Log.Tag("WorkerState", "Invalid state change (Disconnect) called in abstract base class WorkerState");
             return this;
         }
 
         internal virtual WorkerState IsConnected(Engine engine)
         {
-            Trace.WriteLine("Invalid state change (IsConnected) called in abstract base class WorkerState", this.ToString());
+            Log.Tag("WorkerState", "Invalid state change (IsConnected) called in abstract base class WorkerState");
             return this;
         }
     }

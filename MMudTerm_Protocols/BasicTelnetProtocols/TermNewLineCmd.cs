@@ -23,7 +23,7 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return "\n";
+            return "[TermNewLineCmd]\n";
         }
     }
 
@@ -41,7 +41,7 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return "\r";
+            return "[TermCarrigeReturnCmd]\r";
         }
     }
 }

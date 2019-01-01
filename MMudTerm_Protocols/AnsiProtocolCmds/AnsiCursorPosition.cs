@@ -9,12 +9,16 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     internal class AnsiCursorPosition : TermCmd
     {
         int row, col;
-        internal AnsiCursorPosition(List<byte[]> values)
+        internal AnsiCursorPosition(List<byte> values)
         {
             if (values.Count != 2)
                 throw new Exception("AnsiCursorPosition should only have 2 values");
-            col = customAtoi(values[1]);
-            row = customAtoi(values[0]);
+            int idx = values.IndexOf((byte)';');
+            if(idx == 0)
+                throw new Exception("AnsiCursorPosition must have 2 values");
+
+            col = customAtoi(values.GetRange(0, idx).ToArray());
+            row = customAtoi(values.GetRange(idx, values.Count - idx).ToArray());
         }
         public override void DoCommand(ITermProtocolCmds terminal)
         {
@@ -28,7 +32,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 
         public override string ToString()
         {
-            return String.Empty;
+            return "[AnsiCursorPositionCmd:cols " + this.col + ":rows "+ this.row + "]";
         }
     }
 }

@@ -205,22 +205,22 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             {
                 switch (cmd)
                 {
-                    case ANSI_ESC.Graphics: TermCmdsQueue.Enqueue(new AnsiGraphicsCmd(values));
-                        break;
-                    case ANSI_ESC.CursorBkwd: TermCmdsQueue.Enqueue(new AnsiCursorBkwdCmd(values[0]));
-                        break;
-                    case ANSI_ESC.EraseDisplay: TermCmdsQueue.Enqueue(new AnsiEraseDisplayCmd());
-                        break;
-                    case ANSI_ESC.EraseLine: TermCmdsQueue.Enqueue(new AnsiEraseLineCmd());
-                        break;
-                    case ANSI_ESC.CursorPosition:
-                    case ANSI_ESC.CursorPositionf: TermCmdsQueue.Enqueue(new AnsiCursorPosition(values));
-                        break;
-                    case ANSI_ESC.CursorUp: TermCmdsQueue.Enqueue(new AnsiCursorUpCmd(values[0]));
-                        break;
-                    case ANSI_ESC.CursorFwd: TermCmdsQueue.Enqueue(new AnsiCursorFwdCmd(values[0]));
-                        break;
-                    case ANSI_ESC.noIdea: break;
+                    //case ANSI_ESC.Graphics: TermCmdsQueue.Enqueue(new AnsiGraphicsCmd(values));
+                    //    break;
+                    //case ANSI_ESC.CursorBkwd: TermCmdsQueue.Enqueue(new AnsiCursorBkwdCmd(values[0]));
+                    //    break;
+                    //case ANSI_ESC.EraseDisplay: TermCmdsQueue.Enqueue(new AnsiEraseDisplayCmd());
+                    //    break;
+                    //case ANSI_ESC.EraseLine: TermCmdsQueue.Enqueue(new AnsiEraseLineCmd());
+                    //    break;
+                    //case ANSI_ESC.CursorPosition:
+                    //case ANSI_ESC.CursorPositionf: TermCmdsQueue.Enqueue(new AnsiCursorPosition(values));
+                    //    break;
+                    //case ANSI_ESC.CursorUp: TermCmdsQueue.Enqueue(new AnsiCursorUpCmd(values[0]));
+                    //    break;
+                    //case ANSI_ESC.CursorFwd: TermCmdsQueue.Enqueue(new AnsiCursorFwdCmd(values[0]));
+                    //    break;
+                    //case ANSI_ESC.noIdea: break;
                     default:
 #if DEBUG
                         Debug.WriteLine("NYI -- " + cmd.ToString(), this.GetType().FullName);

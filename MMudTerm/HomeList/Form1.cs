@@ -1,6 +1,7 @@
 ﻿using MMudObjects;
 using MMudTerm;
 using MMudTerm_Protocols;
+using MMudTerm_Protocols.Engine;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,10 +20,15 @@ namespace HomeList
         ConnObj m_connObj = null;
         SessionConnectionInfo mySessionInfo = null;
 
-        Script myScript = null;
+        public Engine myScript = null;
 
         delegate void UpdateData(Dictionary<string, TrackedPlayer> data);
         UpdateData DataHandler_Delegate;
+
+        delegate void UpdateStateChange(string s);
+        UpdateStateChange EngineStateChange_Delegate;
+
+
 
         public Form1()
         {
@@ -34,6 +40,7 @@ namespace HomeList
 
             //this.myData
             DataHandler_Delegate = new UpdateData(UpdateDataHandler);
+            EngineStateChange_Delegate = new UpdateStateChange(UpdateEngineStateChange);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -50,6 +57,8 @@ namespace HomeList
                 this.m_connObj = null;
                 this.button1.Text = "Start";
             }
+
+            
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -60,35 +69,43 @@ namespace HomeList
                 {
                     Debug.WriteLine("SessionController - ConnterToServer - ConObj is null, making a new one");
                     this.m_connObj = new ConnObj(this.mySessionInfo.IpA, this.mySessionInfo.Port);
-                    this.myScript = new Script(this.m_connObj);
-                    this.myScript.m_workerThread.ProgressChanged += scriptWorkerThread_ProgressChanged;
+                    this.myScript = new Engine(this.m_connObj);
+                    this.myScript.WorkerThread.ProgressChanged += scriptWorkerThread_ProgressChanged;
+                    this.myScript.EngineStateChangeEvent += MyScript_EngineStateChangeEvent;
                     this.button1.Enabled = true;
+                    Form f = new PlayerForm(this.myScript);
+                    f.Show();
                 }
 
-                SocketHandler.Connect(this.m_connObj);
-                byte[] rcv = new byte[3];
-                int cnt = this.m_connObj.mySocket.Receive(rcv);
-                if(cnt == 3)
-                {
-                    this.myScript.Send("ID,2,42");
-                }
-                else
-                {
-                }
+                this.myScript.Connect();
                 
                 this.button2.Text = "Disconnect";
             }
             else
             {
-                this.m_connObj.Disconnect();
+                this.myScript.Disconnect();
                 this.button2.Text = "Connect";
             }
         }
 
-        //fires when the who data is updated
+        private void MyScript_EngineStateChangeEvent(object sender, string e)
+        {
+            this.Invoke(EngineStateChange_Delegate, e);
+        }
+
+        private void UpdateEngineStateChange(string e)
+        {
+            this.toolStripStatusLabel_workerState.Text = e;
+        }
+
+        //fires when the model data is updated
         private void scriptWorkerThread_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             Dictionary<string, TrackedPlayer> NewPlayersData = (e.UserState as Dictionary<string, TrackedPlayer>);
+            if (this.dataGridView1.InvokeRequired)
+            {
+
+            }
             this.Invoke(DataHandler_Delegate, NewPlayersData);
         }
 
@@ -128,12 +145,12 @@ namespace HomeList
             row.Cells["Title"].Value = p.Title ?? "";
             row.Cells["Gang"].Value = p.GangName ?? "";
             row.Cells["LevelRange"].Value = p.LevelRange ?? "";
-            row.Cells["Level"].Value = p.Level;
+            row.Cells["Level"].Value = p.Stats.Level;
             row.Cells["InitExp"].Value = p.InitialExp;
             row.Cells["Exp"].Value = p.Exp;
             row.Cells["Rank"].Value = p.Rank;
-            row.Cells["Class"].Value = p.Class != null ? p.Class.Name : "";
-            row.Cells["Race"].Value = p.Race != null ? p.Race.Name : "";
+            row.Cells["Class"].Value = p.Stats.Class != null ? p.Stats.Class.Name : "";
+            row.Cells["Race"].Value = p.Stats.Race != null ? p.Stats.Race.Name : "";
             row.Cells["LastExpGain"].Value = p.LastExpGained;
             row.Cells["LastExpRate"].Value = p.LastExpRate;
             row.Cells["TotalExpGain"].Value = p.TotalExpGained;

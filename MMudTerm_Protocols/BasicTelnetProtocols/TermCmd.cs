@@ -12,7 +12,10 @@ namespace MMudTerm_Protocols
     {
         public abstract void DoCommand(ITermProtocolCmds terminal);
 
-        //wtf did i do here?
+        //Ansi IAC codes are one by per value.
+        //ex. Backwards
+        //[0x0b, '[', '7', '9', 'D'
+        //  this converts byte[] { '7', '9' } to int 79
         protected int customAtoi(byte[] b)
         {
             switch (b.Length)

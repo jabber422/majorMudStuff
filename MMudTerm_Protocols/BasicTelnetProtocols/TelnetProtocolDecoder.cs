@@ -63,7 +63,7 @@ namespace MMudTerm_Protocols
             switch (cmd)
             {
                 case TERM_CMD.DATA: //aiString += Encoding.ASCII.GetString(values[0]);
-                    TermCmdsQueue.Enqueue(new TermStringDataCmd(values));
+                    //TermCmdsQueue.Enqueue(new TermStringDataCmd(values));
                     break;
                 case TERM_CMD.NL: TermCmdsQueue.Enqueue(new TermNewLineCmd());
                     break;

@@ -9,9 +9,9 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     class AnsiCursorUpCmd : TermCmd
     {
         int rows = -1;
-        public AnsiCursorUpCmd(byte[] vals)
+        public AnsiCursorUpCmd(List<byte> vals)
         {
-            rows = customAtoi(vals);
+            rows = customAtoi(vals.ToArray());
         }
         public override void DoCommand(ITermProtocolCmds terminal)
         {
@@ -25,7 +25,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 
         public override string ToString()
         {
-            return String.Empty;
+            return "[AnsiCursorUpCmd:rows " + this.rows + "]";
         }
     }
 }

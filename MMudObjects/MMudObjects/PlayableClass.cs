@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MMudObjects
 {
@@ -19,6 +20,11 @@ namespace MMudObjects
         {
             //TODO: Authenticate this vs DB list. load stats on creation?
             this.Name = className;
+        }
+
+        internal static PlayableClass Create(string value)
+        {
+            return new PlayableClass(value);
         }
     }
 

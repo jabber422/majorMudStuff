@@ -89,7 +89,6 @@ namespace HomeList
                 Alignment = m.Groups[1].Value,
                 Title = m.Groups[4].Value,
                 GangName = m.Groups[6].Value,
-                LastName = m.Groups[3].Value
             };
 
             TrackedPlayer trackedPlayerInfo = GetPlayerInfo(playerInfo.FirstName);
@@ -116,14 +115,15 @@ namespace HomeList
          
             Player playerInfo = new Player(m.Groups[2].Value)
             {
-                Class = PlayableClassFactory.CreteClassFromName(m.Groups[4].Value),
                 Rank = int.Parse(m.Groups[1].Value),
                 GangName = m.Groups[5].Value,
                 Exp = double.Parse(m.Groups[7].Value),
-                LastName = m.Groups[3].Value
+                //LastName = m.Groups[3].Value
             };
 
-            if(playerInfo.Exp < 9999)
+            playerInfo.Stats.Class = PlayableClassFactory.CreteClassFromName(m.Groups[4].Value);
+
+            if (playerInfo.Exp < 9999)
             {
 
             }

@@ -7,8 +7,10 @@
         {
             //connect rcvr to decoder
             eng.WorkerThread.DoWork += eng.Worker_DoWork;
+            eng.WorkerThread_React.DoWork += eng.Worker_React_DoWork;
             this.Run = true;
             eng.WorkerThread.RunWorkerAsync();
+            eng.WorkerThread_React.RunWorkerAsync();
 
             return new WorkerState_ThreadRunning();
         }

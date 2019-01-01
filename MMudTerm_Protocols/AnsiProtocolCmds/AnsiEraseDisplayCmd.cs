@@ -23,7 +23,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 
         public override string ToString()
         {
-            return String.Empty;
+            return "[AnsiEraseDisplayCmd]";
         }
     }
 }

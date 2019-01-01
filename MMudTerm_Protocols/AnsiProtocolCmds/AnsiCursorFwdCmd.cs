@@ -9,9 +9,9 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     class AnsiCursorFwdCmd : TermCmd
     {
         int cols = -1;
-        public AnsiCursorFwdCmd(byte[] vals)
+        public AnsiCursorFwdCmd(List<byte> vals)
         {
-            cols = customAtoi(vals);
+            cols = customAtoi(vals.ToArray());
         }
 
         public override void DoCommand(ITermProtocolCmds terminal)
@@ -26,7 +26,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 
         public override string ToString()
         {
-            return String.Empty;
+            return "[AnsiCursorFwdCmd:cols " + this.cols + "]";
         }
     }
 }

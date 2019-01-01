@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
+using MMudObjects;
 
 namespace MMudTerm_Protocols
 {
@@ -61,7 +62,8 @@ namespace MMudTerm_Protocols
         {
             if (Rcvr != null)
             {
-                Debug.WriteLine("{0} -> Send()", this.Name);
+//                Debug.WriteLine("{0} -> Send()", this.Name);
+                Log.Tag("ConnObj", "Rcvr -> {0}", ASCIIEncoding.ASCII.GetString(buffer));
                 Rcvr(buffer);
             }
         }
@@ -77,7 +79,7 @@ namespace MMudTerm_Protocols
         //outgoing raw buffer to the server socket
         public void Send(byte[] buffer)
         {
-            Debug.WriteLine("ConnObj -> Send() - {0}", ASCIIEncoding.ASCII.GetString(buffer));
+            Log.Tag("ConnObj", "Send -> {0}", ASCIIEncoding.ASCII.GetString(buffer));
             SocketHandler.Send(this, buffer);
         }
 

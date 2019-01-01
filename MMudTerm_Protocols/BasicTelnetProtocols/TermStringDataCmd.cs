@@ -10,16 +10,16 @@ namespace MMudTerm_Protocols
     /// </summary>
     public class TermStringDataCmd : TermCmd
     {
-        byte[] str;
-        public TermStringDataCmd(List<byte[]> values)
+        public byte[] str;
+        public TermStringDataCmd(List<byte> values)
         {
-            str = values[0];
-            if (this.GetValue().Contains("32m") ||
-                this.GetValue().StartsWith("n") ||
-                (this.GetValue().Length <=2 && !(this.GetValue() == "]:") && !(this.GetValue() == ", ") && !(this.GetValue() == "."))
-                )
-            {
-            }
+            str = values.ToArray();
+            //if (this.GetValue().Contains("32m") ||
+            //    this.GetValue().StartsWith("n") ||
+            //    (this.GetValue().Length <=2 && !(this.GetValue() == "]:") && !(this.GetValue() == ", ") && !(this.GetValue() == "."))
+            //    )
+            //{
+            //}
         }
 
         public override void DoCommand(ITermProtocolCmds terminal)
@@ -40,7 +40,7 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return this.GetValue();
+            return "[TermStringDataCmd]";
         }
     }
 }

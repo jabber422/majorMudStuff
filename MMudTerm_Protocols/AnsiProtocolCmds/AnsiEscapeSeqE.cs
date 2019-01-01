@@ -13,7 +13,9 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
         Esc = 0x1b,
         OpenCmdBracket = 0x5b,
         BackSpace = 0x08,
-
+        NewLine = (byte)'\n',
+        CarrigeReturn = (byte)'\r',
+        Telnet = 0xff,
         CursorPosition = (byte)'H',
         CursorPositionf = (byte)'f',
         CursorUp = (byte)'A',

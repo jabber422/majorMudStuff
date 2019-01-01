@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using System.Diagnostics;
+using MMudObjects;
 //using MMudTerm.Session;
 
 namespace MMudTerm_Protocols
@@ -27,6 +28,8 @@ namespace MMudTerm_Protocols
             EndConnCB = new AsyncCallback(EndConnect);
             EndRcvCB = new AsyncCallback(EndRcv);
             EndSendCB = new AsyncCallback(EndSend);
+
+            
         }
 
         #region public methods
@@ -41,8 +44,7 @@ namespace MMudTerm_Protocols
                     ar.AsyncWaitHandle.WaitOne();
                 }catch(Exception ex)
                 {
-                    Trace.WriteLine("SocketHandler.Connect ex!");
-                    Trace.WriteLine(ex.ToString());
+                    Log.Tag("SocketHandler", ex.Message);
                 }
             }
             return con.Connected;
@@ -79,8 +81,7 @@ namespace MMudTerm_Protocols
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("Ex - SocketHandler.BeginReceive");
-                Trace.WriteLine(ex.ToString());
+                Log.Tag("SocketHandler", ex.Message);
             }
         }
 
@@ -100,8 +101,7 @@ namespace MMudTerm_Protocols
                 }
                 catch (SocketException se)
                 {
-                    Trace.WriteLine("Ex - SocketHandler.EndConnect");
-                    Trace.WriteLine(se.ToString());
+                    Log.Tag("SocketHandler", se.Message);
                 }
             }
         }
@@ -127,8 +127,7 @@ namespace MMudTerm_Protocols
                 }
                 else
                 {
-                    Trace.WriteLine("SocketHandler.EndRcv - caught socket ex! err.code = " + ex.ErrorCode);
-                    Trace.WriteLine(ex.ToString());
+                    Log.Tag("SocketHandler", ex.Message);
                 }
                 return;
             }

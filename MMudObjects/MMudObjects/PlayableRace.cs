@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MMudObjects
 {
@@ -21,5 +22,11 @@ namespace MMudObjects
         public int HealthMax { get; set; }
         public int CharmMin { get; set; }
         public int CharmMax { get; set; }
+
+        static internal PlayableRace Create(string value)
+        {
+            return new PlayableRace() { Name = value };
+
+        }
     }
 }

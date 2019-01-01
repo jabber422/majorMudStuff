@@ -20,9 +20,9 @@ namespace MMudObjects
 
         public void UpdateTrackedPlayer(Player p)
         {
-            if(p.LastName != null && p.LastName != this.LastName)
+            if(p.Name != null && p.Name != this.Stats.Name)
             {
-                this.LastName = p.LastName;
+                //this.LastName = p.LastName;
             }
 
             if (p.Alignment != null && p.Alignment != this.Alignment)
@@ -38,7 +38,7 @@ namespace MMudObjects
             if (p.Title != null && p.Title != this.Title)
             {
                 this.Title = p.Title;
-                this.LevelRange = ClassTitles.GetLevelRangeByClassAndTitle(p.Class, p.Title);
+                this.LevelRange = ClassTitles.GetLevelRangeByClassAndTitle(p.Stats.Class, p.Title);
             }
 
             if (p.Equipped != null && p.Equipped.CompareTo(this.Equipped) == 0)
@@ -99,7 +99,7 @@ namespace MMudObjects
                 if (!this.LastNames.Any()) return "";
                 return this.LastNames.Last();
             }
-            set => this.LastNames.Add(value);
+            //set => this.LastNames.Add(value);
         }
 
         public override string LevelRange {

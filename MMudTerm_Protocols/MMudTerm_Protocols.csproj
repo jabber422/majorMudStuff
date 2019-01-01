@@ -59,11 +59,13 @@
     <Compile Include="AnsiProtocolCmds\AnsiCursorFwdCmd.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiCursorPosition.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiCursorUpCmd.cs" />
+    <Compile Include="AnsiProtocolCmds\AnsiDecoderState.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiEscapeSeqE.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiColorEnum.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiEraseDisplayCmd.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiEraseLineCmd.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiGraphicObj.cs" />
+    <Compile Include="AnsiProtocolCmds\AnsiProtocolDecoder - Copy.cs" />
     <Compile Include="AnsiProtocolCmds\AnsiProtocolDecoder.cs" />
     <Compile Include="AnsiProtocolCmds\IAnsiProtocolCmds.cs" />
     <Compile Include="BasicTelnetProtocols\ITermProtocolCmds.cs" />
@@ -71,8 +73,27 @@
     <Compile Include="Connection\ConnObj.cs" />
     <Compile Include="Connection\IConnection.cs" />
     <Compile Include="Connection\SocketHandler.cs" />
+    <Compile Include="Engine\ColorKeyColorValue.cs" />
     <Compile Include="Engine\GameProcessorState.cs" />
-    <Compile Include="Engine\GameProcessorState_WaitingForOneLine.cs" />
+    <Compile Include="Engine\GameProcessorStateContext.cs" />
+    <Compile Include="Engine\GameProcessorState_Black.cs" />
+    <Compile Include="Engine\GameProcessorState_Blue.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldBlack.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldBlue.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldCyan.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldGreen.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldMagenta.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldRed.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldWhite.cs" />
+    <Compile Include="Engine\GameProcessorState_BoldYellow.cs" />
+    <Compile Include="Engine\GameProcessorState_Idle.cs" />
+    <Compile Include="Engine\GameProcessorState_Init.cs" />
+    <Compile Include="Engine\GameProcessorState_Magenta.cs" />
+    <Compile Include="Engine\GameProcessorState_Cyan.cs" />
+    <Compile Include="Engine\GameProcessorState_Green.cs" />
+    <Compile Include="Engine\GameProcessorState_Red.cs" />
+    <Compile Include="Engine\GameProcessorState_White.cs" />
+    <Compile Include="Engine\GameProcessorState_Yellow.cs" />
     <Compile Include="Engine\LogonTranistionScript.cs" />
     <Compile Include="Engine\MyRegex.cs" />
     <Compile Include="Engine\RegexAndResponse.cs" />
@@ -90,6 +111,7 @@
     <Compile Include="BasicTelnetProtocols\TermStringDataCmd.cs" />
     <Compile Include="ProtocolCommandLine.cs" />
     <Compile Include="ProtocolConnObj.cs" />
+    <Compile Include="ProtocolDecoder - Copy.cs" />
     <Compile Include="ProtocolDecoder.cs" />
     <Compile Include="Engine\Engine.cs" />
     <Compile Include="Script\ScriptBase.cs" />
@@ -99,6 +121,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MMudObjects\MMudObjects\MMudObjects.csproj">
+      <Project>{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}</Project>
+      <Name>MMudObjects</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
