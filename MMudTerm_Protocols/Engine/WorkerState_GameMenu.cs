@@ -11,6 +11,12 @@ namespace MMudTerm_Protocols.Engine
         {
             RegexAndResponses = new List<RegexAndResponse>(MyRegex.Cache[this.GetType()]);
         }
+
+        internal override int FlushCmds()
+        {
+            throw new System.NotImplementedException();
+        }
+
         internal override WorkerState HandleTermCmd(Engine eng, TermCmd cmd)
         {
             if (!(cmd is TermStringDataCmd)) return this;

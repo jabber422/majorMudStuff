@@ -14,7 +14,7 @@ namespace MMudObjects
         public List<int> Ranks = new List<int>();
         public List<EquippedItemsInfo> Equipments = new List<EquippedItemsInfo>();
 
-        public TrackedPlayer(string firstName) : base(firstName)
+        public TrackedPlayer(string firstName)
         {
         }
 
@@ -38,7 +38,7 @@ namespace MMudObjects
             if (p.Title != null && p.Title != this.Title)
             {
                 this.Title = p.Title;
-                this.LevelRange = ClassTitles.GetLevelRangeByClassAndTitle(p.Stats.Class, p.Title);
+                //this.LevelRange = ClassTitles.GetLevelRangeByClassAndTitle(p.Stats.Class, p.Title);
             }
 
             if (p.Equipped != null && p.Equipped.CompareTo(this.Equipped) == 0)

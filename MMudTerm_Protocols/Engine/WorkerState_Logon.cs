@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace MMudTerm_Protocols.Engine
@@ -11,6 +12,11 @@ namespace MMudTerm_Protocols.Engine
         public WorkerState_Logon()
         {
             RegexAndResponses = new List<RegexAndResponse>(MyRegex.Cache[this.GetType()]);
+        }
+
+        internal override int FlushCmds()
+        {
+            return -1;
         }
 
         internal override WorkerState HandleTermCmd(Engine eng, TermCmd cmd)
@@ -26,7 +32,7 @@ namespace MMudTerm_Protocols.Engine
                 if (rr.IsMatched) continue;
                 if (!rr.IsMatch(cmd as TermStringDataCmd)) continue;
 
-                eng.Send(rr.Reponse);
+                eng.ConnObj.Send(ASCIIEncoding.ASCII.GetBytes(rr.Reponse));
                 rr.IsMatched = true;
                 break;
             }

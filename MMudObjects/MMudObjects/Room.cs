@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MMudObjects
@@ -15,11 +16,14 @@ namespace MMudObjects
 
         RoomLightEnum LightLevel;
 
-        List<RoomExit> RoomExits;
-        List<Item> VisibleItems;
-        List<Item> HiddenItems;
-        List<Entity> AlsoHere;
+        public List<RoomExit> RoomExits;
+        public List<Item> VisibleItems;
+        public List<Item> HiddenItems;
+        public List<Entity> AlsoHere;
 
+        public string Name { get; }
+
+        public string Description { get; }
 
         Boolean IsSafe { get; set; }
 
@@ -33,10 +37,10 @@ namespace MMudObjects
 
         public void Update(DataChangeItem dci)
         {
-            switch (dci.targetProperty)
+            switch (dci.TargetProperty)
             {
                 case "Player.Room.ObviousExits":
-                    string exits = dci.groups[1].Value;
+                    string exits = dci.EndGroups[1].Value;
                     string[] tokens = exits.Split(new char[] { ',' });
                     this.RoomExits.Clear();
                     foreach (string t in tokens){
@@ -44,6 +48,18 @@ namespace MMudObjects
                     }
                     break;
                 case "Player.Room.ObviousItems":
+                    string csv = dci.StartGroups[1].Value;
+                    foreach (List<Group> lst in dci.Middle)
+                    {
+                        csv += lst[1].Value;
+                    }
+                    if(dci.EndPattern != null)
+                    {
+                        csv += dci.EndGroups[1].Value;
+                    }
+                    this.VisibleItems = Item.CreateListFromCsv(csv);
+                    break;
+                default:
                     break;
             }
         }

@@ -161,6 +161,8 @@ namespace MMudTerm_Protocols
                     return new AnsiCursorFwdCmd(values);
                 case ANSI_ESC.noIdea: 
                 case ANSI_ESC.KeyboardString:
+                case ANSI_ESC.CursorRestore:
+                case ANSI_ESC.CursorSave:
                     Log.Warn("NYI -- " + cmd.ToString(), this.GetType().FullName);
                     return null;
                 default:

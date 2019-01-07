@@ -149,8 +149,8 @@ namespace HomeList
             row.Cells["InitExp"].Value = p.InitialExp;
             row.Cells["Exp"].Value = p.Exp;
             row.Cells["Rank"].Value = p.Rank;
-            row.Cells["Class"].Value = p.Stats.Class != null ? p.Stats.Class.Name : "";
-            row.Cells["Race"].Value = p.Stats.Race != null ? p.Stats.Race.Name : "";
+            row.Cells["Class"].Value = p.Stats.Class;
+            row.Cells["Race"].Value = p.Stats.Race;
             row.Cells["LastExpGain"].Value = p.LastExpGained;
             row.Cells["LastExpRate"].Value = p.LastExpRate;
             row.Cells["TotalExpGain"].Value = p.TotalExpGained;

@@ -84,8 +84,9 @@ namespace HomeList
                 throw new NotImplementedException("--fix this, will it even happen?");
             }
 
-            Player playerInfo = new Player(m.Groups[2].Value)
+            Player playerInfo = new Player()
             {
+                Name = m.Groups[2].Value,
                 Alignment = m.Groups[1].Value,
                 Title = m.Groups[4].Value,
                 GangName = m.Groups[6].Value,
@@ -113,15 +114,16 @@ namespace HomeList
                 throw new NotImplementedException(msg);
             }
          
-            Player playerInfo = new Player(m.Groups[2].Value)
+            Player playerInfo = new Player()
             {
+                Name = m.Groups[2].Value,
                 Rank = int.Parse(m.Groups[1].Value),
                 GangName = m.Groups[5].Value,
                 Exp = double.Parse(m.Groups[7].Value),
                 //LastName = m.Groups[3].Value
             };
 
-            playerInfo.Stats.Class = PlayableClassFactory.CreteClassFromName(m.Groups[4].Value);
+           // playerInfo.Stats.Class = PlayableClassFactory.CreteClassFromName(m.Groups[4].Value);
 
             if (playerInfo.Exp < 9999)
             {

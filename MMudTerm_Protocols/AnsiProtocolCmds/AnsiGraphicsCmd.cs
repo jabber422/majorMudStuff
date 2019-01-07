@@ -23,21 +23,13 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
         public byte[] Forground { get { return bytes[1]; } }
         public byte[] Background{ get { return bytes[2]; } }
 
-        public int intAttrib { get { return customAtoi(Attrib); } }
-        public int intForground { get { return customAtoi(Forground); } }
-        public int intBackground { get { return customAtoi(Background); } }
+        public ANSI_COLOR Attribute { get; private set; }
+        public ANSI_COLOR ForeGround { get; private set; }
+        public ANSI_COLOR BackGround { get; private set; }
 
         //should get [byte[, byte], ';', byte[, byte], ';'
         public AnsiGraphicsCmd(List<byte> values)
         {
-            //bytes = new byte[3][];
-            //bytes[0] = new byte[] { 0 };
-            //bytes[1] = new byte[] { 0, 0 };
-            //bytes[2] = new byte[] { 0, 0 };
-
-            //int cnt = 0;
-            //int idx = 0;
-
             vals = new List<int>();
             List<byte> chunks = new List<byte>();
             foreach (byte b in values)
@@ -51,26 +43,27 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     continue;
                 }
                 chunks.Add(b);
-                //bytes[cnt][idx] = b;
-                //idx++;
             }
             vals.Add(customAtoi(chunks.ToArray()));
+
+            foreach(int i in vals)
+                SetEnums(i);
         }
 
-        private void AddValue(int val)
+        private void SetEnums(int val)
         {
             ANSI_COLOR p = (ANSI_COLOR)val;
             if (p >= ANSI_COLOR.All_off && p <= ANSI_COLOR.Bold)
             {
-                vals.Add(val);
+                this.Attribute = (ANSI_COLOR)p;
             }
             else if (p >= ANSI_COLOR.Black && p <= ANSI_COLOR.White)
             {
-                vals.Add(val);
+                this.ForeGround = (ANSI_COLOR)p;
             }
             else if (p >= ANSI_COLOR.Black_B && p <= ANSI_COLOR.White_B)
             {
-                vals.Add(val);
+                this.BackGround = (ANSI_COLOR)p;
             }
             else
             {

@@ -1,4 +1,5 @@
 ﻿using MMudObjects;
+using System;
 using System.Diagnostics;
 
 namespace MMudTerm_Protocols.Engine
@@ -40,9 +41,9 @@ namespace MMudTerm_Protocols.Engine
             //this is used as a catch all, if the state is 'not in game' but we see a [HP= string fly by... somehow we got in game.
             if (this is WorkerState_InGame) return this;
 
-            if (cmd is TermStringDataCmd)
+            if (cmd is TermStringDataCmd stringCmd)
             { 
-                if (MyRegex.HpEquals.IsMatch(cmd as TermStringDataCmd))
+                if (MyRegex.HpEquals.IsMatch(stringCmd))
                 {
                     Log.Tag("WorkerState", "Jumping to InGame state due to '[HP=' ");
                     return new WorkerState_InGame();
@@ -62,5 +63,7 @@ namespace MMudTerm_Protocols.Engine
             Log.Tag("WorkerState", "Invalid state change (IsConnected) called in abstract base class WorkerState");
             return this;
         }
+
+        internal abstract int FlushCmds();
     }
 }

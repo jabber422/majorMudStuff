@@ -22,5 +22,11 @@
             //the work is running, now we can connect
             return eng.State.Connect(eng);
         }
+
+        internal override int FlushCmds()
+        {
+            //throw new System.NotImplementedException();
+            return -1;
+        }
     }
 }

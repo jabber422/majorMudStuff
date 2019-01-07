@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace MMudObjects
 {
@@ -18,6 +19,32 @@ namespace MMudObjects
         {
             return this.Name;
         }
+
+        public static List<Item> CreateListFromCsv(string csv)
+        {
+            List<Item> result = new List<Item>();
+            string[] tokens = csv.Split(new char[] { ',' });
+            foreach(string s in tokens)
+            {
+                //s = s.Trim();
+                CarryableItem i = new CarryableItem();
+                Match m = Regex.Match(s.Trim(), @"^(\d+)? ?(\w+.*)$");
+                if (m.Success)
+                {
+                    if (m.Groups[1].Value != "")
+                    {
+                        i.Quantity = int.Parse(m.Groups[1].Value);
+                    }
+                    i.Name = m.Groups[2].Value;
+                    result.Add(i);
+                }
+                else
+                {
+                    throw new Exception("what happened?");
+                }
+            }
+            return result;
+        }
     }
 
     //used for anything that we can't classify, items start here
@@ -26,10 +53,11 @@ namespace MMudObjects
 
     }
 
-    public abstract class CarryableItem : Item
+    public class CarryableItem : Item
     {
-        int Weight { get; set; }
-        int Limit { get; }
+        public int Weight { get; set; }
+        public int Limit { get; }
+        public int Quantity { get; set; }
     }
 
      //this we can see, and pickup but not equip
@@ -38,7 +66,7 @@ namespace MMudObjects
         EnumSundryType SundryType { get; set; }
     }
 
-    public abstract class EquipableItem : CarryableItem
+    public class EquipableItem : CarryableItem
     {
         List<ItemAbility> Abilities {get; set;}
         int Level { get; set; }
@@ -47,7 +75,7 @@ namespace MMudObjects
         int Accuracy { get; set; }
     }
 
-    public abstract class Weapon : EquipableItem
+    public class Weapon : EquipableItem
     {
         
         EnumWeaponType WeaponType { get; set; }
@@ -58,7 +86,7 @@ namespace MMudObjects
         int BackStab { get; set; }
     }
 
-    public abstract class Armor : EquipableItem
+    public class Armor : EquipableItem
     {
         EnumArmorType ArmorType { get; set; }
         EnumEquipmentSlot EquipmentSlot { get; set; }

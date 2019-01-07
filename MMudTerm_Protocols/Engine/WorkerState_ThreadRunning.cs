@@ -19,5 +19,10 @@ namespace MMudTerm_Protocols.Engine
             eng.ConnObj.Connect();
             return new WorkerState_Logon();
         }
+
+        internal override int FlushCmds()
+        {
+            return -1;
+        }
     }
 }

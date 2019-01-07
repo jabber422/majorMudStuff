@@ -47,12 +47,13 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             }
 
             //If the buffer is empty and we are still searching for an iac, dump the rest of the buffer to a string cmd
-            if (this.State is AnsiDecoderState_LookingForIAC)
+            if (this.State is AnsiDecoderState_LookingForIAC ansiDecoderState)
             {
-                if ((this.State as AnsiDecoderState_LookingForIAC).HasData)
+                if (ansiDecoderState.HasData)
                 {
-                    TermCmd cmd = (this.State as AnsiDecoderState_LookingForIAC).GetTermCmd();
-                    this.TermCmdsQueue.Enqueue(cmd);
+                    TermCmd cmd = ansiDecoderState.GetTermCmd();
+
+                    AddTermCmd(cmd);
                 }
             }
 

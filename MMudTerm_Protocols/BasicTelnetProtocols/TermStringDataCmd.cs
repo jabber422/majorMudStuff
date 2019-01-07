@@ -11,15 +11,23 @@ namespace MMudTerm_Protocols
     public class TermStringDataCmd : TermCmd
     {
         public byte[] str;
+        public bool IsEcho = false;
         public TermStringDataCmd(List<byte> values)
         {
             str = values.ToArray();
-            //if (this.GetValue().Contains("32m") ||
-            //    this.GetValue().StartsWith("n") ||
-            //    (this.GetValue().Length <=2 && !(this.GetValue() == "]:") && !(this.GetValue() == ", ") && !(this.GetValue() == "."))
-            //    )
-            //{
-            //}
+        }
+
+        public TermStringDataCmd(List<byte> values, bool stripLineEndings)
+        {
+            List<byte> val2 = new List<byte>();
+            foreach(byte b in values)
+            {
+                if (b != (byte)'\r' && b != (byte)'\n')
+                {
+                    val2.Add(b);
+                }
+            }
+            str = val2.ToArray();
         }
 
         public override void DoCommand(ITermProtocolCmds terminal)
@@ -40,7 +48,37 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return "[TermStringDataCmd]";
+            return "[TermStringDataCmd] " + (this.IsEcho ? "Echo" : "") + " >" + this.GetValue() + "<";
+        }
+
+        internal void Concat(TermStringDataCmd stringDataCmd)
+        {
+            this.str = ProtocolDecoder.ConcatBuffers(this.str, stringDataCmd.str);
+        }
+
+        internal void Concat(TermCarrigeReturnCmd crCmd)
+        {
+            this.str = ProtocolDecoder.ConcatBuffers(this.str, crCmd.GetValue());
+        }
+
+        internal void Concat(TermNewLineCmd nlCmd)
+        {
+            this.str = ProtocolDecoder.ConcatBuffers(this.str, nlCmd.GetValue());
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is TermStringDataCmd stringCmd)
+            {
+                if (this.str.Length != stringCmd.str.Length) return false;
+
+                for(int i =0; i < this.str.Length-1; ++i)
+                {
+                    if (this.str[i] != stringCmd.str[i]) return false;
+                }
+                return true;
+            }
+            return base.Equals(obj);
         }
     }
 }

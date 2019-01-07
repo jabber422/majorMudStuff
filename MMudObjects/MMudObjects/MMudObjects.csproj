@@ -56,6 +56,7 @@
     <Compile Include="ItemRegenInfo.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MajorMudBbsGame.cs" />
+    <Compile Include="MatchAndCapture.cs" />
     <Compile Include="MonsterAttackInfo.cs" />
     <Compile Include="PlayableClass.cs" />
     <Compile Include="PlayableRace.cs" />

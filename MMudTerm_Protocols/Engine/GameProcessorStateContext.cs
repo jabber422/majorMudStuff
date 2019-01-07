@@ -1,4 +1,6 @@
-﻿namespace MMudTerm_Protocols.Engine
+﻿using MMudObjects;
+
+namespace MMudTerm_Protocols.Engine
 {
     internal class GameProcessorStateContext
     {
@@ -6,6 +8,7 @@
         internal int Foreground { get; set; }
         internal int Background { get; set; }
 
-        internal AnsiColorRegex LastRegex { get; set; }
+        //internal AnsiColorRegex LastRegex { get; set; }
+        internal MatchAndCapture MatchAndCapture { get; set; }
     }
 }

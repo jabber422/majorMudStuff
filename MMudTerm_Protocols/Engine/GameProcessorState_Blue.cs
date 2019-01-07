@@ -10,9 +10,6 @@ namespace MMudTerm_Protocols.Engine
             return this.GetNextState(workerState, cmd);
         }
 
-        internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, TermStringDataCmd stringCmd)
-        {
-            Log.Tag(this.Tag, ">" + stringCmd.GetValue() + "<");
-        }
+
     }
 }

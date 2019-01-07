@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -31,6 +32,9 @@ namespace MMudTerm_Protocols.Engine
         AutoResetEvent are;
 
         public delegate void DataUpdateEventHandler(List<string> targetProperties);
+
+
+
         public event DataUpdateEventHandler DataUpdateEvent;
 
         //state to control worker
@@ -57,6 +61,8 @@ namespace MMudTerm_Protocols.Engine
             this.WorkerThread_React.WorkerReportsProgress = true;
             this.WorkerThread_React.WorkerSupportsCancellation = true;
             this.are = new AutoResetEvent(true);
+
+            this.Player = new Player();
         }
 
         private void StateChanged()
@@ -70,14 +76,45 @@ namespace MMudTerm_Protocols.Engine
         //The worker loop that processes incoming messages in the queue, your script implements this
         public void Worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            List<TermCmd> buffer = null;
             while (!this.WorkerThread.CancellationPending)
             {
                 this.Decoder.mre.WaitOne();
                 List<TermCmd> cmds = this.Decoder.GetTermCmds();
-                foreach(TermCmd cmd in cmds)
+                if(buffer != null)
+                {
+                    if (buffer.Last() is TermStringDataCmd && cmds[0] is TermStringDataCmd)
+                    {
+                        cmds.InsertRange(0, buffer);
+                    }
+                    else
+                    {
+                        throw new Exception("This should never happen?");
+                    }
+                }
+
+                if(cmds.Count == 0){
+                    Log.Warn("Engine.WorkerThread was woken, but TermCmd list count == 0!  Why did this happen?");
+                    continue;
+                }
+                foreach (TermCmd cmd in cmds)
                 {
                     this.State = this.State.HandleTermCmd(this, cmd);
                 }
+
+                try
+                {
+                    Log.Tag("Engine", "Processed Queue until empty, Flushing Cmds left in state buffer");
+                    this.State.FlushCmds();
+                    
+                }catch(TargetInvocationException ex)
+                {
+                    Log.Warn("A know block was not formed correctly, normally this is because the packet was split in half.");
+                    buffer = new List<TermCmd>(cmds);
+                }
+                cmds.Clear();
+
+
             }
         }
 
@@ -98,10 +135,9 @@ namespace MMudTerm_Protocols.Engine
 
                     if(this.Player == null)
                     {
-                        if(dci.targetProperty == "Player.Stats.Name")
+                        if(dci.TargetProperty == "Player.Stats.Name")
                         {
-                            this.Player = new Player(dci.groups[1].Value);
-                            this.Send("who");
+                            this.Send("who\r");
                         }
                         else
                         {
@@ -109,14 +145,15 @@ namespace MMudTerm_Protocols.Engine
                         }
                     }
 
-                    if (dci.targetProperty.StartsWith("Player.Stats"))
+                    if (dci.TargetProperty.StartsWith("Player.Stats"))
                     {
-                        this.Player.Stats.Update(dci);
-                    }else if (dci.targetProperty.StartsWith("Player.Room"))
+                        //this.Player.Stats.Update(dci);
+                    }
+                    else if (dci.TargetProperty.StartsWith("Player.Room"))
                     {
                         this.Player.Room.Update(dci);
                     }
-                    else if (dci.targetProperty.StartsWith("Ignored"))
+                    else if (dci.TargetProperty.StartsWith("Ignored"))
                     {
                         //ignore these expected tags
                     }
@@ -127,7 +164,7 @@ namespace MMudTerm_Protocols.Engine
 
                     //just send the whole dci?  The value fields are raw and unparsed, consumer would need to impl
                     //that or they use the string to go read the property from the model
-                    NewDataItems.Add(dci.targetProperty);
+                    NewDataItems.Add(dci.TargetProperty);
                 }
 
                 //it's possible the connObj.rcvr thread will fill up the termCmd Queue that the work thread works against.
@@ -144,7 +181,6 @@ namespace MMudTerm_Protocols.Engine
             }
         }
 
-
         //start the script
         public void Start()
         {
@@ -152,16 +188,21 @@ namespace MMudTerm_Protocols.Engine
         }
 
         //called by the WorkerThread to signal new Player/world data has been updated.
-        internal void GameDataChange(string targetProperty, GroupCollection groups)
+        internal void GameDataChange(DataChangeItem matchAndCapture)
         {
-            DataChangeItem item = new DataChangeItem(targetProperty, groups);
+            //DataChangeItem item = new DataChangeItem(targetProperty, groups);
             lock (ReactionQueue)
             {
-                ReactionQueue.Enqueue(item);
+                ReactionQueue.Enqueue(matchAndCapture);
             }
 
             are.Set();
         }
+
+        //internal void GameDataChange(MatchAndCapture matchAndCapture)
+        //{
+            
+        //}
 
         //stop the script
         public void Stop()
@@ -181,7 +222,8 @@ namespace MMudTerm_Protocols.Engine
 
         public void Send(string v)
         {
-            this.ConnObj.Send(ASCIIEncoding.ASCII.GetBytes(v));
+            //this.ConnObj.Send();
+            this.Decoder.Send(ASCIIEncoding.ASCII.GetBytes(v));
         }
     }
 }

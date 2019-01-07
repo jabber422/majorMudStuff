@@ -11,11 +11,6 @@ namespace MMudTerm_Protocols.Engine
         {
             return this.GetNextState(workerState, cmd);
         }
-
-        internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, TermStringDataCmd stringCmd)
-        {
-            // throw new NotImplementedException());
-        }
     }
 
     static internal class GameProcess_AnsiColorStateMap {
@@ -64,6 +59,42 @@ namespace MMudTerm_Protocols.Engine
             Bold.Add(35, new GameProcessorState_BoldMagenta());
             Bold.Add(36, new GameProcessorState_BoldCyan());
             Bold.Add(37, new GameProcessorState_BoldWhite());
+        }
+
+        internal static GameProcessorState GetNextState(int attribute, int foreground)
+        {
+            if(attribute == 0)
+            {
+                switch (foreground)
+                {
+                    case 30: return new GameProcessorState_Black();
+                    case 31: return new GameProcessorState_Red();
+                    case 32: return new GameProcessorState_Green();
+                    case 33: return new GameProcessorState_Yellow();
+                    case 34: return new GameProcessorState_Blue();
+                    case 35: return new GameProcessorState_Magenta();
+                    case 36: return new GameProcessorState_Cyan();
+                    case 37: return new GameProcessorState_White();
+                }
+            }
+            else if(attribute == 1){
+                switch (foreground)
+                {
+                    case 30: return new GameProcessorState_BoldBlack();
+                    case 31: return new GameProcessorState_BoldRed();
+                    case 32: return new GameProcessorState_BoldGreen();
+                    case 33: return new GameProcessorState_BoldYellow();
+                    case 34: return new GameProcessorState_BoldBlue();
+                    case 35: return new GameProcessorState_BoldMagenta();
+                    case 36: return new GameProcessorState_BoldCyan();
+                    case 37: return new GameProcessorState_BoldWhite();
+                }
+            }
+            else
+            {
+                throw new Exception("WTF");
+            }
+            throw new Exception("WTF2");
         }
     }
 }

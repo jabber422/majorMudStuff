@@ -77,7 +77,7 @@ namespace MMudTerm_Protocols
         }
 
         //outgoing raw buffer to the server socket
-        public void Send(byte[] buffer)
+        internal void Send(byte[] buffer)
         {
             Log.Tag("ConnObj", "Send -> {0}", ASCIIEncoding.ASCII.GetString(buffer));
             SocketHandler.Send(this, buffer);

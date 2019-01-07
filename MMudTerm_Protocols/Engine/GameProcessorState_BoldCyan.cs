@@ -7,68 +7,64 @@ namespace MMudTerm_Protocols.Engine
     //Either a room name or a HP/MP value is next
     internal class GameProcessorState_BoldCyan : GameProcessorState
     {
+        string myBuffer = "";
         internal override GameProcessorState HandleTermCmd(WorkerState_InGame workerState, TermCmd cmd)
         {
             return this.GetNextState(workerState, cmd);
         }
 
-        internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, TermStringDataCmd stringCmd)
-        {
-            Log.Tag(this.Tag, "{0} >" + stringCmd.GetValue() + "<", this.GetType().ToString());
-
-            if (IsConsumedValue(workerState, stringCmd))
-            {
-                Log.Tag(this.Tag, "Consumed Bold Cyan string -> " + stringCmd.GetValue());
-                return;
-            }
-
-            foreach (AnsiColorRegex acr in AnsiColorRegexTable.Cache[this.GetType()])
-            {
-                if (!acr.IsKeyMatch(stringCmd)) continue;
-                Log.Tag(this.Tag, "Matched - {0} = {1}", acr.KeyPattern, stringCmd.GetValue());
-                //when stats comes in this triggers one invoke on the gui thread per stat (is that good/bad?)
-
-                //when we are green and see Name:, supress updates until t/o (todo) or MagicRes: <val>
-                workerState.StateContext.LastRegex = acr;
-                return;
-            }
-
-            Log.Tag(this.Tag, "Unmatched Bold Cyan string -> " + stringCmd.GetValue());
-        }
-        //public override GameProcessorState HandleTermCmd(Engine eng, TermCmd cmd)
+        //internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, string stringCmd)
         //{
-        //    if (!(cmd is TermStringDataCmd))
+        //    Log.Tag(this.Tag, "{0} >" + stringCmd + "<", this.GetType().ToString());
+
+        //    //check if we have something looking to consume from a cyan text block
+        //    if (workerState.StateContext.MatchAndCapture != null)
         //    {
-        //        if (cmd is AnsiProtocolCmds.AnsiGraphicsCmd)
+        //        Log.Tag(this.Tag, "StateContext has previous MatchAndcapture");
+        //        bool result = workerState.StateContext.MatchAndCapture.Consume(stringCmd);
+        //        //something has specifically been set to consume the next string
+        //        if (result && workerState.StateContext.MatchAndCapture.IsComplete)
         //        {
-        //            throw new System.Exception("WTF");
+        //            Log.Tag(this.Tag, "Previous MatchAndCapture has completed with this line");
+        //            //the object captured what it wanted, this string has been consumed
+        //            workerState.Engine.GameDataChange(workerState.StateContext.MatchAndCapture.CreateDataChangeItem());
+        //            workerState.StateContext.MatchAndCapture = null;
+        //            return;
         //        }
-        //        Log.Tag("GameProcessorState", "Not a String - Change to Idle state - " + cmd.GetType().ToString());
-        //        return new GameProcessorState_Idle();
-        //    }
-
-        //    string s = cmd.ToString();
-
-        //    Match m = Regex.Match(s, @"^(\d+)$");
-        //    if (m.Success)
-        //    {
-        //        if (eng.Player != null)
+        //        else if (result && !workerState.StateContext.MatchAndCapture.IsComplete)
         //        {
-        //            eng.Player.Health = int.Parse(m.Groups[1].Value);
-        //            MMudObjects.Log.Tag("GameProcessorState", "HP= " + m.Groups[1].Value);
+        //            //doesn't trigger
         //        }
-        //        return new GameProcessorState_Idle();
+        //        else if (!result && !workerState.StateContext.MatchAndCapture.IsComplete)
+        //        {
+        //            //the consumer failed to match but the task is complete... this is used for known ignored items ]:
+        //        }
+        //        else
+        //        {
+        //            //match failed and the item is not complete... let it ride
+        //            Log.Tag(this.Tag, "MatchAndCapture is still capturing");
+        //        }
         //    }
 
-        //    Regex.Match(s, @"^([^0-9])$");
-        //    if (m.Success)
+        //    foreach (MatchAndCapture mac in MatchAndCaptureTables.Cache[this.GetType()])
         //    {
-        //        MMudObjects.Log.Tag("GameProcessorState", "Room= " + m.Groups[1].Value);
-        //        return new GameProcessorState_Idle();
+        //        if (mac.IsMatch(stringCmd))
+        //        {
+        //            if (!mac.Consume(stringCmd))
+        //            {
+        //                Log.Tag(this.Tag, "Found Match and now capturing next cmd(s)");
+        //                workerState.StateContext.MatchAndCapture = mac;
+        //                //have a match but it's still looking for more data, save it and move to the next TermCmd;
+        //                return;
+        //            }
+        //            Log.Tag(this.Tag, "Found Match and consumed this string");
+        //            //had a match and it consumed what it needed
+        //            return;
+        //        }
+        //        //not a match
         //    }
 
-        //    Log.Tag("GameProcessorState", this.GetType().ToString());
-        //    return this;
+        //    Log.Tag(this.Tag, "Unmatched string -> " + stringCmd);
         //}
     }
 }

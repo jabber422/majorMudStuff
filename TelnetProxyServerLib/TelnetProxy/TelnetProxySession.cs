@@ -106,14 +106,19 @@ namespace TelnetProxyServer.TelnetProxy
             RemoveSession(ETelnetProxySession.Tap);
         }
         #endregion
+        byte[] hdr = new byte[] { (byte)'#', (byte)'#', (byte)'#'};
 
         #region Receive from telnet session handlers
         //Got something from the local send it to the remote and listen(ers)
         public void RcvFromClientSession(object sender, DataRcvEvent e)
-        {
+            {
             if (this.TapSession != null && this.TapSession.IsConnected)
             {
-                this.TapSession.SendToRemote(e.DataBuffer);
+                
+                byte[] tmp = new byte[e.DataBuffer.Length + hdr.Length];
+                Buffer.BlockCopy(hdr, 0, tmp, 0, hdr.Length);
+                Buffer.BlockCopy(e.DataBuffer, 0, tmp, hdr.Length, e.DataBuffer.Length);
+                this.TapSession.SendToRemote(tmp);
             }
 
             if (!this.m_TapBlockRcvFromClient)

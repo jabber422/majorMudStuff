@@ -5,41 +5,64 @@ namespace MMudTerm_Protocols.Engine
 {
     internal class GameProcessorState_Green : GameProcessorState
     {
+        string myBuffer = "";
         internal override GameProcessorState HandleTermCmd(WorkerState_InGame workerState, TermCmd cmd)
         {
             return this.GetNextState(workerState, cmd);
         }
 
-        internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, TermStringDataCmd stringCmd)
-        {
-            Log.Tag(this.Tag, "{0} >" + stringCmd.GetValue() + "<", this.GetType().ToString());
+        //internal override void HandleTermStringDataCmd(WorkerState_InGame workerState, string stringCmd)
+        //{
+        //    Log.Tag(this.Tag, "{0} >" + stringCmd + "<", this.GetType().ToString());
 
-            if(this.IsConsumedValue(workerState, stringCmd))
-            {
-                Log.Tag(this.Tag, "Consumed Cyan string -> " + stringCmd.GetValue());
-                return;
-            }
+        //    //check if we have something looking to consume from a cyan text block
+        //    if (workerState.StateContext.MatchAndCapture != null)
+        //    {
+        //        Log.Tag(this.Tag, "StateContext has previous MatchAndcapture");
+        //        bool result = workerState.StateContext.MatchAndCapture.Consume(stringCmd);
+        //        //something has specifically been set to consume the next string
+        //        if (result && workerState.StateContext.MatchAndCapture.IsComplete)
+        //        {
+        //            Log.Tag(this.Tag, "Previous MatchAndCapture has completed with this line");
+        //            //the object captured what it wanted, this string has been consumed
+        //            workerState.Engine.GameDataChange(workerState.StateContext.MatchAndCapture);
+        //            workerState.StateContext.MatchAndCapture = null;
+        //            return;
+        //        }
+        //        else if (result && !workerState.StateContext.MatchAndCapture.IsComplete)
+        //        {
+        //            //doesn't trigger
+        //        }
+        //        else if (!result && !workerState.StateContext.MatchAndCapture.IsComplete)
+        //        {
+        //            //the consumer failed to match but the task is complete... this is used for known ignored items ]:
+        //        }
+        //        else
+        //        {
+        //            //match failed and the item is not complete... let it ride
+        //            Log.Tag(this.Tag, "MatchAndCapture is still capturing");
+        //        }
+        //    }
 
-            foreach (AnsiColorRegex acr in AnsiColorRegexTable.Cache[this.GetType()])
-            {
-                if (!acr.IsKeyMatch(stringCmd)) continue;
-                Log.Tag(this.Tag, "Matched - {0} = {1}", acr.KeyPattern, stringCmd.GetValue());
-                //the current color is green, we found a familiar string, set this regex so that the next datastring is captured if it's also a match
-                // stats keys
-                // obvious exits
-                // items names when looking at someone
-                // names of people in who
-                // walks into the room
-                // wealth and enc in inventory
-                workerState.StateContext.LastRegex = acr;
-                if (acr.IsInlineMatch)
-                {
-                    HandleTermStringDataCmd(workerState, stringCmd);
-                }
-                return;
-            }
+        //    foreach (MatchAndCapture mac in MatchAndCaptureTables.Cache[this.GetType()])
+        //    {
+        //        if (mac.IsMatch(stringCmd))
+        //        {
+        //            if (!mac.Consume(stringCmd))
+        //            {
+        //                Log.Tag(this.Tag, "Found Match and now capturing next cmd(s)");
+        //                workerState.StateContext.MatchAndCapture = mac;
+        //                //have a match but it's still looking for more data, save it and move to the next TermCmd;
+        //                return;
+        //            }
+        //            Log.Tag(this.Tag, "Found Match and consumed this string");
+        //            //had a match and it consumed what it needed
+        //            return;
+        //        }
+        //        //not a match
+        //    }
 
-            Log.Tag(this.Tag, "Unmatched Green string -> " + stringCmd.GetValue());
-        }
+        //    Log.Tag(this.Tag, "Unmatched string -> " + stringCmd);
+        //}
     }
 }

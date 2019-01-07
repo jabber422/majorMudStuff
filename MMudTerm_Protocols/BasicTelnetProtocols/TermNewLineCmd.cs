@@ -23,7 +23,12 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return "[TermNewLineCmd]\n";
+            return "[TermNewLineCmd]";
+        }
+
+        public byte[] GetValue()
+        {
+            return new byte[] { (byte)'\n' };
         }
     }
 
@@ -41,7 +46,12 @@ namespace MMudTerm_Protocols
 
         public override string ToString()
         {
-            return "[TermCarrigeReturnCmd]\r";
+            return "[TermCarrigeReturnCmd]";
+        }
+
+        public byte[] GetValue()
+        {
+            return new byte[] { (byte)'\r' };
         }
     }
 }

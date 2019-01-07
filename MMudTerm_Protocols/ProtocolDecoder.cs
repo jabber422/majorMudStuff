@@ -79,50 +79,22 @@ namespace MMudTerm_Protocols
                 return buffer;
             
             string s = "";
-            #region debug
-#if DEBUG_2
-            Debug.WriteLine("ENTER: " +
-                    System.Reflection.MethodBase.GetCurrentMethod().Name,
-                    this.GetType().Namespace);
-            Debug.Indent();
 
-            s = String.Format("partialBuffer.Len={0}, buffer.Len={1}", 
-                partialMsgBuffer.Length, buffer.Length);
-            Debug.WriteLine(s, this.GetType().Namespace);
-           
-            s = null;
-            for (int i = 0; i < partialMsgBuffer.Length; ++i)
-            {
-                s += String.Format("{0:X}-", partialMsgBuffer[i]);
-            }
-            Debug.WriteLine("pmb contains: " + s, this.GetType().Namespace);
-            
-            s = null;
-            for (int i = 0; i < buffer.Length; ++i)
-            {
-                s += String.Format("{0:X}-",buffer[i]);
-            }
-            Debug.WriteLine("buf contains: " + s, this.GetType().Namespace);
-            s = null;
-#endif
-            #endregion
             byte[] temp = new byte[partialMsgBuffer.Length + buffer.Length];
             Buffer.BlockCopy(partialMsgBuffer, 0, temp, 0, partialMsgBuffer.Length);
             Buffer.BlockCopy(buffer, 0, temp, partialMsgBuffer.Length,
                 temp.Length - partialMsgBuffer.Length);
             
             partialMsgBuffer = new byte[0];
-            #region debug
-#if DEBUG
-            
-            for (int i = 0; i < temp.Length; ++i)
-            {
-                s += String.Format("{0:X}-", temp[i]);
-            }
-            Debug.WriteLine("concated contains: " + s, this.GetType().Namespace);
-            Debug.Unindent();
-#endif
-            #endregion
+            return temp;
+        }
+
+        public static byte[] ConcatBuffers(byte[] buffer1, byte[] buffer2)
+        {
+            byte[] temp = new byte[buffer1.Length + buffer2.Length];
+            Buffer.BlockCopy(buffer1, 0, temp, 0, buffer1.Length);
+            Buffer.BlockCopy(buffer2, 0, temp, buffer1.Length, buffer2.Length);
+
             return temp;
         }
 
