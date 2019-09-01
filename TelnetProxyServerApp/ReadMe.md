@@ -5,7 +5,7 @@ ID?
   
 There are two modes.  
 
-1) Connect to a Remote server  
+Connect to a Remote server  
 You send - ID,1,42  ID,<1 = Connect to Remote Server>,<42 = Session Token>  
   
 The proxy server will then ask for the remote connection info  
@@ -14,7 +14,7 @@ You send - CON,BBS.com,23
 
 You don't need carriage returns on the response... i should change that..  
   
-  
-2) Tap into an active session  
+And  
+Tap into an active session  
 ID?  
-ID,2,42 - ID, <2 = Tamp into session>,<42 = Session Token>  
+ID,2,42 - ID, <2 = Tap into session>,<42 = Session Token>  
