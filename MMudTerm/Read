@@ -1,0 +1,5 @@
+Application to connects to a server and renders the telnet as text  
+
+Terminal will process the Queue's of Term commands and draw to a GDI+ canvas
+Session wraps each connection to a server.  The application is capable of running many sessions at the same time.
+
