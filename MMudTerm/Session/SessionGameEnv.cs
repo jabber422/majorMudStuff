@@ -8,5 +8,12 @@ namespace MMudTerm.Session
 {
     internal class SessionGameEnv
     {
+        private SessionController m_controller = null;
+        private Player
+        public SessionGameEnv(SessionController controller) {
+            this.m_controller = controller;
+        }
+
+
     }
 }

@@ -35,12 +35,51 @@ namespace MMudTerm.Session.SessionStateData
             common_patterns.Add(@"You just bought ", ProcessBoughtSomething);
             common_patterns.Add(@"You sold ", ProcessSoldSomething);
             common_patterns.Add(@"There is no exit in that direction!", ProcessBadRoomMove);
-            common_patterns.Add(@"You hid", ProcessHidSomething);
-            common_patterns.Add(@"You notice", ProcessSearch);
+            common_patterns.Add(@"You hid ", ProcessHidSomething);
+            common_patterns.Add(@"You notice ", ProcessSearch);
+            common_patterns.Add(@"Attempting to sneak...", ProcessSneak);
+            common_patterns.Add(@"The following items are for sale here:", ProcessForSale);
+
 
 
             this._matcher = new RegexMatcher(common_patterns);
             this._resting = new Regex(@"\((Resting)\)", RegexOptions.Compiled);
+        }
+
+        private void ProcessForSale(Match match, string arg2)
+        {
+            string result = arg2.Split(new string[] { "for sale here:" }, StringSplitOptions.RemoveEmptyEntries)[1].Trim();
+            this.m_controller.m_sessionForm.UpdateForSale(result);
+        }
+
+        private void ProcessSneak(Match match, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessSearch(Match match, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessHidSomething(Match match, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessBadRoomMove(Match match, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessSoldSomething(Match match, string arg2)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void ProcessBoughtSomething(Match match, string arg2)
+        {
+            throw new NotImplementedException();
         }
 
         internal override SessionState HandleCommands(Queue<TermCmd> cmds)
@@ -306,7 +345,7 @@ namespace MMudTerm.Session.SessionStateData
 
         }
 
-        private string ProcessTopList(Match m, string s)
+        private void ProcessTopList(Match m, string s)
         {
 
         }

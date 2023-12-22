@@ -148,6 +148,7 @@
     <Compile Include="Session\SessionDebugWindow.Designer.cs">
       <DependentUpon>SessionDebugWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="Session\SessionGameEnv.cs" />
     <Compile Include="Session\SessionState\SessionState.cs" />
     <Compile Include="Session\SessionState\SessionStateInGame.cs" />
     <Compile Include="Session\SessionState\SessionStateLogon.cs" />
