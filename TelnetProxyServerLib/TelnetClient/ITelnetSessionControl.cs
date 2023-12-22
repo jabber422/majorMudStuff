@@ -30,6 +30,7 @@ namespace TelnetProxyServer.TelnetClient
         event EventHandler Disconnect_Event;
 
         void SetTcpClient(TcpClient client);
+        TcpClient GetTcpClient();
 
         bool Connect();
         bool Disconnect();

@@ -143,14 +143,22 @@ namespace MMudTerm.Session
         #endregion
 
         #region logon key value pairs
+        internal Dictionary<Regex, string> GetJumpToInGameSessionsStrings()
+        {
+            string pattern_tick = @"\[HP=(\d+)(?:/MA=(\d+))?\]:(?: \((\w+)\))?";
+            Dictionary<Regex, string> dict = new Dictionary<Regex, string>();
+            dict.Add(new Regex(pattern_tick), "");
+            
+            return dict;
+        }
 
         internal Dictionary<Regex, string> GetLogonDataStrings()
         {
             Dictionary<Regex, string> dict = new Dictionary<Regex, string>();
-            //dict.Add(new Regex(@"ID\?"), "ID,2,5454");
-            //dict.Add(new Regex(@"CON\?"), "CON,dadosbladebbs.dyndns.org,23");
+            dict.Add(new Regex(@"ID\?"), "ID,2,1");
+            //dict.Add(new Regex(@"CON\?"), "CON,bbs.classicmud.com,2323");
             dict.Add(new Regex("Otherwise type \"new\":"), @"jabber"+((char)0x0d).ToString());
-            dict.Add(new Regex("Enter your password:"), @"abcdefg" + ((char)0x0d).ToString());
+            dict.Add(new Regex("Enter your password:"), @"zetafoo" + ((char)0x0d).ToString());
 
 
             return dict;

@@ -10,8 +10,29 @@ using TelnetProxyServer.TelnetProxy;
 
 namespace TelnetProxyServer
 {
+    //abstract class StartScriptState
+    //{
+    //    abstract public void handle(string a);
+    //}
+
+    //class IdState : StartScriptState
+    //{
+    //    public override void handle(string a)
+    //    {
+    //        throw new NotImplementedException();
+    //    }
+    //}
+
+    //class ConState: StartScriptState { }
+
+    //class WorkingState : StartScriptState { }
+
     class TelnetProxySession_StartScript
     {
+        StartScriptState _state = null;
+        byte[] _buffer = null;
+
+        
         object m_lock = new object();
         Queue<string> rcvd = new Queue<string>();
 
@@ -39,6 +60,7 @@ namespace TelnetProxyServer
 
         public TelnetProxySession_StartScript()
         {
+            
             ClientRcvdDataEventHandler = new EventHandler<DataRcvEvent>(newProxySession_ClientDataReceivedListener_Event);
         }
 

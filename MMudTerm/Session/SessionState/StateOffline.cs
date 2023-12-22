@@ -1,170 +1,98 @@
-﻿using MMudTerm.Session;
+﻿using MMudTerm.Connection;
+using MMudTerm.Session;
 using MMudTerm_Protocols;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Timers;
 
 namespace MMudTerm.Session.SessionStateData
 {
     //offline, we do nothing when TermCmds are rcv'd.  Return all cmds and the the display consume them.
     internal class SessionStateOffline : SessionState
     {
-        internal SessionStateOffline(SessionController controller)
-            : base(controller)
+        public SessionStateOffline(SessionState _state) : base(_state, "Offline")
         {
-            this.m_state = SessionStates.OFFLINE;
         }
 
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
+        public SessionStateOffline(SessionState _state, SessionController controller) : this(_state)
         {
-            return cmds;
+            this.m_controller = controller;
         }
 
-        internal override SessionStates Connect()
+        internal override SessionState HandleCommands( Queue<TermCmd> cmds)
         {
-            int result = this.m_controller.ConnectToServer();
-            if (result == 2)
+            throw new Exception("We shouldn't have this connected while in the offline state");
+        }
+
+        internal override SessionState Connect()
+        {
+            int result = 0;
+            if (this.m_controller.Connection == null)
             {
-                return SessionStates.CONNECTED;
+                Debug.WriteLine("SessionController - ConnterToServer - ConObj is null, making a new one");
+                this.m_controller.m_connObj = new ConnObj(this.m_controller.m_SessionData.ConnectionInfo.IpA, this.m_controller.m_SessionData.ConnectionInfo.Port);
+                result = 1;
             }
-            else if (result == 3)
+
+            if (SocketHandler.Connect(this.m_controller.Connection))
             {
-                return this.m_state;
+                this.m_controller.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
+                this.m_controller.m_connObj.Rcvr += new RcvMsgCallback(this.m_controller.ConnHandler_Rcvr);
+                this.m_controller.m_connObj.Disconnected += new EventHandler(this.m_controller.ConnHandler_Disconnected);
+                result = 2;
+                return new SessionStateConnected(this);
             }
             else
             {
-                throw new Exception("Not possible state error");
+                this.m_controller.m_connObj.mySocket.Close();
+                this.m_controller.m_connObj = null;
+                result = 3;
             }
+
+            return this;
         }
 
-        internal override SessionStates Disconnect()
+        internal override SessionState Disconnect()
         {
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new Exception("Invalid State");
+            return this;
         }
     }
 
+    //handles then first telnet IAC hand-shake, then moves to Logon
     internal class SessionStateConnected : SessionState
     {
-        internal SessionStateConnected(SessionController controller)
-            : base(controller)
+        public SessionStateConnected(SessionState _state) : base(_state, "Connected")
         {
-            this.m_state = SessionStates.CONNECTED;
         }
 
-        internal override SessionStates Connect()
+        //Try and handle the telnet IAC stuff here if needed
+        internal override SessionState HandleCommands(Queue<TermCmd> cmds)
         {
-            return this.m_state;
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            if (this.m_controller.SetLogonState() == 1)
-            {
-                return SessionStates.LOGON;
-            }
-
-            Debug.WriteLine("Faield to set the logon state to active!", DBG_CAT);
-            return this.m_state;
-        }
-    }
-
-
-    internal class SessionStateLogon : SessionState
-    {
-        Dictionary<Regex, string> LogonStrings_Regex;
-        Dictionary<Regex, bool> LogonSuccess;
-
-        internal bool LogonComplete
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.LogonSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal SessionStateLogon(SessionController controller) : base(controller)
-        {
-            this.m_state = SessionStates.LOGON;
-            this.LogonStrings_Regex = controller.SessionData.GetLogonDataStrings();
-            this.LogonSuccess = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.LogonStrings_Regex)
-            {
-                this.LogonSuccess.Add(kvp.Key, false);
-            }
-        }
-
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
-        {
-            Queue<TermCmd> returnQ = new Queue<TermCmd>();
-            while(cmds.Count > 0)
+            while (cmds.Count > 0)
             {
                 TermCmd c = cmds.Dequeue();
-                if (c is TermStringDataCmd)
+                if (c is TermIAC)
                 {
-                    string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
-                    foreach (Regex r in this.LogonStrings_Regex.Keys)
+                    if (!this.IAC_DONE)
                     {
-                        Match m = r.Match(msg);
-                        if(m.Success)
-                        {
-                            string rsp = this.LogonStrings_Regex[r];
-                            this.m_controller.Send(rsp);
-                            this.LogonSuccess[r] = true;
-                        }
+                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
+                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
+                        this.m_controller.m_connObj.Send(new byte[] { 255, 251, 0 });
+                        this.IAC_DONE = true;
+                    }
+                    else
+                    {
+                        return new SessionStateLogon(this);
                     }
                 }
-                returnQ.Enqueue(c);
+
             }
-            if (LogonComplete)
-            {
-                this.m_controller.SetMenuState();
-            }
-            return returnQ;
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new Exception("Bad state change, can't go from logo to connect");
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            return this.m_state;
+            return this;
         }
     }
 
@@ -186,11 +114,9 @@ namespace MMudTerm.Session.SessionStateData
             }
         }
 
-        internal SessionStateMenu(SessionController controller)
-            : base(controller)
+        public SessionStateMenu(SessionState _state) : base(_state, "Server Menu")
         {
-            this.m_state = SessionStates.MENU;
-            this.MenuStrings_Regex = controller.SessionData.GetMenuDataStrings();
+            this.MenuStrings_Regex = this.m_controller.SessionData.GetMenuDataStrings();
             this.MenuSuccess = new Dictionary<Regex, bool>();
             foreach (KeyValuePair<Regex, string> kvp in this.MenuStrings_Regex)
             {
@@ -198,7 +124,7 @@ namespace MMudTerm.Session.SessionStateData
             }
         }
 
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
+        internal override SessionState HandleCommands( Queue<TermCmd> cmds)
         {
             Queue<TermCmd> returnQ = new Queue<TermCmd>();
             while (cmds.Count > 0)
@@ -230,29 +156,10 @@ namespace MMudTerm.Session.SessionStateData
             }
             if (MenuComplete)
             {
-                this.m_controller.SetGameMenuState();
+                return new SessionStateGameMenu(this);
             }
-            return returnQ;
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new NotImplementedException();
+            return this;
+            
         }
     }
 
@@ -274,11 +181,9 @@ namespace MMudTerm.Session.SessionStateData
             }
         }
 
-        internal SessionStateGameMenu(SessionController controller)
-            : base(controller)
+        public SessionStateGameMenu(SessionState _state) : base(_state, "Game Menu")
         {
-            this.m_state = SessionStates.GAME_MENU;
-            this.MenuStrings_Regex = controller.SessionData.GetMajorMudMenuStrings();
+            this.MenuStrings_Regex = this.m_controller.SessionData.GetMajorMudMenuStrings();
             this.MMudMenuSuccess = new Dictionary<Regex, bool>();
             foreach (KeyValuePair<Regex, string> kvp in this.MenuStrings_Regex)
             {
@@ -286,7 +191,7 @@ namespace MMudTerm.Session.SessionStateData
             }
         }
 
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
+        internal override SessionState HandleCommands( Queue<TermCmd> cmds)
         {
             Queue<TermCmd> returnQ = new Queue<TermCmd>();
             while (cmds.Count > 0)
@@ -321,390 +226,11 @@ namespace MMudTerm.Session.SessionStateData
                 if (this.m_controller.SessionData.EnterGameEnabled)
                 {
                     this.m_controller.Send("e" + ((char)0x0d).ToString());
-                    this.m_controller.SetEnteringGameState();
+                    return new SessionStateInGame(this);
                 }
             }
-            return returnQ;
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new NotImplementedException();
+            return this;
         }
     }
 
-    internal class SessionStateEnteringGame : SessionState
-    {
-        Dictionary<Regex, string> MMudCharCreationStrings_Regex;
-        Dictionary<Regex, string> MMudCharPageStrings_Regex;
-        Dictionary<Regex, string> MMudEnterGameStrings_Regex;
-
-        Dictionary<Regex, bool> MMudCharCreationSuccess;
-        Dictionary<Regex, bool> MMudCharPageSuccess; 
-        Dictionary<Regex, bool> MMudEnterGameSuccess;
-
-        internal bool IsCreation
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MMudCharCreationSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal bool IsCharPage
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MMudCharPageSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal bool IsInGame
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MMudEnterGameSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal SessionStateEnteringGame(SessionController controller)
-            : base(controller)
-        {
-            this.m_state = SessionStates.ENTERING_GAME;
-            this.MMudCharCreationStrings_Regex = controller.SessionData.GetMajorMudCharCreationStrings();
-            this.MMudCharCreationSuccess = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.MMudCharCreationStrings_Regex)
-            {
-                this.MMudCharCreationSuccess.Add(kvp.Key, false);
-            }
-
-            this.MMudCharPageStrings_Regex = controller.SessionData.GetMajorMudCharPageStrings();
-            this.MMudCharPageSuccess = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.MMudCharPageStrings_Regex)
-            {
-                this.MMudCharPageSuccess.Add(kvp.Key, false);
-            }
-
-            this.MMudEnterGameStrings_Regex = controller.SessionData.GetMajorMudEnterGameStrings();
-            this.MMudEnterGameSuccess = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.MMudEnterGameStrings_Regex)
-            {
-                this.MMudEnterGameSuccess.Add(kvp.Key, false);
-            }
-        }
-
-        //hit e at the game menu
-        //this states figures out if we go to in game or in char page or in creation
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
-        {
-            Queue<TermCmd> returnQ = new Queue<TermCmd>();
-            while (cmds.Count > 0)
-            {
-                TermCmd c = cmds.Dequeue();
-                if (c is TermStringDataCmd)
-                {
-                    string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
-                    if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
-                    {
-                        this.m_controller.Send("N");
-                    }
-                    else
-                    {
-                        foreach (Regex r in this.MMudCharCreationStrings_Regex.Keys)
-                        {
-                            Match m = r.Match(msg);
-                            if (m.Success)
-                            {
-                                string rsp = this.MMudCharCreationStrings_Regex[r];
-                                this.m_controller.Send(rsp);
-                                this.MMudCharCreationSuccess[r] = true;
-                            }
-                        }
-
-                        foreach (Regex r in this.MMudCharPageStrings_Regex.Keys)
-                        {
-                            Match m = r.Match(msg);
-                            if (m.Success)
-                            {
-                                string rsp = this.MMudCharPageStrings_Regex[r];
-                                this.m_controller.Send(rsp);
-                                this.MMudCharPageSuccess[r] = true;
-                            }
-                        }
-
-                        foreach (Regex r in this.MMudEnterGameStrings_Regex.Keys)
-                        {
-                            Match m = r.Match(msg);
-                            if (m.Success)
-                            {
-                                string rsp = this.MMudEnterGameStrings_Regex[r];
-                                this.m_controller.Send(rsp);
-                                this.MMudEnterGameSuccess[r] = true;
-                            }
-                        }
-                    }
-                }
-                returnQ.Enqueue(c);
-            }
-
-            if (this.IsCreation)
-            {
-                //do nothing
-            }
-            else if (this.IsCharPage)
-            {
-                //do nothing
-            }
-            else if (this.IsInGame)
-            {
-                this.m_controller.SetInGameState();
-            }
-            return returnQ;
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class SessionStateInGame : SessionState
-    {
-        Dictionary<Regex, string> MenuStrings_Regex;
-        Dictionary<Regex, bool> MMudMenuSuccess;
-
-        internal bool GameMenuComplete
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MMudMenuSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal SessionStateInGame(SessionController controller)
-            : base(controller)
-        {
-            this.m_state = SessionStates.IN_GAME;
-        }
-
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
-        {
-            return cmds;
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal class SessionStateMummyScript : SessionState
-    {
-        Dictionary<Regex, string> MenuStrings_Regex;
-        Dictionary<Regex, bool> MMudMenuSuccess;
-        Timer idleTimer = new Timer(5 * 1000);
-        Boolean isIdle = true;
-
-        internal bool GameMenuComplete
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MMudMenuSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
-
-        internal SessionStateMummyScript(SessionController controller)
-            : base(controller)
-        {
-            this.m_state = SessionStates.MummyScript;
-            idleTimer.Elapsed += idleTimer_Elapsed;
-        }
-
-        internal override Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
-        {
-            //dict.Add(new Regex(@"ID\?"), "ID,2,5454");
-            //dict.Add(new Regex(@"CON\?"), "CON,dadosbladebbs.dyndns.org,23");
-
-
-            Queue<TermCmd> returnQ = new Queue<TermCmd>();
-            
-            while (cmds.Count > 0)
-            {
-                TermCmd c = cmds.Dequeue();
-                if (c is TermStringDataCmd)
-                {
-                    string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
-                    if (Regex.Match(msg, @"\*Combat Engaged\*").Success)
-                    {
-                        idleTimer.Stop();
-                        isIdle = false;
-                        this.m_controller.m_sessionForm.SetCombat(true);
-                    }
-                    else if (Regex.Match(msg, @"\*Combat Off\*").Success)
-                    {
-                        idleTimer.Start();
-                        isIdle = true;
-                        this.m_controller.m_sessionForm.SetCombat(false);
-                    }
-                    else if (Regex.Match(msg, @"ID\?").Success)
-                    {
-                        this.m_controller.Send("ID,2,42");
-                    }
-                }
-            }
-            return returnQ;
-        }
-
-        void idleTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (this.idleTimer.Enabled)
-            {
-                this.m_controller.Send(e.SignalTime + " " + ((char)0x0d).ToString());
-                
-                this.m_controller.Send("s" + ((char)0x0d).ToString());
-                this.m_controller.Send("n" + ((char)0x0d).ToString());
-                this.m_controller.Send("aa mummy" + ((char)0x0d).ToString());
-                this.m_controller.Send("aa wight" + ((char)0x0d).ToString());
-            }
-            else
-            {
-                Debug.WriteLine(e.SignalTime + "NO");
-            }
-        }
-
-        internal override SessionStates Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal override SessionStates Disconnect()
-        {
-            int result = this.m_controller.DisconnectFromServer();
-            if (result == 2) return SessionStates.OFFLINE;
-
-            Debug.WriteLine("Disconnect failed?!?", DBG_CAT);
-
-            return this.m_state;
-        }
-
-        internal override SessionStates Logon()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
-    internal abstract class SessionState
-    {
-        protected SessionController m_controller;
-        protected SessionStates m_state;
-        protected string DBG_CAT = "SessionState";
-
-        internal SessionState(SessionController controller)
-        {
-            this.m_controller = controller;
-        }
-
-        internal virtual Queue<TermCmd> HandleCommands(Queue<TermCmd> cmds)
-        {
-            return cmds;
-        }
-
-        internal SessionStates State { get { return this.m_state; } }
-
-        internal abstract SessionStates Connect();
-        internal abstract SessionStates Disconnect();
-        internal abstract SessionStates Logon();
-    }
-
-
-
-    internal enum SessionStates : byte
-    {
-        OFFLINE = 0,
-        CONNECTED,
-        LOGON,
-        MENU,
-        GAME_MENU,
-        ENTERING_GAME,
-        CHAR_PAGE,
-        IN_GAME,
-        
-        MummyScript,
-
-        NULL = 255,
-
-    }
 }

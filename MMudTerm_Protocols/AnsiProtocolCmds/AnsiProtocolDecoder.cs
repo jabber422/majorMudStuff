@@ -12,6 +12,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     /// </summary>
     public class AnsiProtocolDecoder : TelnetProtocolDecoder
     {
+        bool InCommandStruct = false;
+        byte[] m_buffer = new byte[4096];
+        int offset = 0;
+        int count = 0;
         public override Queue<TermCmd> DecodeBuffer(byte[] buffer)
         {
 #if DEBUG_2
@@ -23,43 +27,65 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
 #endif
             lock (commandsForTheTerminalScreen)
             {
+                //Buffer.BlockCopy(m_buffer, offset, buffer, 0, buffer.Length)
                 //append the saved buffer if any
                 buffer = ConcatBuffers(buffer);
 
-                commandsForTheTerminalScreen.Clear();
-                values.Clear();
-                pieces.Clear();
+                if(commandsForTheTerminalScreen.Count > 0) {
+                    commandsForTheTerminalScreen.Clear();
+                }
+
 
                 if (buffer[0] == 0xff)
                 {
-                    //0xff is start of a telnet IAC cmd, ignore it
+                    while (buffer.Length > 0 && buffer[0] == 0xff)
+                    {
+                        //0xff is start of a telnet IAC cmd, ignore it
 #if DEBUG_2
                     Debug.WriteLine("Recieved telent IAC in ANSI parser, this is bad", this.GetType().Namespace);
 #endif
-                    //ignoreing Telnet commands at the front of a buffer
-                    if ((buffer.Length - 3) > 0)
-                    {
-                        //TODO: handle these one day
-                        byte[] buf2 = new byte[buffer.Length - 3];
-                        Buffer.BlockCopy(buffer, 3, buf2, 0, buffer.Length - 3);
-                        this.DecodeBuffer(buf2);
+                        //ignoreing Telnet commands at the front of a buffer
+                        if (buffer.Length >= 3) 
+                        {
+                            //TODO: handle these one day
+                            byte[] buf1 = new byte[3];
+                            Buffer.BlockCopy(buffer, 0, buf1, 0, 3);
+                            List<byte[]> list1 = new List<byte[]>();
+                            list1.Add(buf1);
+                            TermIAC iac = new TermIAC(list1);
+                            commandsForTheTerminalScreen.Enqueue(iac);
+
+                            byte[] buf2 = new byte[buffer.Length - 3];
+                            Buffer.BlockCopy(buffer, 3, buf2, 0, buffer.Length - 3);
+                            buffer = buf2;
+                        }
                     }
                 }
                 else //if (buffer[0] == 0x1b) // 'ESC'
                 {
+                    
                     int idx = this.TokenizeAnsiCommandBuffer(buffer);
+
+                    if (idx != -1)
+                    {
+                        
+                    }
 #if DEBUG_2
                     string s = String.Format("Tokenize Completed: BufferIdx= {0}, buffer.len= {1}",
                         idx, buffer.Length);
                     Debug.WriteLine(s, this.GetType().Namespace);
 #endif
-                    //save off the rest
-                    if (idx != buffer.Length && idx != -1)
-                        SaveBuffer(buffer, idx);
+                    //if we aren't in the middle of a control command, dump the rest of the buffer as a test string
+                    if (!this.InCommandStruct)
+                    {
+                        CreateTextCmd();
+                    }
+                    else
+                    {
+
+                    }
+
                 }
-                //else
-                //{
-                //}
             }
 #if DEBUG_2
             Debug.Unindent();
@@ -73,10 +99,8 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
         /// <param name="buffer">message buffer from server</param>
         private int TokenizeAnsiCommandBuffer(byte[] buffer)
         {
-            //we've found a 0x1b, mark the index and handle as command
-            //buffer[0] is a 0x1b, ot should be
             int IDX = 0;
-            bool InCommandStruct = false;
+            
 
             for (int idx = 0; idx < buffer.Length; ++idx)
             {
@@ -91,15 +115,14 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     if (HandleAsText(buffer[idx]))
                     {
                         InCommandStruct = true;
-                        IDX = idx;
                     }
                 }
 
-                IDX = idx;
+                IDX++;
             }
 
             //clean up what ever is left over in the buffers
-            CreateTextCmd();
+            //CreateTextCmd();
             //this.PostToAi();
             return IDX;
         }

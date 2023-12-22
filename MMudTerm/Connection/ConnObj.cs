@@ -59,7 +59,7 @@ namespace MMudTerm.Connection
         {
             if (Rcvr != null)
             {
-                Console.WriteLine("{0} -> Send()", this.Name);
+                //Console.WriteLine("{0} -> BroadcastRcv() - {1}", this.Name, buffer.Length);
                 Rcvr(buffer);
             }
         }
@@ -69,13 +69,12 @@ namespace MMudTerm.Connection
             if (Disconnected != null)
             {
                 Disconnected(this, null);
-                //Disconnected = null;
             }
         }
 
         internal void Send(byte[] buffer)
         {
-            Console.WriteLine("{0} -> Send()", this.Name);
+            Console.WriteLine("{0} -> Send() - {1}", this.Name, buffer.Length);
             SocketHandler.Send(this, buffer);
         }
 

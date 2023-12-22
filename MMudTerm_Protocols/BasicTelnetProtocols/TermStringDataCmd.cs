@@ -32,4 +32,23 @@ namespace MMudTerm_Protocols
             return Encoding.ASCII.GetString(this.str);
         }
     }
+
+    public class TermIAC : TermCmd
+    {
+        byte[] str;
+        public TermIAC(List<byte[]> values)
+        {
+            str = values[0];
+        }
+
+        public override void DoCommand(ITermProtocolCmds terminal)
+        {
+            
+
+        }
+        public string GetValue()
+        {
+            return Encoding.ASCII.GetString(this.str);
+        }
+    }
 }

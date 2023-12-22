@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MMudTerm</RootNamespace>
     <AssemblyName>MMudTerm</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -102,6 +102,9 @@
       <DependentUpon>SessionConfigForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Session\SessionDebugWindow.resx">
+      <DependentUpon>SessionDebugWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Session\SessionForm.resx">
       <DependentUpon>SessionForm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -139,6 +142,16 @@
     <Compile Include="Session\SessionConfigData.cs" />
     <Compile Include="Session\SessionController.cs" />
     <Compile Include="Session\SessionDataObject.cs" />
+    <Compile Include="Session\SessionDebugWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Session\SessionDebugWindow.Designer.cs">
+      <DependentUpon>SessionDebugWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Session\SessionState\SessionState.cs" />
+    <Compile Include="Session\SessionState\SessionStateInGame.cs" />
+    <Compile Include="Session\SessionState\SessionStateLogon.cs" />
+    <Compile Include="Session\SessionState\SessionStateMummyScript.cs" />
     <Compile Include="Session\SessionState\StateOffline.cs" />
     <Compile Include="Session\SessionForm.cs">
       <SubType>Form</SubType>

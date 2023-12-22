@@ -7,6 +7,9 @@ using MMudTerm.Session.SessionStateData;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace MMudTerm.Session
 {
@@ -16,75 +19,138 @@ namespace MMudTerm.Session
     public class SessionController : IDisposable
     {
         internal SessionForm m_sessionForm;
-        SessionDataObject m_SessionData;
-        ProtocolDecoder m_decoder;
-        SessionState m_currentSessionState;
-        SessionState[] m_states;
-        ConnObj m_connObj;
+        internal SessionDataObject m_SessionData;
+        internal ProtocolDecoder m_decoder;
+        SessionState m_currentSessionState; //a thread changes this, be careful
+        //SessionState[] m_states;
+        internal ConnObj m_connObj;
+        ConcurrentQueue<TermCmd> terminal_term_cmds = new ConcurrentQueue<TermCmd>();
+        ConcurrentQueue<TermCmd> state_term_cmds = new ConcurrentQueue<TermCmd>();
+        private object _term_q_in_use = new object();
+        private object _state_q_in_use = new object();
+
 
         string DBG_CAT = "SessionController";
 
         //read access to our session data object
         internal SessionDataObject SessionData { get { return this.m_SessionData; } }
         internal ConnObj Connection { get { return this.m_connObj; } }
-        internal SessionStates CurrentState { get { return this.m_currentSessionState.State; } }
+        internal SessionState CurrentState { get { return this.m_currentSessionState; } }
 
         public SessionController(SessionDataObject si, SessionForm sf)
         {
             this.m_SessionData = si;
             this.m_sessionForm = sf;
-            InitStates();
-        }
+            this.m_currentSessionState = new SessionStateOffline(null, this);
 
-        private void InitStates()
-        {
-            //set up the session state pattern
-            this.m_states = new SessionState[Enum.GetNames(typeof(SessionStates)).Length];
-            m_states[(byte)SessionStates.OFFLINE] = new SessionStateOffline(this);
-            m_states[(byte)SessionStates.CONNECTED] = new SessionStateConnected(this);
-            m_states[(byte)SessionStates.LOGON] = new SessionStateLogon(this);
-            m_states[(byte)SessionStates.MENU] = new SessionStateMenu(this);
-            m_states[(byte)SessionStates.GAME_MENU] = new SessionStateGameMenu(this);
-            m_states[(byte)SessionStates.ENTERING_GAME] = new SessionStateEnteringGame(this);
-            //m_states[(byte)SessionStates.CHAR_PAGE] = new SessionStateCharPage(this);
-            m_states[(byte)SessionStates.IN_GAME] = new SessionStateInGame(this);
-            m_states[(byte)SessionStates.MummyScript] = new SessionStateMummyScript(this);
+            //This is the thread that runs the game basically.  It will contantly look for new TermCmd and
+            Task.Run(() =>
+            {
+                while (true) // Replace with a proper condition for stopping
+                {
+                    
+                    if (state_term_cmds.Count > 0)
+                    {
+                        Queue<TermCmd> cmds = new Queue<TermCmd>();
+                        lock (_state_q_in_use)
+                        {
+                            TermCmd cmd;
+                            while(state_term_cmds.TryDequeue(out cmd))
+                            {
+                                cmds.Enqueue(cmd);
+                            }
+                        }
+                        // Process cmd
+                        this.m_currentSessionState = this.m_currentSessionState.HandleCommands(cmds);
+                    }
+                }
+            });
 
-            this.m_currentSessionState = this.m_states[(byte)SessionStates.OFFLINE];
+            //This is the thread that runs the games terminal.  It will contantly look for new TermCmd and
+            Task.Run(() =>
+            {
+                while (true) // Replace with a proper condition for stopping
+                {
+
+                    if (terminal_term_cmds.Count > 0)
+                    {
+                        Queue<TermCmd> cmds = new Queue<TermCmd>();
+                        lock (_term_q_in_use)
+                        {
+                            TermCmd cmd;
+                            while (terminal_term_cmds.TryDequeue(out cmd))
+                            {
+                                cmds.Enqueue(cmd);
+                            }
+                        }
+                        // Process cmd
+                        this.m_sessionForm.Terminal.HandleCommands(cmds);
+                    }
+                }
+            });
         }
 
         #region event rcv'r from conn obj
-        void ConnHandler_Disconnected(object sender, EventArgs e)
+        internal void ConnHandler_Disconnected(object sender, EventArgs e)
         {
-            Debug.WriteLine("Disconnect Event!", DBG_CAT);            
-            SetState(SessionStates.OFFLINE);
+            Debug.WriteLine("Disconnect Event!", DBG_CAT);
+            this.m_currentSessionState = this.m_currentSessionState.Disconnect();
         }
 
-        //handles the packet rcvd from socket
-        void ConnHandler_Rcvr(byte[] buffer)
+        class FixedSizeList<T> : List<T>
         {
-            if (buffer.Length == 0)
-                return; //TODO: buffer of zero means a disconnect?
-            //decode the byte[]
-            Queue<TermCmd> cmds = m_decoder.DecodeBuffer(buffer);
-            foreach (TermCmd c in cmds)
+            private readonly int _maxSize;
+
+            public FixedSizeList(int maxSize)
             {
-                Queue<TermCmd> sessionsCmds = new Queue<TermCmd>();
-                sessionsCmds.Enqueue(c);
-                //depends on our state depends on how we process data from the server
-                this.m_currentSessionState.HandleCommands(sessionsCmds);
-                //send cmds to terminal for drawing
-                Queue<TermCmd> termCmds = new Queue<TermCmd>();
-                termCmds.Enqueue(c);
-                this.m_sessionForm.Terminal.HandleCommands(termCmds);
+                _maxSize = maxSize;
             }
 
+            public new void Add(T item)
+            {
+                base.Add(item);
+                if (Count > _maxSize)
+                {
+                    RemoveAt(0); // Removes the oldest item
+                }
+            }
+        }
+
+        FixedSizeList<byte[]> temp = new FixedSizeList<byte[]>(10);
+
+
+        //handles the packet rcvd from socket
+        internal void ConnHandler_Rcvr(byte[] buffer)
+        {
+            temp.Add(buffer);
+            if (buffer[0] == 91)
+            {
+            }
+            if (buffer.Length == 0)
+                return; //TODO: buffer of zero means a disconnect?
+
+            
+            //decode the byte[]
+            Queue<TermCmd> cmds = m_decoder.DecodeBuffer(buffer);
+            foreach(TermCmd c in cmds) {
+                lock (this._term_q_in_use)
+                {
+                    terminal_term_cmds.Enqueue(c);
+                }
+                lock (this._state_q_in_use)
+                {
+                    state_term_cmds.Enqueue(c);
+                }
+            }
+            cmds.Clear();
+            
         }
         #endregion
 
         #region Internals
         #region Internals - commands called from SF
         byte[] StringAsciiNewLineMask = System.Text.Encoding.ASCII.GetBytes(new char[] {'\r'});
+        
 
         internal void Send(string s)
         {
@@ -106,17 +172,10 @@ namespace MMudTerm.Session
         internal bool Connect()
         {
             bool result = false;
-            SessionStates state = this.m_currentSessionState.Connect();
-            if (state == SessionStates.CONNECTED)
-            {
-                result = true;
+            this.m_currentSessionState = this.m_currentSessionState.Connect();
+            if(this.m_currentSessionState is SessionStateConnected) { 
+                result = true; 
             }
-            this.SetState(state);
-
-            if (this.m_SessionData.LogonEnabled) this.SetState(SessionStates.LOGON);
-            else if (this.m_SessionData.EnterGameEnabled) this.SetState(SessionStates.ENTERING_GAME);
-            else if (this.m_SessionData.MummyScriptEnabled) this.SetState(SessionStates.MummyScript);
-            
             return result;
             
         }
@@ -124,12 +183,8 @@ namespace MMudTerm.Session
         internal bool Disconnect()
         {
             bool result = false;
-            SessionStates state = this.m_currentSessionState.Disconnect();
-            if (state == SessionStates.OFFLINE)
-            {
-                result = true;
-            }
-            this.SetState(state);
+            this.m_currentSessionState = this.m_currentSessionState.Disconnect();
+            if (this.m_currentSessionState is SessionStateOffline) { result = true; }
             return result;
         }
         #endregion
@@ -137,23 +192,13 @@ namespace MMudTerm.Session
         #region API for SessionState calls
         internal int DisconnectFromServer()
         {
-            int result = 0;
-            if (this.m_connObj == null && this.m_currentSessionState.State == SessionStates.OFFLINE)
-                result = 1;
-            else if(this.m_connObj != null && this.m_currentSessionState.State != SessionStates.OFFLINE)
-                result = 2;
-            else
-            {
-                throw new Exception("Invalid coonObj state and session state!");
-            }
+            if(this.m_currentSessionState is SessionStateOffline) {  return -1; }
 
-            if(result == 2){
+            if (this.m_connObj != null) { 
                 SocketHandler.Disconnect(this.m_connObj);
                 this.m_connObj = null;
-                SetState(SessionStates.OFFLINE);
-                result = 1;
             }
-            return result;
+            return 1;
         }
 
         internal int ConnectToServer()
@@ -183,47 +228,14 @@ namespace MMudTerm.Session
             return result;
         }
 
-        internal int SetLogonState()
-        {
-            SetState(SessionStates.LOGON);
-            return 1;
-        }
-
         #endregion
               
         public void Dispose()
         {
-            this.m_connObj.Disconnect();
-            this.m_currentSessionState.Disconnect();
-            this.m_SessionData.Dispose();
-            this.m_sessionForm.Close();
-        }
-
-        internal void SetState(SessionStates sessionStates)
-        {
-            Debug.WriteLine("State change FROM: " + this.m_currentSessionState.State.ToString() + 
-                " TO: " + sessionStates.ToString(), DBG_CAT);
-            this.m_currentSessionState = this.m_states[(byte)sessionStates];
-        }
-
-        internal void SetMenuState()
-        {
-            this.SetState(SessionStates.MENU);
-        }
-
-        internal void SetGameMenuState()
-        {
-            this.SetState(SessionStates.GAME_MENU);
-        }
-
-        internal void SetEnteringGameState()
-        {
-            this.SetState(SessionStates.ENTERING_GAME);
-        }
-
-        internal void SetInGameState()
-        {
-            throw new NotImplementedException();
+            //this.m_connObj.Disconnect();
+            //this.m_currentSessionState.Disconnect();
+            //this.m_SessionData.Dispose();
+            //this.m_sessionForm.Close();
         }
     }
 }

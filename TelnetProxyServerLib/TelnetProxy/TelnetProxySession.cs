@@ -111,10 +111,10 @@ namespace TelnetProxyServer.TelnetProxy
         //Got something from the local send it to the remote and listen(ers)
         public void RcvFromClientSession(object sender, DataRcvEvent e)
         {
-            if (this.TapSession != null && this.TapSession.IsConnected)
-            {
-                this.TapSession.SendToRemote(e.DataBuffer);
-            }
+            //if (this.TapSession != null && this.TapSession.IsConnected)
+            //{
+            //    this.TapSession.SendToRemote(e.DataBuffer);
+            //}
 
             if (!this.m_TapBlockRcvFromClient)
             {

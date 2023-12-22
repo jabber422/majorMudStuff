@@ -41,7 +41,7 @@ namespace MMudTerm.Session
 
             this.toolStripButtonProxy.Checked = this.m_sessionData.ProxyEnabled;
             this.toolStripButtonLogon.Checked = this.m_sessionData.LogonEnabled;
-            this.toolStripButtonMummy.Checked = this.m_sessionData.EnterGameEnabled;
+            //this.toolStripButtonMummy.Checked = this.m_sessionData.EnterGameEnabled;
             this.toolStripButtonMummy.Checked = this.m_sessionData.MummyScriptEnabled;
         }
 
@@ -57,10 +57,20 @@ namespace MMudTerm.Session
             this.m_term.Init();
         }
 
-        //if focus is on the session window any key pressed goes to the server
+        List<char> _buffer = new List<char>();
+        //if focus is on the session window any key pressed is buffered, enter will send the buffer
         private void term_KeyPress(object sender, KeyPressEventArgs e)
         {
-            this.m_controller.Send(Encoding.ASCII.GetBytes(new char[] { e.KeyChar }));
+            if(e.KeyChar == (char)'\r')
+            {
+                this._buffer.Add(e.KeyChar);
+                this.m_controller.Send(Encoding.ASCII.GetBytes(this._buffer.ToArray()));
+                this._buffer.Clear();
+            }
+            else { 
+                this._buffer.Add(e.KeyChar);
+            }
+            
             e.Handled = true;
         }
 
@@ -134,29 +144,104 @@ namespace MMudTerm.Session
             this.m_sessionData.MummyScriptEnabled = !this.toolStripButtonMummy.Checked;
             this.toolStripButtonMummy.Checked = this.m_sessionData.MummyScriptEnabled;
 
-            if (this.m_sessionData.MummyScriptEnabled)
-            {
-                this.m_controller.SetState(SessionStates.MummyScript);
-            }
-            else
-            {
-                this.m_controller.SetState(SessionStates.CONNECTED);
-            }
+            //if (this.m_sessionData.MummyScriptEnabled)
+            //{
+            //    this.m_controller.SetState(SessionStates.MummyScript);
+            //}
+            //else
+            //{
+            //    this.m_controller.SetState(SessionStates.CONNECTED);
+            //}
                 
         }
 
         public void SetCombat(bool combatEngaged)
         {
             //this.buttonCombatEngaged
-            if (combatEngaged)
+            //if (combatEngaged)
+            //{
+            //    this.buttonCombatEngaged.BackColor = Color.Red;
+            //}
+            //else
+            //{
+            //    this.buttonCombatEngaged.BackColor = System.Drawing.SystemColors.Control;
+            //}
+        }
+
+        internal void UpdateState(string state_name)
+        {
+            if (this.InvokeRequired)
             {
-                this.buttonCombatEngaged.BackColor = Color.Red;
+                this.Invoke(new Action<string>(UpdateState), state_name);
             }
             else
             {
-                this.buttonCombatEngaged.BackColor = System.Drawing.SystemColors.Control;
+                this.toolStripStatusLabel1.Text = state_name;
             }
         }
-        
+
+        SessionDebugWindow debug_window = null;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this.debug_window = new SessionDebugWindow(this.m_controller);
+            debug_window.Show();
+        }
+
+        internal void UpdatePlayerStats(Dictionary<string, string> stats)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<Dictionary<string, string>>(UpdatePlayerStats), stats);
+            }
+            else
+            {
+                if(stats.ContainsKey("Resting"))
+                {
+                    if (stats["Resting"] == "Resting")
+                    {
+                        this.toolStripStatusLabel2.Text = "Resting";
+                    }else if(stats["Resting"] == "No")
+                    {
+                        if (this.toolStripStatusLabel2.Text == "Resting")
+                        {
+                            this.toolStripStatusLabel2.Text = "Idle";
+                        }
+                    }
+                }
+            }
+
+            if (debug_window != null)
+            {
+                debug_window.UpdateStats(stats);
+            }
+        }
+
+        internal void UpdateRoom(Dictionary<string, string> room_info)
+        {
+            if (debug_window != null)
+            {
+                debug_window.UpdateRoom(room_info);
+            }
+        }
+
+        internal void UpdateInv(Dictionary<string, string> inv)
+        {
+            if (debug_window != null)
+            {
+                debug_window.UpdateInv(inv);
+            }
+        }
+
+        internal void UpdateCombat(bool in_combat)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<bool>(UpdateCombat), in_combat);
+            }
+            else
+            {
+                this.toolStripStatusLabel2.Text = in_combat ? "In Combat" : "Idle";
+            }
+        }
     }
 }

@@ -121,6 +121,18 @@ namespace TelnetProxyServer
             this.CountId = GetCounterId();
             this.DataBuffer = buffer;
         }
+
+        public override string ToString()
+        {
+            String s = "";
+            for(int i = 0; i < this.DataBuffer.Length; i++)
+            {
+                s += this.DataBuffer[i].ToString();
+                s += ", ";
+            }
+            return s;
+
+        }
     }
 
     public class SessionsDisconnectEvent : EventArgs

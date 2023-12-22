@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.ComponentModel;
 using TelnetProxyServer.TelnetProxy;
+using System.Threading.Tasks;
 
 namespace TelnetProxyServer
 {
@@ -74,7 +75,7 @@ namespace TelnetProxyServer
         {
             Debug.WriteLine("ENTER m_listener_NewClientConnectEvent");
             //the connection to/from mega
-            ITelnetSessionControl newSession = new TelnetSession(newClient);
+            TelnetSession newSession = new TelnetSession(newClient);
             //wrapper to hold loval and remote connections
             //ITelnetProxySessionControl newProxySession = new TelnetProxySession(newSession);
             //prompt mega for remote connection info
@@ -84,22 +85,23 @@ namespace TelnetProxyServer
         //Every time there is a new connection do this.
         void OnNewClientStart(object newSessionObject)
         {
-            ITelnetSessionControl newSession = (ITelnetSessionControl)newSessionObject;
+            TelnetSession newSession = (TelnetSession)newSessionObject;
 
             //blocks while the connection to the remote server is started
-            TelnetProxySession_StartScript Script = new TelnetProxySession_StartScript();
-            int retVal = Script.Start(newSession, m_sessions);
-            Debug.WriteLine("After Script retval = " + retVal);
+            NewConnectionScript Script = new NewConnectionScript(); ;
+            Task<int> foo = Script.RunLogonScript(newSession, m_sessions);
+            //Debug.WriteLine("After Script retval = " + retVal);
 
-            if (retVal < 0)
-            {
-                Debug.WriteLine("New Client failed to complete start script succesfully");
-                newSession.Disconnect();
-            }
-            else
-            {
-                m_sessions[retVal].DisconnectEvent += newSession_Disconnect_Event;
-            }
+            //if (retVal < 0)
+            //{
+            //    Debug.WriteLine("New Client failed to complete start script succesfully");
+            //    newSession.Disconnect();
+            //}
+            //else
+            //{
+            //    //connect listener to the watched sockets disconnect event
+            //    m_sessions[retVal].DisconnectEvent += newSession_Disconnect_Event;
+            //}
         }
 
         void newSession_Disconnect_Event(object sender, EventArgs e)

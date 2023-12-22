@@ -21,7 +21,7 @@ namespace TelnetProxyServer.TelnetClient
         //public IAsyncResult CurrentAsyncHandler { get; private set; }
         //public MyBuffer TcpClientReadBuffer { get; private set; }
         string m_name;
-        TcpClient m_TcpClient;
+        public TcpClient m_TcpClient;
         string m_remoteIp;
         int m_remotePort;
         Guid m_Id;
@@ -100,6 +100,11 @@ namespace TelnetProxyServer.TelnetClient
             IPEndPoint ip = (IPEndPoint)this.TcpClient.Client.RemoteEndPoint;
             this.m_remoteIp = ip.Address.ToString();
             this.m_remotePort = ip.Port;
+        }
+
+        public TcpClient GetTcpClient()
+        {
+            return this.TcpClient;
         }
 
         public bool Connect()
