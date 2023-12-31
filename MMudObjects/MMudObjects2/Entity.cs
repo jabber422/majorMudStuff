@@ -1,24 +1,51 @@
 ﻿using MMudObjects;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace MMudObjects
 {
-    public class Entity : ISerializable
+    public class Entity
     {
-        public virtual string Name { get; set; }
+        public Entity(string name) { 
+            string verb_pattern_entity = "nasty|big|angry|nasty";
+            string noun = $"(?:({verb_pattern_entity}))?" + @"(.*)";
+            Match match = Regex.Match(name, noun);
+            if (match.Success)
+            {
+                this.Name = match.Groups[2].Value.Trim();
+                string[] tokens= this.Name.Split(',');
+                if(this is Player)
+                {
+                    this.Name = tokens[0];
+                }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            throw new System.NotImplementedException();
+                this.Verb = match.Groups[1].Value.Trim();
+            }
+            else
+            {
+                Debug.WriteLine("Failed to match Entity: " + name);
+                this.Name = name;
+                this.Verb = "";                
+            }
         }
+        public virtual string Name { get; private set; }
+
+        public virtual string FullName { get { return $"{this.Verb} {this.Name}".Trim(); } }
+        public virtual string Verb { get; private set; }
+
+        public virtual bool InCombat { get; set; }
     }
 
     public class NPC : Entity
     {
-        public NPC()
+        public NPC(string name) : base(name)
         {
             this.Abilities = new List<ItemAbility>();
             this.Attacks = new List<MonsterAttackInfo>();
@@ -45,6 +72,147 @@ namespace MMudObjects
         int Magic { get; set; }
     }
 
+    public class Purse
+    {
+        public int runic = 0;
+        public int platinum = 0;
+        public int gold = 0;
+        public int silver = 0;
+        public int copper = 0;
+        public int wealth = 0;
+
+        public Purse(List<CarryableItem> coins)
+        {
+            foreach(CarryableItem coin in coins)
+            {
+                switch (coin.Name)
+                {
+                    case "runic coins":
+                        this.runic = coin.Quantity; break;
+                    case "platinum pieces":
+                        this.platinum = coin.Quantity; break;
+                    case "gold crowns":
+                        this.gold = coin.Quantity; break;
+                    case "silver nobles":
+                        this.silver = coin.Quantity; break;
+                    case "copper farthings":
+                        this.copper = coin.Quantity; break;
+                }
+            }
+        }
+    }
+
+    public class Inventory
+    {
+        private Dictionary<string, CarryableItem> items = null;
+        public string weight
+        {
+            get { return this.current_weight + "/" + this.max_weight; }
+            set { 
+                this.current_weight = int.Parse(value.Split('/')[0]); 
+                this.max_weight = int.Parse(value.Split('/')[1]); 
+            }
+        }
+        public int current_weight = 0; 
+        public int max_weight = 0;
+
+        public Dictionary<string, CarryableItem> Items {  get { return this.items; } }
+
+        public Inventory()
+        {
+            this.items = new Dictionary<string, CarryableItem> ();
+            this.weight = "0/0";
+        }
+
+        //sets the current inventory, based on the 'inv' command in game
+        public void SetInventory(Dictionary<string, CarryableItem> items, string weight)
+        {
+            this.items = items;
+            this.weight = weight;
+        }
+
+        public Purse GetPurse()
+        {
+            string[] coin_names = new string[] { "runic coins", "platinum pieces", "gold crons", "silver nobles", "copper farthings" };
+            List<CarryableItem> coins = new List<CarryableItem> ();
+            foreach(string coin_name in coin_names)
+            {
+                CarryableItem new_coin = null;
+                bool result = this.Items.TryGetValue(coin_name, out new_coin);
+                if (result) { coins.Add(new_coin); }
+            }
+
+            return new Purse(coins);
+        }
+
+        public void Add(List<CarryableItem> items)
+        {
+            foreach(var item in items)
+            {
+                this.Add(item);
+            }
+        }
+
+        public void Add(CarryableItem item)
+        {
+            if (this.items.ContainsKey(item.Name))
+            {
+                var items_player_has = this.items[item.Name];
+                items_player_has.Quantity += item.Quantity;
+            }
+            else
+            {
+                this.items.Add(item.Name, item);
+            }
+        }
+
+        public void Remove(List<CarryableItem> items)
+        {
+            foreach (var item in items)
+            {
+                this.Remove(item);
+            }
+        }
+
+        public void Remove(CarryableItem item)
+        {
+            if (this.items.ContainsKey(item.Name))
+            {
+                var items_player_has = this.items[item.Name];
+                items_player_has.Quantity -= item.Quantity;
+                if(items_player_has.Quantity <= 0)
+                {
+                    this.items.Remove(items_player_has.Name);
+                }
+            }
+            else
+            {
+                //should only happen if the inv object hasn't been loaded
+            }
+        }
+
+        public CarryableItem GetItem(string coin_name)
+        {
+            List<string> item_names = this.items.Keys.ToList();
+            if (item_names.Contains(coin_name))
+            {
+                return this.items[coin_name];
+            }
+            return null;
+        }
+
+        public void RemoveItem(string coin_name)
+        {
+            List<string> item_names = this.items.Keys.ToList();
+            if (item_names.Contains(coin_name))
+            {
+                this.items.Remove(coin_name);
+            }
+        }
+
+       
+    }
+
     public class Player : Entity
     {
         public Room Room { get; set; }
@@ -58,17 +226,21 @@ namespace MMudObjects
         public bool IsResting { get; set; }
         public bool IsMeditating { get; set; }
 
-        public Player()
+        public Player(string name) : base(name)
         {
             this.Stats = new PlayerStats();
+            this.Stats.Name = this.Name;
             this.Room = new Room();
-            this.Inventory = new List<CarryableItem>();
+            this.Inventory = new Inventory();
             this.Equipped = new EquippedItemsInfo();
             this.Abilities = new List<ItemAbility>();
             this.QuestAbilities = new List<QuestAbility>();
+            
+
+            
         }
 
-        public List<CarryableItem> Inventory { get; set; }
+        public Inventory Inventory { get; set; }
         public virtual EquippedItemsInfo Equipped { get; set; }
 
         public virtual int Rank { get; set; }
@@ -99,13 +271,9 @@ namespace MMudObjects
             get { return this.Stats.LastName; }
         }
 
-        public virtual string Name
-        {
-            get { return this.Stats.Name; }
-            set { this.Stats.UpdateName(value); }
-        }
-
         public PlayerStats Stats { get; set; }
+        public bool Online { get; set; }
+        public double GainedExp { get; set; }
     }
 }
 
@@ -113,11 +281,11 @@ public class PlayerStats
 {
     public event EventHandler<PlayerStats> UpdatedPlayerStats;
     //this is a FirstName and possibly a LastName, space seperated, no special chars
-    public string Name { get { return this._name; } set { UpdateName(value); } }
-    
-    
-    public string Lives_CP { get; set; }
-    
+    public string Name { get { return this._name; } set { this._name = value; } }
+
+
+    public string Lives_CP = "";
+
     public string Race { get; set; }
     public double Exp { get; set; }
     public string Class { get; set; }
@@ -128,7 +296,7 @@ public class PlayerStats
     public int Agility { get; set; }
     public int Health { get; set; }
     public int Charm { get; set; }
-    
+
     public string Hits
     {
         get { return this.CurHits + "/" + this.MaxHits; }
@@ -156,6 +324,7 @@ public class PlayerStats
         this.Charm = newStats.Charm;
         this.Hits = newStats.Hits;
         this.Armour_Class = newStats.Armour_Class;
+        this.SpellCasting = newStats.SpellCasting;
         this.Perception = newStats.Perception;
         this.Stealth = newStats.Stealth;
         this.Thievery = newStats.Thievery;
@@ -198,6 +367,7 @@ public class PlayerStats
         }
     }
 
+    public int SpellCasting { get; set; }
     public int Perception { get; set; }
     public int Stealth { get; set; }
     public int Thievery { get; set; }
@@ -226,50 +396,138 @@ public class PlayerStats
     public int AC { get; set; }
     public int DR { get; set; }
 
-    public int Lives { get { return int.Parse(this.Lives_CP.Split(new char[] { '/' })[0]); } }
-    public int CP { get { return int.Parse(this.Lives_CP.Split(new char[] { '/' })[1]); } }
+    public int Lives { get {
+            string token = this.Lives_CP.Split(new char[] { '/' })[0];
+            int lives = 0;
+            int.TryParse(token, out lives);
+            return lives;
+        } }
+    public int CP
+    {
+        get
+        {
+            string[] tokens = this.Lives_CP.Split(new char[] { '/' });
+            int cp = 0;
 
+            if (tokens.Length != 2) { return cp; }
+            int.TryParse(tokens[1], out cp);
+            return cp;
+        }
+    }
 
     public PlayerStats()
     {
     }
 
-    private string _name;
+    public PlayerStats(Dictionary<string, string> stats)
+    {
+        this.stats = stats;
+        this.fromdict(this.stats);
+    }
+
+    private string _name = "";
     private string _firstName;
     private string _lastName;
+    private Dictionary<string, string> stats;
 
-    internal void UpdateName(string value)
+    public void fromdict(Dictionary<string, string> stats)
     {
-        if(this._name == null)
+        foreach (KeyValuePair<String, string> kvp in stats)
         {
-            this._name = value;
-            string[] tokens = this._name.Split(new char[] { ' ' });
-            this._firstName = tokens[0];
-
-            if(tokens.Length == 2)
+            string[] vals = null;
+            switch (kvp.Key)
             {
-                this._lastName = tokens[1];
+                case "Lives/CP":
+                    this.Lives_CP = kvp.Value;
+                    break;
+                case "Exp":
+                    this.Exp = double.Parse(kvp.Value);
+                    break;
+                case "Perception":
+                    this.Perception = int.Parse(kvp.Value);
+                    break;
+                case "Stealth":
+                    this.Stealth = int.Parse(kvp.Value);
+                    break;
+                case "Hits":
+                    vals = kvp.Value.Split('/');
+                    this.CurHits = int.Parse(vals[0]);
+                    this.MaxHits = int.Parse(vals[1]);
+                    break;
+                case "Current Hits":
+                    this.CurHits = int.Parse(kvp.Value);
+                    break;
+                case "Armour":
+                    vals = kvp.Value.Split('/');
+                    this.AC = int.Parse(vals[0]);
+                    this.DR = int.Parse(vals[1]);
+                    break;
+                case "Thievery":
+                    this.Thievery = int.Parse(kvp.Value);
+                    break;
+                case "Mana":
+                    vals = kvp.Value.Split('/');
+                    this.CurMana = int.Parse(vals[0]);
+                    this.MaxMana = int.Parse(vals[1]);
+                    break;
+                case "Current Mana":
+                    this.CurMana = int.Parse(kvp.Value);
+                    break;
+                case "Spellcasting":
+                    this.SpellCasting = int.Parse(kvp.Value);
+                    break;
+                case "Traps":
+                    this.Traps = int.Parse(kvp.Value);
+                    break;
+                case "Picklocks":
+                    this.Picklocks = int.Parse(kvp.Value);
+                    break;
+                case "Strength":
+                    this.Strength = int.Parse(kvp.Value);
+                    break;
+                case "Agility":
+                    this.Agility = int.Parse(kvp.Value);
+                    break;
+                case "Tracking":
+                    this.Tracking = int.Parse(kvp.Value);
+                    break;
+                case "Intellect":
+                    this.Intellect = int.Parse(kvp.Value);
+                    break;
+                case "Health":
+                    this.Health = int.Parse(kvp.Value);
+                    break;
+                case "Arts":
+                    this.Martial_Arts = int.Parse(kvp.Value);
+                    break;
+                case "Willpower":
+                    this.Willpower = int.Parse(kvp.Value);
+                    break;
+                case "Charm":
+                    this.Charm = int.Parse(kvp.Value);
+                    break;
+                case "MagicRes":
+                    this.MagicRes = int.Parse(kvp.Value);
+                    break;
+                case "Level":
+                    this.Level = int.Parse(kvp.Value);
+                    break;
+                //case "Resting":
+                //    this.Resting = bool.Parse(kvp.Value);
+                    //break;
+                case "Name":
+                    this.Name = kvp.Value;
+                    break;
+                case "Race":
+                    this.Race = kvp.Value;
+                    break;
+                case "Class":
+                    this.Class =kvp.Value;
+                    break;
+                default:
+                    break;
             }
         }
-        else
-        {
-            string[] tokens = value.Split(new char[] { ' ' });
-            if(this._firstName != tokens[0])
-            {
-                Log.Warn("Player first name has changed!  From: {0}, To: {0}", this._firstName, tokens[0]);
-                this._firstName = tokens[0];
-            }
-
-            if (tokens.Length == 2)
-            {
-                if (this._lastName != tokens[1])
-                {
-                    Log.Warn("Player last name has changed!  From: {0}, To: {0}", this._firstName, tokens[0]);
-                    this._lastName = tokens[1];
-                }
-            }
-        }
-
     }
 }
 

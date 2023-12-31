@@ -81,7 +81,8 @@ namespace MMudTerm.Session.SessionStateData
                     if (!this.IAC_DONE)
                     {
                         this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
+                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 1 });
+                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 0 });
                         this.m_controller.m_connObj.Send(new byte[] { 255, 251, 0 });
                         this.IAC_DONE = true;
                     }
@@ -133,7 +134,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    //Console.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
                         this.m_controller.Send("N");
@@ -200,7 +201,7 @@ namespace MMudTerm.Session.SessionStateData
                 if (c is TermStringDataCmd)
                 {
                     string msg = (c as TermStringDataCmd).GetValue();
-                    Console.WriteLine(msg);
+                    //Console.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
                         this.m_controller.Send("N");

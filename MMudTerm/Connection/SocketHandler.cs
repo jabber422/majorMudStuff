@@ -72,6 +72,7 @@ namespace MMudTerm.Connection
             }
             catch (Exception)
             {
+                //if you are tapping into the session, is that session working? 
             }
         }
 
@@ -91,6 +92,7 @@ namespace MMudTerm.Connection
                 }
                 catch (SocketException se)
                 {
+                    //is the tap session alive?
                 }
             }
         }

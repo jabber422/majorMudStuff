@@ -28,78 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label_name = new System.Windows.Forms.Label();
-            this.label_race = new System.Windows.Forms.Label();
-            this.label_class = new System.Windows.Forms.Label();
-            this.label_mana = new System.Windows.Forms.Label();
-            this.label_hits = new System.Windows.Forms.Label();
-            this.label_wil = new System.Windows.Forms.Label();
-            this.label_int = new System.Windows.Forms.Label();
-            this.label_str = new System.Windows.Forms.Label();
-            this.label_wil_value = new System.Windows.Forms.Label();
-            this.label_int_value = new System.Windows.Forms.Label();
-            this.label_str_value = new System.Windows.Forms.Label();
-            this.label_hits_value = new System.Windows.Forms.Label();
-            this.label_class_value = new System.Windows.Forms.Label();
-            this.label_race_value = new System.Windows.Forms.Label();
-            this.label_name_value = new System.Windows.Forms.Label();
-            this.label_chr = new System.Windows.Forms.Label();
-            this.label_hea = new System.Windows.Forms.Label();
-            this.label_agi = new System.Windows.Forms.Label();
-            this.label_sc = new System.Windows.Forms.Label();
-            this.label_ac = new System.Windows.Forms.Label();
-            this.label_level = new System.Windows.Forms.Label();
-            this.label_xp = new System.Windows.Forms.Label();
-            this.label_chr_value = new System.Windows.Forms.Label();
-            this.label_hea_value = new System.Windows.Forms.Label();
-            this.label_agi_value = new System.Windows.Forms.Label();
-            this.label_sc_value = new System.Windows.Forms.Label();
-            this.label_level_value = new System.Windows.Forms.Label();
-            this.label_exp_value = new System.Windows.Forms.Label();
-            this.label_mr = new System.Windows.Forms.Label();
-            this.label_ma = new System.Windows.Forms.Label();
-            this.label_track = new System.Windows.Forms.Label();
-            this.label_traps = new System.Windows.Forms.Label();
-            this.label_thief = new System.Windows.Forms.Label();
-            this.label_stealth = new System.Windows.Forms.Label();
-            this.label_perception = new System.Windows.Forms.Label();
-            this.label_lives_cp = new System.Windows.Forms.Label();
-            this.label_pick = new System.Windows.Forms.Label();
-            this.label_pick_value = new System.Windows.Forms.Label();
-            this.label_mr_value = new System.Windows.Forms.Label();
-            this.label_ma_value = new System.Windows.Forms.Label();
-            this.label_track_value = new System.Windows.Forms.Label();
-            this.label_trap_value = new System.Windows.Forms.Label();
-            this.label_thief_value = new System.Windows.Forms.Label();
-            this.label_stealth_value = new System.Windows.Forms.Label();
-            this.label_perception_value = new System.Windows.Forms.Label();
-            this.label_lives_value = new System.Windows.Forms.Label();
-            this.label_hits_max = new System.Windows.Forms.Label();
-            this.label_mana_value = new System.Windows.Forms.Label();
-            this.label_mana_max = new System.Windows.Forms.Label();
-            this.label_cp_value = new System.Windows.Forms.Label();
-            this.label_dr_value = new System.Windows.Forms.Label();
-            this.label_ac_value = new System.Windows.Forms.Label();
-            this.label_rest_value = new System.Windows.Forms.Label();
-            this.label_rest = new System.Windows.Forms.Label();
             this.label2_alsohere = new System.Windows.Forms.Label();
             this.label_roomname_value = new System.Windows.Forms.Label();
             this.label_roomname = new System.Windows.Forms.Label();
             this.label_roomdesc_value = new System.Windows.Forms.Label();
             this.label_roomdesc = new System.Windows.Forms.Label();
-            this.label_incombat_value = new System.Windows.Forms.Label();
-            this.label_incombat = new System.Windows.Forms.Label();
             this.label_items = new System.Windows.Forms.Label();
             this.label_exits_value = new System.Windows.Forms.Label();
             this.label_exits = new System.Windows.Forms.Label();
             this.textbox_inv_value = new System.Windows.Forms.TextBox();
             this.label_inv = new System.Windows.Forms.Label();
-            this.label_wealth = new System.Windows.Forms.Label();
-            this.label_wealth_value = new System.Windows.Forms.Label();
             this.label_enc_value = new System.Windows.Forms.Label();
             this.label_enc = new System.Windows.Forms.Label();
             this.textBox_alsohere_value = new System.Windows.Forms.TextBox();
             this.textBox_items_value = new System.Windows.Forms.TextBox();
+            this.label_forsale = new System.Windows.Forms.Label();
+            this.textBox_forsale_value = new System.Windows.Forms.TextBox();
             this.label_platinum_value = new System.Windows.Forms.Label();
             this.label_copper_value = new System.Windows.Forms.Label();
             this.label_silver_value = new System.Windows.Forms.Label();
@@ -110,549 +54,65 @@
             this.label_silver = new System.Windows.Forms.Label();
             this.label_gold = new System.Windows.Forms.Label();
             this.label_runic = new System.Windows.Forms.Label();
-            this.label_forsale = new System.Windows.Forms.Label();
-            this.textBox_forsale_value = new System.Windows.Forms.TextBox();
+            this.label_wealth_value = new System.Windows.Forms.Label();
+            this.label_wealth = new System.Windows.Forms.Label();
+            this.label_incombat_value = new System.Windows.Forms.Label();
+            this.label_incombat = new System.Windows.Forms.Label();
+            this.label_rest_value = new System.Windows.Forms.Label();
+            this.label_rest = new System.Windows.Forms.Label();
+            this.label_dr_value = new System.Windows.Forms.Label();
+            this.label_ac_value = new System.Windows.Forms.Label();
+            this.label_cp_value = new System.Windows.Forms.Label();
+            this.label_mana_max = new System.Windows.Forms.Label();
+            this.label_mana_value = new System.Windows.Forms.Label();
+            this.label_hits_max = new System.Windows.Forms.Label();
+            this.label_pick_value = new System.Windows.Forms.Label();
+            this.label_mr_value = new System.Windows.Forms.Label();
+            this.label_ma_value = new System.Windows.Forms.Label();
+            this.label_track_value = new System.Windows.Forms.Label();
+            this.label_trap_value = new System.Windows.Forms.Label();
+            this.label_thief_value = new System.Windows.Forms.Label();
+            this.label_stealth_value = new System.Windows.Forms.Label();
+            this.label_perception_value = new System.Windows.Forms.Label();
+            this.label_lives_value = new System.Windows.Forms.Label();
+            this.label_pick = new System.Windows.Forms.Label();
+            this.label_mr = new System.Windows.Forms.Label();
+            this.label_ma = new System.Windows.Forms.Label();
+            this.label_track = new System.Windows.Forms.Label();
+            this.label_traps = new System.Windows.Forms.Label();
+            this.label_thief = new System.Windows.Forms.Label();
+            this.label_stealth = new System.Windows.Forms.Label();
+            this.label_perception = new System.Windows.Forms.Label();
+            this.label_lives_cp = new System.Windows.Forms.Label();
+            this.label_chr_value = new System.Windows.Forms.Label();
+            this.label_hea_value = new System.Windows.Forms.Label();
+            this.label_agi_value = new System.Windows.Forms.Label();
+            this.label_sc_value = new System.Windows.Forms.Label();
+            this.label_level_value = new System.Windows.Forms.Label();
+            this.label_exp_value = new System.Windows.Forms.Label();
+            this.label_chr = new System.Windows.Forms.Label();
+            this.label_hea = new System.Windows.Forms.Label();
+            this.label_agi = new System.Windows.Forms.Label();
+            this.label_sc = new System.Windows.Forms.Label();
+            this.label_ac = new System.Windows.Forms.Label();
+            this.label_level = new System.Windows.Forms.Label();
+            this.label_xp = new System.Windows.Forms.Label();
+            this.label_wil_value = new System.Windows.Forms.Label();
+            this.label_int_value = new System.Windows.Forms.Label();
+            this.label_str_value = new System.Windows.Forms.Label();
+            this.label_hits_value = new System.Windows.Forms.Label();
+            this.label_class_value = new System.Windows.Forms.Label();
+            this.label_race_value = new System.Windows.Forms.Label();
+            this.label_name_value = new System.Windows.Forms.Label();
+            this.label_wil = new System.Windows.Forms.Label();
+            this.label_int = new System.Windows.Forms.Label();
+            this.label_str = new System.Windows.Forms.Label();
+            this.label_mana = new System.Windows.Forms.Label();
+            this.label_hits = new System.Windows.Forms.Label();
+            this.label_class = new System.Windows.Forms.Label();
+            this.label_race = new System.Windows.Forms.Label();
+            this.label_name = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // label_name
-            // 
-            this.label_name.AutoSize = true;
-            this.label_name.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_name.Location = new System.Drawing.Point(12, 9);
-            this.label_name.Name = "label_name";
-            this.label_name.Size = new System.Drawing.Size(63, 19);
-            this.label_name.TabIndex = 0;
-            this.label_name.Text = "Name: ";
-            // 
-            // label_race
-            // 
-            this.label_race.AutoSize = true;
-            this.label_race.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_race.Location = new System.Drawing.Point(12, 37);
-            this.label_race.Name = "label_race";
-            this.label_race.Size = new System.Drawing.Size(54, 19);
-            this.label_race.TabIndex = 1;
-            this.label_race.Text = "Race:";
-            // 
-            // label_class
-            // 
-            this.label_class.AutoSize = true;
-            this.label_class.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_class.Location = new System.Drawing.Point(12, 66);
-            this.label_class.Name = "label_class";
-            this.label_class.Size = new System.Drawing.Size(63, 19);
-            this.label_class.TabIndex = 2;
-            this.label_class.Text = "Class:";
-            // 
-            // label_mana
-            // 
-            this.label_mana.AutoSize = true;
-            this.label_mana.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_mana.Location = new System.Drawing.Point(12, 122);
-            this.label_mana.Name = "label_mana";
-            this.label_mana.Size = new System.Drawing.Size(54, 19);
-            this.label_mana.TabIndex = 4;
-            this.label_mana.Text = "Mana:";
-            // 
-            // label_hits
-            // 
-            this.label_hits.AutoSize = true;
-            this.label_hits.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_hits.Location = new System.Drawing.Point(12, 94);
-            this.label_hits.Name = "label_hits";
-            this.label_hits.Size = new System.Drawing.Size(54, 19);
-            this.label_hits.TabIndex = 3;
-            this.label_hits.Text = "Hits:";
-            // 
-            // label_wil
-            // 
-            this.label_wil.AutoSize = true;
-            this.label_wil.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_wil.Location = new System.Drawing.Point(12, 238);
-            this.label_wil.Name = "label_wil";
-            this.label_wil.Size = new System.Drawing.Size(45, 19);
-            this.label_wil.TabIndex = 8;
-            this.label_wil.Text = "WIL:";
-            // 
-            // label_int
-            // 
-            this.label_int.AutoSize = true;
-            this.label_int.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_int.Location = new System.Drawing.Point(12, 209);
-            this.label_int.Name = "label_int";
-            this.label_int.Size = new System.Drawing.Size(45, 19);
-            this.label_int.TabIndex = 7;
-            this.label_int.Text = "INT:";
-            // 
-            // label_str
-            // 
-            this.label_str.AutoSize = true;
-            this.label_str.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_str.Location = new System.Drawing.Point(12, 181);
-            this.label_str.Name = "label_str";
-            this.label_str.Size = new System.Drawing.Size(45, 19);
-            this.label_str.TabIndex = 6;
-            this.label_str.Text = "STR:";
-            // 
-            // label_wil_value
-            // 
-            this.label_wil_value.AutoSize = true;
-            this.label_wil_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_wil_value.Location = new System.Drawing.Point(81, 238);
-            this.label_wil_value.Name = "label_wil_value";
-            this.label_wil_value.Size = new System.Drawing.Size(18, 19);
-            this.label_wil_value.TabIndex = 16;
-            this.label_wil_value.Text = "2";
-            // 
-            // label_int_value
-            // 
-            this.label_int_value.AutoSize = true;
-            this.label_int_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_int_value.Location = new System.Drawing.Point(81, 209);
-            this.label_int_value.Name = "label_int_value";
-            this.label_int_value.Size = new System.Drawing.Size(18, 19);
-            this.label_int_value.TabIndex = 15;
-            this.label_int_value.Text = "1";
-            // 
-            // label_str_value
-            // 
-            this.label_str_value.AutoSize = true;
-            this.label_str_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_str_value.Location = new System.Drawing.Point(81, 181);
-            this.label_str_value.Name = "label_str_value";
-            this.label_str_value.Size = new System.Drawing.Size(18, 19);
-            this.label_str_value.TabIndex = 14;
-            this.label_str_value.Text = "0";
-            // 
-            // label_hits_value
-            // 
-            this.label_hits_value.AutoSize = true;
-            this.label_hits_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_hits_value.Location = new System.Drawing.Point(72, 94);
-            this.label_hits_value.Name = "label_hits_value";
-            this.label_hits_value.Size = new System.Drawing.Size(45, 19);
-            this.label_hits_value.TabIndex = 12;
-            this.label_hits_value.Text = "9999";
-            // 
-            // label_class_value
-            // 
-            this.label_class_value.AutoSize = true;
-            this.label_class_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_class_value.Location = new System.Drawing.Point(81, 66);
-            this.label_class_value.Name = "label_class_value";
-            this.label_class_value.Size = new System.Drawing.Size(72, 19);
-            this.label_class_value.TabIndex = 11;
-            this.label_class_value.Text = "Unknown";
-            // 
-            // label_race_value
-            // 
-            this.label_race_value.AutoSize = true;
-            this.label_race_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_race_value.Location = new System.Drawing.Point(81, 37);
-            this.label_race_value.Name = "label_race_value";
-            this.label_race_value.Size = new System.Drawing.Size(72, 19);
-            this.label_race_value.TabIndex = 10;
-            this.label_race_value.Text = "Unknown";
-            // 
-            // label_name_value
-            // 
-            this.label_name_value.AutoSize = true;
-            this.label_name_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_name_value.Location = new System.Drawing.Point(81, 9);
-            this.label_name_value.Name = "label_name_value";
-            this.label_name_value.Size = new System.Drawing.Size(81, 19);
-            this.label_name_value.TabIndex = 9;
-            this.label_name_value.Text = "John Doe";
-            // 
-            // label_chr
-            // 
-            this.label_chr.AutoSize = true;
-            this.label_chr.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_chr.Location = new System.Drawing.Point(171, 238);
-            this.label_chr.Name = "label_chr";
-            this.label_chr.Size = new System.Drawing.Size(45, 19);
-            this.label_chr.TabIndex = 24;
-            this.label_chr.Text = "CHR:";
-            // 
-            // label_hea
-            // 
-            this.label_hea.AutoSize = true;
-            this.label_hea.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_hea.Location = new System.Drawing.Point(171, 209);
-            this.label_hea.Name = "label_hea";
-            this.label_hea.Size = new System.Drawing.Size(45, 19);
-            this.label_hea.TabIndex = 23;
-            this.label_hea.Text = "HEA:";
-            // 
-            // label_agi
-            // 
-            this.label_agi.AutoSize = true;
-            this.label_agi.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_agi.Location = new System.Drawing.Point(171, 181);
-            this.label_agi.Name = "label_agi";
-            this.label_agi.Size = new System.Drawing.Size(45, 19);
-            this.label_agi.TabIndex = 22;
-            this.label_agi.Text = "AGI:";
-            // 
-            // label_sc
-            // 
-            this.label_sc.AutoSize = true;
-            this.label_sc.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_sc.Location = new System.Drawing.Point(171, 122);
-            this.label_sc.Name = "label_sc";
-            this.label_sc.Size = new System.Drawing.Size(126, 19);
-            this.label_sc.TabIndex = 21;
-            this.label_sc.Text = "Spellcasting:";
-            // 
-            // label_ac
-            // 
-            this.label_ac.AutoSize = true;
-            this.label_ac.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ac.Location = new System.Drawing.Point(171, 94);
-            this.label_ac.Name = "label_ac";
-            this.label_ac.Size = new System.Drawing.Size(126, 19);
-            this.label_ac.TabIndex = 20;
-            this.label_ac.Text = "Armour Class:";
-            // 
-            // label_level
-            // 
-            this.label_level.AutoSize = true;
-            this.label_level.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_level.Location = new System.Drawing.Point(171, 66);
-            this.label_level.Name = "label_level";
-            this.label_level.Size = new System.Drawing.Size(63, 19);
-            this.label_level.TabIndex = 19;
-            this.label_level.Text = "Level:";
-            // 
-            // label_xp
-            // 
-            this.label_xp.AutoSize = true;
-            this.label_xp.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_xp.Location = new System.Drawing.Point(171, 37);
-            this.label_xp.Name = "label_xp";
-            this.label_xp.Size = new System.Drawing.Size(45, 19);
-            this.label_xp.TabIndex = 18;
-            this.label_xp.Text = "Exp:";
-            // 
-            // label_chr_value
-            // 
-            this.label_chr_value.AutoSize = true;
-            this.label_chr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_chr_value.Location = new System.Drawing.Point(303, 238);
-            this.label_chr_value.Name = "label_chr_value";
-            this.label_chr_value.Size = new System.Drawing.Size(18, 19);
-            this.label_chr_value.TabIndex = 32;
-            this.label_chr_value.Text = "6";
-            // 
-            // label_hea_value
-            // 
-            this.label_hea_value.AutoSize = true;
-            this.label_hea_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_hea_value.Location = new System.Drawing.Point(303, 209);
-            this.label_hea_value.Name = "label_hea_value";
-            this.label_hea_value.Size = new System.Drawing.Size(18, 19);
-            this.label_hea_value.TabIndex = 31;
-            this.label_hea_value.Text = "5";
-            // 
-            // label_agi_value
-            // 
-            this.label_agi_value.AutoSize = true;
-            this.label_agi_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_agi_value.Location = new System.Drawing.Point(303, 181);
-            this.label_agi_value.Name = "label_agi_value";
-            this.label_agi_value.Size = new System.Drawing.Size(18, 19);
-            this.label_agi_value.TabIndex = 30;
-            this.label_agi_value.Text = "4";
-            // 
-            // label_sc_value
-            // 
-            this.label_sc_value.AutoSize = true;
-            this.label_sc_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_sc_value.Location = new System.Drawing.Point(303, 122);
-            this.label_sc_value.Name = "label_sc_value";
-            this.label_sc_value.Size = new System.Drawing.Size(27, 19);
-            this.label_sc_value.TabIndex = 29;
-            this.label_sc_value.Text = "12";
-            // 
-            // label_level_value
-            // 
-            this.label_level_value.AutoSize = true;
-            this.label_level_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_level_value.Location = new System.Drawing.Point(303, 66);
-            this.label_level_value.Name = "label_level_value";
-            this.label_level_value.Size = new System.Drawing.Size(27, 19);
-            this.label_level_value.TabIndex = 27;
-            this.label_level_value.Text = "11";
-            // 
-            // label_exp_value
-            // 
-            this.label_exp_value.AutoSize = true;
-            this.label_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_exp_value.Location = new System.Drawing.Point(303, 37);
-            this.label_exp_value.Name = "label_exp_value";
-            this.label_exp_value.Size = new System.Drawing.Size(27, 19);
-            this.label_exp_value.TabIndex = 26;
-            this.label_exp_value.Text = "-1";
-            // 
-            // label_mr
-            // 
-            this.label_mr.AutoSize = true;
-            this.label_mr.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_mr.Location = new System.Drawing.Point(372, 238);
-            this.label_mr.Name = "label_mr";
-            this.label_mr.Size = new System.Drawing.Size(90, 19);
-            this.label_mr.TabIndex = 40;
-            this.label_mr.Text = "MagicRes:";
-            // 
-            // label_ma
-            // 
-            this.label_ma.AutoSize = true;
-            this.label_ma.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ma.Location = new System.Drawing.Point(372, 209);
-            this.label_ma.Name = "label_ma";
-            this.label_ma.Size = new System.Drawing.Size(126, 19);
-            this.label_ma.TabIndex = 39;
-            this.label_ma.Text = "Martial Arts:";
-            // 
-            // label_track
-            // 
-            this.label_track.AutoSize = true;
-            this.label_track.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_track.Location = new System.Drawing.Point(372, 181);
-            this.label_track.Name = "label_track";
-            this.label_track.Size = new System.Drawing.Size(81, 19);
-            this.label_track.TabIndex = 38;
-            this.label_track.Text = "Tracking";
-            // 
-            // label_traps
-            // 
-            this.label_traps.AutoSize = true;
-            this.label_traps.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_traps.Location = new System.Drawing.Point(372, 122);
-            this.label_traps.Name = "label_traps";
-            this.label_traps.Size = new System.Drawing.Size(54, 19);
-            this.label_traps.TabIndex = 37;
-            this.label_traps.Text = "Traps";
-            // 
-            // label_thief
-            // 
-            this.label_thief.AutoSize = true;
-            this.label_thief.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_thief.Location = new System.Drawing.Point(372, 94);
-            this.label_thief.Name = "label_thief";
-            this.label_thief.Size = new System.Drawing.Size(81, 19);
-            this.label_thief.TabIndex = 36;
-            this.label_thief.Text = "Thievery";
-            // 
-            // label_stealth
-            // 
-            this.label_stealth.AutoSize = true;
-            this.label_stealth.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_stealth.Location = new System.Drawing.Point(372, 66);
-            this.label_stealth.Name = "label_stealth";
-            this.label_stealth.Size = new System.Drawing.Size(72, 19);
-            this.label_stealth.TabIndex = 35;
-            this.label_stealth.Text = "Stealth";
-            // 
-            // label_perception
-            // 
-            this.label_perception.AutoSize = true;
-            this.label_perception.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_perception.Location = new System.Drawing.Point(372, 37);
-            this.label_perception.Name = "label_perception";
-            this.label_perception.Size = new System.Drawing.Size(99, 19);
-            this.label_perception.TabIndex = 34;
-            this.label_perception.Text = "Perception";
-            // 
-            // label_lives_cp
-            // 
-            this.label_lives_cp.AutoSize = true;
-            this.label_lives_cp.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_lives_cp.Location = new System.Drawing.Point(372, 9);
-            this.label_lives_cp.Name = "label_lives_cp";
-            this.label_lives_cp.Size = new System.Drawing.Size(81, 19);
-            this.label_lives_cp.TabIndex = 33;
-            this.label_lives_cp.Text = "Lives/CP";
-            // 
-            // label_pick
-            // 
-            this.label_pick.AutoSize = true;
-            this.label_pick.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_pick.Location = new System.Drawing.Point(372, 151);
-            this.label_pick.Name = "label_pick";
-            this.label_pick.Size = new System.Drawing.Size(90, 19);
-            this.label_pick.TabIndex = 41;
-            this.label_pick.Text = "Picklocks";
-            // 
-            // label_pick_value
-            // 
-            this.label_pick_value.AutoSize = true;
-            this.label_pick_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_pick_value.Location = new System.Drawing.Point(497, 151);
-            this.label_pick_value.Name = "label_pick_value";
-            this.label_pick_value.Size = new System.Drawing.Size(27, 19);
-            this.label_pick_value.TabIndex = 50;
-            this.label_pick_value.Text = "16";
-            // 
-            // label_mr_value
-            // 
-            this.label_mr_value.AutoSize = true;
-            this.label_mr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_mr_value.Location = new System.Drawing.Point(497, 238);
-            this.label_mr_value.Name = "label_mr_value";
-            this.label_mr_value.Size = new System.Drawing.Size(27, 19);
-            this.label_mr_value.TabIndex = 49;
-            this.label_mr_value.Text = "19";
-            // 
-            // label_ma_value
-            // 
-            this.label_ma_value.AutoSize = true;
-            this.label_ma_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ma_value.Location = new System.Drawing.Point(497, 209);
-            this.label_ma_value.Name = "label_ma_value";
-            this.label_ma_value.Size = new System.Drawing.Size(27, 19);
-            this.label_ma_value.TabIndex = 48;
-            this.label_ma_value.Text = "18";
-            // 
-            // label_track_value
-            // 
-            this.label_track_value.AutoSize = true;
-            this.label_track_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_track_value.Location = new System.Drawing.Point(497, 181);
-            this.label_track_value.Name = "label_track_value";
-            this.label_track_value.Size = new System.Drawing.Size(27, 19);
-            this.label_track_value.TabIndex = 47;
-            this.label_track_value.Text = "17";
-            // 
-            // label_trap_value
-            // 
-            this.label_trap_value.AutoSize = true;
-            this.label_trap_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_trap_value.Location = new System.Drawing.Point(497, 122);
-            this.label_trap_value.Name = "label_trap_value";
-            this.label_trap_value.Size = new System.Drawing.Size(27, 19);
-            this.label_trap_value.TabIndex = 46;
-            this.label_trap_value.Text = "15";
-            // 
-            // label_thief_value
-            // 
-            this.label_thief_value.AutoSize = true;
-            this.label_thief_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_thief_value.Location = new System.Drawing.Point(497, 94);
-            this.label_thief_value.Name = "label_thief_value";
-            this.label_thief_value.Size = new System.Drawing.Size(27, 19);
-            this.label_thief_value.TabIndex = 45;
-            this.label_thief_value.Text = "14";
-            // 
-            // label_stealth_value
-            // 
-            this.label_stealth_value.AutoSize = true;
-            this.label_stealth_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_stealth_value.Location = new System.Drawing.Point(497, 66);
-            this.label_stealth_value.Name = "label_stealth_value";
-            this.label_stealth_value.Size = new System.Drawing.Size(27, 19);
-            this.label_stealth_value.TabIndex = 44;
-            this.label_stealth_value.Text = "14";
-            // 
-            // label_perception_value
-            // 
-            this.label_perception_value.AutoSize = true;
-            this.label_perception_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_perception_value.Location = new System.Drawing.Point(497, 37);
-            this.label_perception_value.Name = "label_perception_value";
-            this.label_perception_value.Size = new System.Drawing.Size(27, 19);
-            this.label_perception_value.TabIndex = 43;
-            this.label_perception_value.Text = "13";
-            // 
-            // label_lives_value
-            // 
-            this.label_lives_value.AutoSize = true;
-            this.label_lives_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_lives_value.Location = new System.Drawing.Point(497, 9);
-            this.label_lives_value.Name = "label_lives_value";
-            this.label_lives_value.Size = new System.Drawing.Size(18, 19);
-            this.label_lives_value.TabIndex = 42;
-            this.label_lives_value.Text = "9";
-            // 
-            // label_hits_max
-            // 
-            this.label_hits_max.AutoSize = true;
-            this.label_hits_max.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_hits_max.Location = new System.Drawing.Point(111, 94);
-            this.label_hits_max.Name = "label_hits_max";
-            this.label_hits_max.Size = new System.Drawing.Size(54, 19);
-            this.label_hits_max.TabIndex = 51;
-            this.label_hits_max.Text = "/9999";
-            // 
-            // label_mana_value
-            // 
-            this.label_mana_value.AutoSize = true;
-            this.label_mana_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_mana_value.Location = new System.Drawing.Point(72, 122);
-            this.label_mana_value.Name = "label_mana_value";
-            this.label_mana_value.Size = new System.Drawing.Size(45, 19);
-            this.label_mana_value.TabIndex = 52;
-            this.label_mana_value.Text = "9999";
-            // 
-            // label_mana_max
-            // 
-            this.label_mana_max.AutoSize = true;
-            this.label_mana_max.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_mana_max.Location = new System.Drawing.Point(111, 122);
-            this.label_mana_max.Name = "label_mana_max";
-            this.label_mana_max.Size = new System.Drawing.Size(54, 19);
-            this.label_mana_max.TabIndex = 53;
-            this.label_mana_max.Text = "/9999";
-            // 
-            // label_cp_value
-            // 
-            this.label_cp_value.AutoSize = true;
-            this.label_cp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_cp_value.Location = new System.Drawing.Point(521, 9);
-            this.label_cp_value.Name = "label_cp_value";
-            this.label_cp_value.Size = new System.Drawing.Size(45, 19);
-            this.label_cp_value.TabIndex = 54;
-            this.label_cp_value.Text = "/999";
-            // 
-            // label_dr_value
-            // 
-            this.label_dr_value.AutoSize = true;
-            this.label_dr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_dr_value.Location = new System.Drawing.Point(321, 94);
-            this.label_dr_value.Name = "label_dr_value";
-            this.label_dr_value.Size = new System.Drawing.Size(45, 19);
-            this.label_dr_value.TabIndex = 56;
-            this.label_dr_value.Text = "/999";
-            // 
-            // label_ac_value
-            // 
-            this.label_ac_value.AutoSize = true;
-            this.label_ac_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_ac_value.Location = new System.Drawing.Point(297, 94);
-            this.label_ac_value.Name = "label_ac_value";
-            this.label_ac_value.Size = new System.Drawing.Size(18, 19);
-            this.label_ac_value.TabIndex = 55;
-            this.label_ac_value.Text = "9";
-            // 
-            // label_rest_value
-            // 
-            this.label_rest_value.AutoSize = true;
-            this.label_rest_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_rest_value.Location = new System.Drawing.Point(99, 289);
-            this.label_rest_value.Name = "label_rest_value";
-            this.label_rest_value.Size = new System.Drawing.Size(72, 19);
-            this.label_rest_value.TabIndex = 58;
-            this.label_rest_value.Text = "Unknown";
-            // 
-            // label_rest
-            // 
-            this.label_rest.AutoSize = true;
-            this.label_rest.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_rest.Location = new System.Drawing.Point(12, 289);
-            this.label_rest.Name = "label_rest";
-            this.label_rest.Size = new System.Drawing.Size(81, 19);
-            this.label_rest.TabIndex = 57;
-            this.label_rest.Text = "Resting:";
             // 
             // label2_alsohere
             // 
@@ -706,26 +166,6 @@
             this.label_roomdesc.TabIndex = 63;
             this.label_roomdesc.Text = "Room Desc:";
             // 
-            // label_incombat_value
-            // 
-            this.label_incombat_value.AutoSize = true;
-            this.label_incombat_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_incombat_value.Location = new System.Drawing.Point(294, 289);
-            this.label_incombat_value.Name = "label_incombat_value";
-            this.label_incombat_value.Size = new System.Drawing.Size(72, 19);
-            this.label_incombat_value.TabIndex = 66;
-            this.label_incombat_value.Text = "Unknown";
-            // 
-            // label_incombat
-            // 
-            this.label_incombat.AutoSize = true;
-            this.label_incombat.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_incombat.Location = new System.Drawing.Point(196, 289);
-            this.label_incombat.Name = "label_incombat";
-            this.label_incombat.Size = new System.Drawing.Size(99, 19);
-            this.label_incombat.TabIndex = 65;
-            this.label_incombat.Text = "In Combat:";
-            // 
             // label_items
             // 
             this.label_items.AutoSize = true;
@@ -776,26 +216,6 @@
             this.label_inv.TabIndex = 72;
             this.label_inv.Text = "Inventory:";
             // 
-            // label_wealth
-            // 
-            this.label_wealth.AutoSize = true;
-            this.label_wealth.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_wealth.Location = new System.Drawing.Point(615, 9);
-            this.label_wealth.Name = "label_wealth";
-            this.label_wealth.Size = new System.Drawing.Size(72, 19);
-            this.label_wealth.TabIndex = 73;
-            this.label_wealth.Text = "Wealth:";
-            // 
-            // label_wealth_value
-            // 
-            this.label_wealth_value.AutoSize = true;
-            this.label_wealth_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_wealth_value.Location = new System.Drawing.Point(720, 9);
-            this.label_wealth_value.Name = "label_wealth_value";
-            this.label_wealth_value.Size = new System.Drawing.Size(72, 19);
-            this.label_wealth_value.TabIndex = 74;
-            this.label_wealth_value.Text = "Unknown";
-            // 
             // label_enc_value
             // 
             this.label_enc_value.AutoSize = true;
@@ -835,6 +255,26 @@
             this.textBox_items_value.ReadOnly = true;
             this.textBox_items_value.Size = new System.Drawing.Size(747, 65);
             this.textBox_items_value.TabIndex = 78;
+            // 
+            // label_forsale
+            // 
+            this.label_forsale.AutoSize = true;
+            this.label_forsale.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_forsale.Location = new System.Drawing.Point(12, 667);
+            this.label_forsale.Name = "label_forsale";
+            this.label_forsale.Size = new System.Drawing.Size(90, 19);
+            this.label_forsale.TabIndex = 90;
+            this.label_forsale.Text = "For Sale:";
+            // 
+            // textBox_forsale_value
+            // 
+            this.textBox_forsale_value.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_forsale_value.Location = new System.Drawing.Point(121, 663);
+            this.textBox_forsale_value.Multiline = true;
+            this.textBox_forsale_value.Name = "textBox_forsale_value";
+            this.textBox_forsale_value.ReadOnly = true;
+            this.textBox_forsale_value.Size = new System.Drawing.Size(747, 404);
+            this.textBox_forsale_value.TabIndex = 89;
             // 
             // label_platinum_value
             // 
@@ -936,25 +376,585 @@
             this.label_runic.TabIndex = 79;
             this.label_runic.Text = "Runic:";
             // 
-            // label_forsale
+            // label_wealth_value
             // 
-            this.label_forsale.AutoSize = true;
-            this.label_forsale.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_forsale.Location = new System.Drawing.Point(12, 667);
-            this.label_forsale.Name = "label_forsale";
-            this.label_forsale.Size = new System.Drawing.Size(90, 19);
-            this.label_forsale.TabIndex = 90;
-            this.label_forsale.Text = "For Sale:";
+            this.label_wealth_value.AutoSize = true;
+            this.label_wealth_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_wealth_value.Location = new System.Drawing.Point(720, 9);
+            this.label_wealth_value.Name = "label_wealth_value";
+            this.label_wealth_value.Size = new System.Drawing.Size(72, 19);
+            this.label_wealth_value.TabIndex = 74;
+            this.label_wealth_value.Text = "Unknown";
             // 
-            // textBox_forsale_value
+            // label_wealth
             // 
-            this.textBox_forsale_value.Font = new System.Drawing.Font("Consolas", 8.25F);
-            this.textBox_forsale_value.Location = new System.Drawing.Point(121, 663);
-            this.textBox_forsale_value.Multiline = true;
-            this.textBox_forsale_value.Name = "textBox_forsale_value";
-            this.textBox_forsale_value.ReadOnly = true;
-            this.textBox_forsale_value.Size = new System.Drawing.Size(747, 404);
-            this.textBox_forsale_value.TabIndex = 89;
+            this.label_wealth.AutoSize = true;
+            this.label_wealth.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_wealth.Location = new System.Drawing.Point(615, 9);
+            this.label_wealth.Name = "label_wealth";
+            this.label_wealth.Size = new System.Drawing.Size(72, 19);
+            this.label_wealth.TabIndex = 73;
+            this.label_wealth.Text = "Wealth:";
+            // 
+            // label_incombat_value
+            // 
+            this.label_incombat_value.AutoSize = true;
+            this.label_incombat_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_incombat_value.Location = new System.Drawing.Point(294, 289);
+            this.label_incombat_value.Name = "label_incombat_value";
+            this.label_incombat_value.Size = new System.Drawing.Size(72, 19);
+            this.label_incombat_value.TabIndex = 66;
+            this.label_incombat_value.Text = "Unknown";
+            // 
+            // label_incombat
+            // 
+            this.label_incombat.AutoSize = true;
+            this.label_incombat.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_incombat.Location = new System.Drawing.Point(196, 289);
+            this.label_incombat.Name = "label_incombat";
+            this.label_incombat.Size = new System.Drawing.Size(99, 19);
+            this.label_incombat.TabIndex = 65;
+            this.label_incombat.Text = "In Combat:";
+            // 
+            // label_rest_value
+            // 
+            this.label_rest_value.AutoSize = true;
+            this.label_rest_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_rest_value.Location = new System.Drawing.Point(99, 289);
+            this.label_rest_value.Name = "label_rest_value";
+            this.label_rest_value.Size = new System.Drawing.Size(72, 19);
+            this.label_rest_value.TabIndex = 58;
+            this.label_rest_value.Text = "Unknown";
+            // 
+            // label_rest
+            // 
+            this.label_rest.AutoSize = true;
+            this.label_rest.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_rest.Location = new System.Drawing.Point(12, 289);
+            this.label_rest.Name = "label_rest";
+            this.label_rest.Size = new System.Drawing.Size(81, 19);
+            this.label_rest.TabIndex = 57;
+            this.label_rest.Text = "Resting:";
+            // 
+            // label_dr_value
+            // 
+            this.label_dr_value.AutoSize = true;
+            this.label_dr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_dr_value.Location = new System.Drawing.Point(321, 94);
+            this.label_dr_value.Name = "label_dr_value";
+            this.label_dr_value.Size = new System.Drawing.Size(45, 19);
+            this.label_dr_value.TabIndex = 56;
+            this.label_dr_value.Text = "/999";
+            // 
+            // label_ac_value
+            // 
+            this.label_ac_value.AutoSize = true;
+            this.label_ac_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ac_value.Location = new System.Drawing.Point(297, 94);
+            this.label_ac_value.Name = "label_ac_value";
+            this.label_ac_value.Size = new System.Drawing.Size(18, 19);
+            this.label_ac_value.TabIndex = 55;
+            this.label_ac_value.Text = "9";
+            // 
+            // label_cp_value
+            // 
+            this.label_cp_value.AutoSize = true;
+            this.label_cp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_cp_value.Location = new System.Drawing.Point(521, 9);
+            this.label_cp_value.Name = "label_cp_value";
+            this.label_cp_value.Size = new System.Drawing.Size(45, 19);
+            this.label_cp_value.TabIndex = 54;
+            this.label_cp_value.Text = "/999";
+            // 
+            // label_mana_max
+            // 
+            this.label_mana_max.AutoSize = true;
+            this.label_mana_max.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mana_max.Location = new System.Drawing.Point(111, 122);
+            this.label_mana_max.Name = "label_mana_max";
+            this.label_mana_max.Size = new System.Drawing.Size(54, 19);
+            this.label_mana_max.TabIndex = 53;
+            this.label_mana_max.Text = "/9999";
+            // 
+            // label_mana_value
+            // 
+            this.label_mana_value.AutoSize = true;
+            this.label_mana_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mana_value.Location = new System.Drawing.Point(72, 122);
+            this.label_mana_value.Name = "label_mana_value";
+            this.label_mana_value.Size = new System.Drawing.Size(45, 19);
+            this.label_mana_value.TabIndex = 52;
+            this.label_mana_value.Text = "9999";
+            // 
+            // label_hits_max
+            // 
+            this.label_hits_max.AutoSize = true;
+            this.label_hits_max.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_hits_max.Location = new System.Drawing.Point(111, 94);
+            this.label_hits_max.Name = "label_hits_max";
+            this.label_hits_max.Size = new System.Drawing.Size(54, 19);
+            this.label_hits_max.TabIndex = 51;
+            this.label_hits_max.Text = "/9999";
+            // 
+            // label_pick_value
+            // 
+            this.label_pick_value.AutoSize = true;
+            this.label_pick_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_pick_value.Location = new System.Drawing.Point(497, 151);
+            this.label_pick_value.Name = "label_pick_value";
+            this.label_pick_value.Size = new System.Drawing.Size(27, 19);
+            this.label_pick_value.TabIndex = 50;
+            this.label_pick_value.Text = "16";
+            // 
+            // label_mr_value
+            // 
+            this.label_mr_value.AutoSize = true;
+            this.label_mr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mr_value.Location = new System.Drawing.Point(497, 238);
+            this.label_mr_value.Name = "label_mr_value";
+            this.label_mr_value.Size = new System.Drawing.Size(27, 19);
+            this.label_mr_value.TabIndex = 49;
+            this.label_mr_value.Text = "19";
+            // 
+            // label_ma_value
+            // 
+            this.label_ma_value.AutoSize = true;
+            this.label_ma_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ma_value.Location = new System.Drawing.Point(497, 209);
+            this.label_ma_value.Name = "label_ma_value";
+            this.label_ma_value.Size = new System.Drawing.Size(27, 19);
+            this.label_ma_value.TabIndex = 48;
+            this.label_ma_value.Text = "18";
+            // 
+            // label_track_value
+            // 
+            this.label_track_value.AutoSize = true;
+            this.label_track_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_track_value.Location = new System.Drawing.Point(497, 181);
+            this.label_track_value.Name = "label_track_value";
+            this.label_track_value.Size = new System.Drawing.Size(27, 19);
+            this.label_track_value.TabIndex = 47;
+            this.label_track_value.Text = "17";
+            // 
+            // label_trap_value
+            // 
+            this.label_trap_value.AutoSize = true;
+            this.label_trap_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_trap_value.Location = new System.Drawing.Point(497, 122);
+            this.label_trap_value.Name = "label_trap_value";
+            this.label_trap_value.Size = new System.Drawing.Size(27, 19);
+            this.label_trap_value.TabIndex = 46;
+            this.label_trap_value.Text = "15";
+            // 
+            // label_thief_value
+            // 
+            this.label_thief_value.AutoSize = true;
+            this.label_thief_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_thief_value.Location = new System.Drawing.Point(497, 94);
+            this.label_thief_value.Name = "label_thief_value";
+            this.label_thief_value.Size = new System.Drawing.Size(27, 19);
+            this.label_thief_value.TabIndex = 45;
+            this.label_thief_value.Text = "14";
+            // 
+            // label_stealth_value
+            // 
+            this.label_stealth_value.AutoSize = true;
+            this.label_stealth_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_stealth_value.Location = new System.Drawing.Point(497, 66);
+            this.label_stealth_value.Name = "label_stealth_value";
+            this.label_stealth_value.Size = new System.Drawing.Size(27, 19);
+            this.label_stealth_value.TabIndex = 44;
+            this.label_stealth_value.Text = "14";
+            // 
+            // label_perception_value
+            // 
+            this.label_perception_value.AutoSize = true;
+            this.label_perception_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_perception_value.Location = new System.Drawing.Point(497, 37);
+            this.label_perception_value.Name = "label_perception_value";
+            this.label_perception_value.Size = new System.Drawing.Size(27, 19);
+            this.label_perception_value.TabIndex = 43;
+            this.label_perception_value.Text = "13";
+            // 
+            // label_lives_value
+            // 
+            this.label_lives_value.AutoSize = true;
+            this.label_lives_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lives_value.Location = new System.Drawing.Point(497, 9);
+            this.label_lives_value.Name = "label_lives_value";
+            this.label_lives_value.Size = new System.Drawing.Size(18, 19);
+            this.label_lives_value.TabIndex = 42;
+            this.label_lives_value.Text = "9";
+            // 
+            // label_pick
+            // 
+            this.label_pick.AutoSize = true;
+            this.label_pick.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_pick.Location = new System.Drawing.Point(372, 151);
+            this.label_pick.Name = "label_pick";
+            this.label_pick.Size = new System.Drawing.Size(90, 19);
+            this.label_pick.TabIndex = 41;
+            this.label_pick.Text = "Picklocks";
+            // 
+            // label_mr
+            // 
+            this.label_mr.AutoSize = true;
+            this.label_mr.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mr.Location = new System.Drawing.Point(372, 238);
+            this.label_mr.Name = "label_mr";
+            this.label_mr.Size = new System.Drawing.Size(90, 19);
+            this.label_mr.TabIndex = 40;
+            this.label_mr.Text = "MagicRes:";
+            // 
+            // label_ma
+            // 
+            this.label_ma.AutoSize = true;
+            this.label_ma.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ma.Location = new System.Drawing.Point(372, 209);
+            this.label_ma.Name = "label_ma";
+            this.label_ma.Size = new System.Drawing.Size(126, 19);
+            this.label_ma.TabIndex = 39;
+            this.label_ma.Text = "Martial Arts:";
+            // 
+            // label_track
+            // 
+            this.label_track.AutoSize = true;
+            this.label_track.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_track.Location = new System.Drawing.Point(372, 181);
+            this.label_track.Name = "label_track";
+            this.label_track.Size = new System.Drawing.Size(81, 19);
+            this.label_track.TabIndex = 38;
+            this.label_track.Text = "Tracking";
+            // 
+            // label_traps
+            // 
+            this.label_traps.AutoSize = true;
+            this.label_traps.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_traps.Location = new System.Drawing.Point(372, 122);
+            this.label_traps.Name = "label_traps";
+            this.label_traps.Size = new System.Drawing.Size(54, 19);
+            this.label_traps.TabIndex = 37;
+            this.label_traps.Text = "Traps";
+            // 
+            // label_thief
+            // 
+            this.label_thief.AutoSize = true;
+            this.label_thief.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_thief.Location = new System.Drawing.Point(372, 94);
+            this.label_thief.Name = "label_thief";
+            this.label_thief.Size = new System.Drawing.Size(81, 19);
+            this.label_thief.TabIndex = 36;
+            this.label_thief.Text = "Thievery";
+            // 
+            // label_stealth
+            // 
+            this.label_stealth.AutoSize = true;
+            this.label_stealth.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_stealth.Location = new System.Drawing.Point(372, 66);
+            this.label_stealth.Name = "label_stealth";
+            this.label_stealth.Size = new System.Drawing.Size(72, 19);
+            this.label_stealth.TabIndex = 35;
+            this.label_stealth.Text = "Stealth";
+            // 
+            // label_perception
+            // 
+            this.label_perception.AutoSize = true;
+            this.label_perception.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_perception.Location = new System.Drawing.Point(372, 37);
+            this.label_perception.Name = "label_perception";
+            this.label_perception.Size = new System.Drawing.Size(99, 19);
+            this.label_perception.TabIndex = 34;
+            this.label_perception.Text = "Perception";
+            // 
+            // label_lives_cp
+            // 
+            this.label_lives_cp.AutoSize = true;
+            this.label_lives_cp.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lives_cp.Location = new System.Drawing.Point(372, 9);
+            this.label_lives_cp.Name = "label_lives_cp";
+            this.label_lives_cp.Size = new System.Drawing.Size(81, 19);
+            this.label_lives_cp.TabIndex = 33;
+            this.label_lives_cp.Text = "Lives/CP";
+            // 
+            // label_chr_value
+            // 
+            this.label_chr_value.AutoSize = true;
+            this.label_chr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_chr_value.Location = new System.Drawing.Point(303, 238);
+            this.label_chr_value.Name = "label_chr_value";
+            this.label_chr_value.Size = new System.Drawing.Size(18, 19);
+            this.label_chr_value.TabIndex = 32;
+            this.label_chr_value.Text = "6";
+            // 
+            // label_hea_value
+            // 
+            this.label_hea_value.AutoSize = true;
+            this.label_hea_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_hea_value.Location = new System.Drawing.Point(303, 209);
+            this.label_hea_value.Name = "label_hea_value";
+            this.label_hea_value.Size = new System.Drawing.Size(18, 19);
+            this.label_hea_value.TabIndex = 31;
+            this.label_hea_value.Text = "5";
+            // 
+            // label_agi_value
+            // 
+            this.label_agi_value.AutoSize = true;
+            this.label_agi_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_agi_value.Location = new System.Drawing.Point(303, 181);
+            this.label_agi_value.Name = "label_agi_value";
+            this.label_agi_value.Size = new System.Drawing.Size(18, 19);
+            this.label_agi_value.TabIndex = 30;
+            this.label_agi_value.Text = "4";
+            // 
+            // label_sc_value
+            // 
+            this.label_sc_value.AutoSize = true;
+            this.label_sc_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_sc_value.Location = new System.Drawing.Point(303, 122);
+            this.label_sc_value.Name = "label_sc_value";
+            this.label_sc_value.Size = new System.Drawing.Size(27, 19);
+            this.label_sc_value.TabIndex = 29;
+            this.label_sc_value.Text = "12";
+            // 
+            // label_level_value
+            // 
+            this.label_level_value.AutoSize = true;
+            this.label_level_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_level_value.Location = new System.Drawing.Point(303, 66);
+            this.label_level_value.Name = "label_level_value";
+            this.label_level_value.Size = new System.Drawing.Size(27, 19);
+            this.label_level_value.TabIndex = 27;
+            this.label_level_value.Text = "11";
+            // 
+            // label_exp_value
+            // 
+            this.label_exp_value.AutoSize = true;
+            this.label_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_exp_value.Location = new System.Drawing.Point(303, 37);
+            this.label_exp_value.Name = "label_exp_value";
+            this.label_exp_value.Size = new System.Drawing.Size(27, 19);
+            this.label_exp_value.TabIndex = 26;
+            this.label_exp_value.Text = "-1";
+            // 
+            // label_chr
+            // 
+            this.label_chr.AutoSize = true;
+            this.label_chr.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_chr.Location = new System.Drawing.Point(171, 238);
+            this.label_chr.Name = "label_chr";
+            this.label_chr.Size = new System.Drawing.Size(45, 19);
+            this.label_chr.TabIndex = 24;
+            this.label_chr.Text = "CHR:";
+            // 
+            // label_hea
+            // 
+            this.label_hea.AutoSize = true;
+            this.label_hea.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_hea.Location = new System.Drawing.Point(171, 209);
+            this.label_hea.Name = "label_hea";
+            this.label_hea.Size = new System.Drawing.Size(45, 19);
+            this.label_hea.TabIndex = 23;
+            this.label_hea.Text = "HEA:";
+            // 
+            // label_agi
+            // 
+            this.label_agi.AutoSize = true;
+            this.label_agi.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_agi.Location = new System.Drawing.Point(171, 181);
+            this.label_agi.Name = "label_agi";
+            this.label_agi.Size = new System.Drawing.Size(45, 19);
+            this.label_agi.TabIndex = 22;
+            this.label_agi.Text = "AGI:";
+            // 
+            // label_sc
+            // 
+            this.label_sc.AutoSize = true;
+            this.label_sc.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_sc.Location = new System.Drawing.Point(171, 122);
+            this.label_sc.Name = "label_sc";
+            this.label_sc.Size = new System.Drawing.Size(126, 19);
+            this.label_sc.TabIndex = 21;
+            this.label_sc.Text = "Spellcasting:";
+            // 
+            // label_ac
+            // 
+            this.label_ac.AutoSize = true;
+            this.label_ac.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_ac.Location = new System.Drawing.Point(171, 94);
+            this.label_ac.Name = "label_ac";
+            this.label_ac.Size = new System.Drawing.Size(126, 19);
+            this.label_ac.TabIndex = 20;
+            this.label_ac.Text = "Armour Class:";
+            // 
+            // label_level
+            // 
+            this.label_level.AutoSize = true;
+            this.label_level.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_level.Location = new System.Drawing.Point(171, 66);
+            this.label_level.Name = "label_level";
+            this.label_level.Size = new System.Drawing.Size(63, 19);
+            this.label_level.TabIndex = 19;
+            this.label_level.Text = "Level:";
+            // 
+            // label_xp
+            // 
+            this.label_xp.AutoSize = true;
+            this.label_xp.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_xp.Location = new System.Drawing.Point(171, 37);
+            this.label_xp.Name = "label_xp";
+            this.label_xp.Size = new System.Drawing.Size(45, 19);
+            this.label_xp.TabIndex = 18;
+            this.label_xp.Text = "Exp:";
+            // 
+            // label_wil_value
+            // 
+            this.label_wil_value.AutoSize = true;
+            this.label_wil_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_wil_value.Location = new System.Drawing.Point(81, 238);
+            this.label_wil_value.Name = "label_wil_value";
+            this.label_wil_value.Size = new System.Drawing.Size(18, 19);
+            this.label_wil_value.TabIndex = 16;
+            this.label_wil_value.Text = "2";
+            // 
+            // label_int_value
+            // 
+            this.label_int_value.AutoSize = true;
+            this.label_int_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_int_value.Location = new System.Drawing.Point(81, 209);
+            this.label_int_value.Name = "label_int_value";
+            this.label_int_value.Size = new System.Drawing.Size(18, 19);
+            this.label_int_value.TabIndex = 15;
+            this.label_int_value.Text = "1";
+            // 
+            // label_str_value
+            // 
+            this.label_str_value.AutoSize = true;
+            this.label_str_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_str_value.Location = new System.Drawing.Point(81, 181);
+            this.label_str_value.Name = "label_str_value";
+            this.label_str_value.Size = new System.Drawing.Size(18, 19);
+            this.label_str_value.TabIndex = 14;
+            this.label_str_value.Text = "0";
+            // 
+            // label_hits_value
+            // 
+            this.label_hits_value.AutoSize = true;
+            this.label_hits_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_hits_value.Location = new System.Drawing.Point(72, 94);
+            this.label_hits_value.Name = "label_hits_value";
+            this.label_hits_value.Size = new System.Drawing.Size(45, 19);
+            this.label_hits_value.TabIndex = 12;
+            this.label_hits_value.Text = "9999";
+            // 
+            // label_class_value
+            // 
+            this.label_class_value.AutoSize = true;
+            this.label_class_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_class_value.Location = new System.Drawing.Point(81, 66);
+            this.label_class_value.Name = "label_class_value";
+            this.label_class_value.Size = new System.Drawing.Size(72, 19);
+            this.label_class_value.TabIndex = 11;
+            this.label_class_value.Text = "Unknown";
+            // 
+            // label_race_value
+            // 
+            this.label_race_value.AutoSize = true;
+            this.label_race_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_race_value.Location = new System.Drawing.Point(81, 37);
+            this.label_race_value.Name = "label_race_value";
+            this.label_race_value.Size = new System.Drawing.Size(72, 19);
+            this.label_race_value.TabIndex = 10;
+            this.label_race_value.Text = "Unknown";
+            // 
+            // label_name_value
+            // 
+            this.label_name_value.AutoSize = true;
+            this.label_name_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_name_value.Location = new System.Drawing.Point(81, 9);
+            this.label_name_value.Name = "label_name_value";
+            this.label_name_value.Size = new System.Drawing.Size(81, 19);
+            this.label_name_value.TabIndex = 9;
+            this.label_name_value.Text = "John Doe";
+            // 
+            // label_wil
+            // 
+            this.label_wil.AutoSize = true;
+            this.label_wil.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_wil.Location = new System.Drawing.Point(12, 238);
+            this.label_wil.Name = "label_wil";
+            this.label_wil.Size = new System.Drawing.Size(45, 19);
+            this.label_wil.TabIndex = 8;
+            this.label_wil.Text = "WIL:";
+            // 
+            // label_int
+            // 
+            this.label_int.AutoSize = true;
+            this.label_int.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_int.Location = new System.Drawing.Point(12, 209);
+            this.label_int.Name = "label_int";
+            this.label_int.Size = new System.Drawing.Size(45, 19);
+            this.label_int.TabIndex = 7;
+            this.label_int.Text = "INT:";
+            // 
+            // label_str
+            // 
+            this.label_str.AutoSize = true;
+            this.label_str.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_str.Location = new System.Drawing.Point(12, 181);
+            this.label_str.Name = "label_str";
+            this.label_str.Size = new System.Drawing.Size(45, 19);
+            this.label_str.TabIndex = 6;
+            this.label_str.Text = "STR:";
+            // 
+            // label_mana
+            // 
+            this.label_mana.AutoSize = true;
+            this.label_mana.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_mana.Location = new System.Drawing.Point(12, 122);
+            this.label_mana.Name = "label_mana";
+            this.label_mana.Size = new System.Drawing.Size(54, 19);
+            this.label_mana.TabIndex = 4;
+            this.label_mana.Text = "Mana:";
+            // 
+            // label_hits
+            // 
+            this.label_hits.AutoSize = true;
+            this.label_hits.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_hits.Location = new System.Drawing.Point(12, 94);
+            this.label_hits.Name = "label_hits";
+            this.label_hits.Size = new System.Drawing.Size(54, 19);
+            this.label_hits.TabIndex = 3;
+            this.label_hits.Text = "Hits:";
+            // 
+            // label_class
+            // 
+            this.label_class.AutoSize = true;
+            this.label_class.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_class.Location = new System.Drawing.Point(12, 66);
+            this.label_class.Name = "label_class";
+            this.label_class.Size = new System.Drawing.Size(63, 19);
+            this.label_class.TabIndex = 2;
+            this.label_class.Text = "Class:";
+            // 
+            // label_race
+            // 
+            this.label_race.AutoSize = true;
+            this.label_race.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_race.Location = new System.Drawing.Point(12, 37);
+            this.label_race.Name = "label_race";
+            this.label_race.Size = new System.Drawing.Size(54, 19);
+            this.label_race.TabIndex = 1;
+            this.label_race.Text = "Race:";
+            // 
+            // label_name
+            // 
+            this.label_name.AutoSize = true;
+            this.label_name.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_name.Location = new System.Drawing.Point(12, 9);
+            this.label_name.Name = "label_name";
+            this.label_name.Size = new System.Drawing.Size(63, 19);
+            this.label_name.TabIndex = 0;
+            this.label_name.Text = "Name: ";
             // 
             // SessionDebugWindow
             // 
@@ -1053,79 +1053,22 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label_name;
-        private System.Windows.Forms.Label label_race;
-        private System.Windows.Forms.Label label_class;
-        private System.Windows.Forms.Label label_mana;
-        private System.Windows.Forms.Label label_hits;
-        private System.Windows.Forms.Label label_wil;
-        private System.Windows.Forms.Label label_int;
-        private System.Windows.Forms.Label label_str;
-        private System.Windows.Forms.Label label_wil_value;
-        private System.Windows.Forms.Label label_int_value;
-        private System.Windows.Forms.Label label_str_value;
-        private System.Windows.Forms.Label label_hits_value;
-        private System.Windows.Forms.Label label_class_value;
-        private System.Windows.Forms.Label label_race_value;
-        private System.Windows.Forms.Label label_name_value;
-        private System.Windows.Forms.Label label_chr;
-        private System.Windows.Forms.Label label_hea;
-        private System.Windows.Forms.Label label_agi;
-        private System.Windows.Forms.Label label_sc;
-        private System.Windows.Forms.Label label_ac;
-        private System.Windows.Forms.Label label_level;
-        private System.Windows.Forms.Label label_xp;
-        private System.Windows.Forms.Label label_chr_value;
-        private System.Windows.Forms.Label label_hea_value;
-        private System.Windows.Forms.Label label_agi_value;
-        private System.Windows.Forms.Label label_sc_value;
-        private System.Windows.Forms.Label label_level_value;
-        private System.Windows.Forms.Label label_exp_value;
-        private System.Windows.Forms.Label label_mr;
-        private System.Windows.Forms.Label label_ma;
-        private System.Windows.Forms.Label label_track;
-        private System.Windows.Forms.Label label_traps;
-        private System.Windows.Forms.Label label_thief;
-        private System.Windows.Forms.Label label_stealth;
-        private System.Windows.Forms.Label label_perception;
-        private System.Windows.Forms.Label label_lives_cp;
-        private System.Windows.Forms.Label label_pick;
-        private System.Windows.Forms.Label label_pick_value;
-        private System.Windows.Forms.Label label_mr_value;
-        private System.Windows.Forms.Label label_ma_value;
-        private System.Windows.Forms.Label label_track_value;
-        private System.Windows.Forms.Label label_trap_value;
-        private System.Windows.Forms.Label label_thief_value;
-        private System.Windows.Forms.Label label_stealth_value;
-        private System.Windows.Forms.Label label_perception_value;
-        private System.Windows.Forms.Label label_lives_value;
-        private System.Windows.Forms.Label label_hits_max;
-        private System.Windows.Forms.Label label_mana_value;
-        private System.Windows.Forms.Label label_mana_max;
-        private System.Windows.Forms.Label label_cp_value;
-        private System.Windows.Forms.Label label_dr_value;
-        private System.Windows.Forms.Label label_ac_value;
-        private System.Windows.Forms.Label label_rest_value;
-        private System.Windows.Forms.Label label_rest;
         private System.Windows.Forms.Label label2_alsohere;
         private System.Windows.Forms.Label label_roomname_value;
         private System.Windows.Forms.Label label_roomname;
         private System.Windows.Forms.Label label_roomdesc_value;
         private System.Windows.Forms.Label label_roomdesc;
-        private System.Windows.Forms.Label label_incombat_value;
-        private System.Windows.Forms.Label label_incombat;
         private System.Windows.Forms.Label label_items;
         private System.Windows.Forms.Label label_exits_value;
         private System.Windows.Forms.Label label_exits;
         private System.Windows.Forms.TextBox textbox_inv_value;
         private System.Windows.Forms.Label label_inv;
-        private System.Windows.Forms.Label label_wealth;
-        private System.Windows.Forms.Label label_wealth_value;
         private System.Windows.Forms.Label label_enc_value;
         private System.Windows.Forms.Label label_enc;
         private System.Windows.Forms.TextBox textBox_alsohere_value;
         private System.Windows.Forms.TextBox textBox_items_value;
+        private System.Windows.Forms.Label label_forsale;
+        private System.Windows.Forms.TextBox textBox_forsale_value;
         private System.Windows.Forms.Label label_platinum_value;
         private System.Windows.Forms.Label label_copper_value;
         private System.Windows.Forms.Label label_silver_value;
@@ -1136,7 +1079,63 @@
         private System.Windows.Forms.Label label_silver;
         private System.Windows.Forms.Label label_gold;
         private System.Windows.Forms.Label label_runic;
-        private System.Windows.Forms.Label label_forsale;
-        private System.Windows.Forms.TextBox textBox_forsale_value;
+        private System.Windows.Forms.Label label_wealth_value;
+        private System.Windows.Forms.Label label_wealth;
+        private System.Windows.Forms.Label label_incombat_value;
+        private System.Windows.Forms.Label label_incombat;
+        private System.Windows.Forms.Label label_rest_value;
+        private System.Windows.Forms.Label label_rest;
+        private System.Windows.Forms.Label label_dr_value;
+        private System.Windows.Forms.Label label_ac_value;
+        private System.Windows.Forms.Label label_cp_value;
+        private System.Windows.Forms.Label label_mana_max;
+        private System.Windows.Forms.Label label_mana_value;
+        private System.Windows.Forms.Label label_hits_max;
+        private System.Windows.Forms.Label label_pick_value;
+        private System.Windows.Forms.Label label_mr_value;
+        private System.Windows.Forms.Label label_ma_value;
+        private System.Windows.Forms.Label label_track_value;
+        private System.Windows.Forms.Label label_trap_value;
+        private System.Windows.Forms.Label label_thief_value;
+        private System.Windows.Forms.Label label_stealth_value;
+        private System.Windows.Forms.Label label_perception_value;
+        private System.Windows.Forms.Label label_lives_value;
+        private System.Windows.Forms.Label label_pick;
+        private System.Windows.Forms.Label label_mr;
+        private System.Windows.Forms.Label label_ma;
+        private System.Windows.Forms.Label label_track;
+        private System.Windows.Forms.Label label_traps;
+        private System.Windows.Forms.Label label_thief;
+        private System.Windows.Forms.Label label_stealth;
+        private System.Windows.Forms.Label label_perception;
+        private System.Windows.Forms.Label label_lives_cp;
+        private System.Windows.Forms.Label label_chr_value;
+        private System.Windows.Forms.Label label_hea_value;
+        private System.Windows.Forms.Label label_agi_value;
+        private System.Windows.Forms.Label label_sc_value;
+        private System.Windows.Forms.Label label_level_value;
+        private System.Windows.Forms.Label label_exp_value;
+        private System.Windows.Forms.Label label_chr;
+        private System.Windows.Forms.Label label_hea;
+        private System.Windows.Forms.Label label_agi;
+        private System.Windows.Forms.Label label_sc;
+        private System.Windows.Forms.Label label_ac;
+        private System.Windows.Forms.Label label_level;
+        private System.Windows.Forms.Label label_xp;
+        private System.Windows.Forms.Label label_wil_value;
+        private System.Windows.Forms.Label label_int_value;
+        private System.Windows.Forms.Label label_str_value;
+        private System.Windows.Forms.Label label_hits_value;
+        private System.Windows.Forms.Label label_class_value;
+        private System.Windows.Forms.Label label_race_value;
+        private System.Windows.Forms.Label label_name_value;
+        private System.Windows.Forms.Label label_wil;
+        private System.Windows.Forms.Label label_int;
+        private System.Windows.Forms.Label label_str;
+        private System.Windows.Forms.Label label_mana;
+        private System.Windows.Forms.Label label_hits;
+        private System.Windows.Forms.Label label_class;
+        private System.Windows.Forms.Label label_race;
+        private System.Windows.Forms.Label label_name;
     }
 }

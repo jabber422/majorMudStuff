@@ -8,7 +8,7 @@ namespace MMudObjects
 {
     public class Bbs
     {
-        public List<MajorMudBbsGame> MMudGames;
+        //public List<MajorMudBbsGame> MMudGames;
         public List<BbsAccount> Users;
     }
 }

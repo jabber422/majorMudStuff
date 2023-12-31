@@ -17,53 +17,86 @@ namespace MMudObjects
         RoomLightEnum LightLevel;
 
         public List<RoomExit> RoomExits;
-        public List<Item> VisibleItems;
-        public List<Item> HiddenItems;
+        public Dictionary<string, Item> VisibleItems;
+        public Dictionary<string, Item> HiddenItems;
         public List<Entity> AlsoHere;
 
-        public string Name { get; }
+        public string Name { get; set; }
 
-        public string Description { get; }
+        public string Description { get; set; }
 
         Boolean IsSafe { get; set; }
 
         public Room()
         {
             this.RoomExits = new List<RoomExit>();
-            this.VisibleItems = new List<Item>();
-            this.HiddenItems = new List<Item>();
+            this.VisibleItems = new Dictionary<string, Item>();
+            this.HiddenItems = new Dictionary<string, Item>();
             this.AlsoHere = new List<Entity>();
         }
 
         public void Update(DataChangeItem dci)
         {
-            switch (dci.TargetProperty)
+           
+        }
+
+        public void Add(CarryableItem item)
+        {
+            if (this.VisibleItems.ContainsKey(item.Name))
             {
-                case "Player.Room.ObviousExits":
-                    string exits = dci.EndGroups[1].Value;
-                    string[] tokens = exits.Split(new char[] { ',' });
-                    this.RoomExits.Clear();
-                    foreach (string t in tokens){
-                        this.RoomExits.Add(new RoomExit(t));
-                    }
-                    break;
-                case "Player.Room.ObviousItems":
-                    string csv = dci.StartGroups[1].Value;
-                    foreach (List<Group> lst in dci.Middle)
-                    {
-                        csv += lst[1].Value;
-                    }
-                    if(dci.EndPattern != null)
-                    {
-                        csv += dci.EndGroups[1].Value;
-                    }
-                    this.VisibleItems = Item.CreateListFromCsv(csv);
-                    break;
-                default:
-                    break;
+                var items_room_has = this.VisibleItems[item.Name];
+                items_room_has.Quantity += item.Quantity;
+            }
+            else
+            {
+                this.VisibleItems.Add(item.Name, item);
             }
         }
 
+        public void Remove(CarryableItem item)
+        {
+            if (this.VisibleItems.ContainsKey(item.Name))
+            {
+                var items_room_has = this.VisibleItems[item.Name];
+                items_room_has.Quantity -= item.Quantity;
+                if (items_room_has.Quantity <= 0)
+                {
+                    this.VisibleItems.Remove(items_room_has.Name);
+                }
+            }
+            else
+            {
+                //should only happen if the inv object hasn't been loaded
+            }
+        }
+
+        public void Add_Hidden(Item item)
+        {
+            if (this.HiddenItems.ContainsKey(item.Name))
+            {
+                var items_room_has = this.HiddenItems[item.Name];
+                items_room_has.Quantity += item.Quantity;
+            }
+            else
+            {
+                this.HiddenItems.Add(item.Name, item);
+            }
+        }
+
+        public void Add_Hidden(List<CarryableItem> items)
+        {
+            foreach(var item in items) { Add_Hidden(item); }
+        }
+
+        public void Add(List<CarryableItem> items)
+        {
+            foreach (var item in items) { Add(item); }
+        }
+
+        public void Remove(List<CarryableItem> items)
+        {
+            foreach (var item in items) { Remove(item); }
+        }
     }
 
     public enum RoomLightEnum

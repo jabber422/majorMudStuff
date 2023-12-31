@@ -32,8 +32,9 @@
             // 
             // TerminalWindow
             // 
+            this.Name = "TerminalWindow";
             this.Size = new System.Drawing.Size(714, 574);
-            
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TerminalWindow_KeyPress);
             this.ResumeLayout(false);
 
         }

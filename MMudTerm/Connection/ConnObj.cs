@@ -60,8 +60,16 @@ namespace MMudTerm.Connection
             if (Rcvr != null)
             {
                 //Console.WriteLine("{0} -> BroadcastRcv() - {1}", this.Name, buffer.Length);
+                if (buffer.Length == 0)
+                {
+                    //disconnect
+                    BroadcastDisconnected();
+                    return;
+                }
                 Rcvr(buffer);
             }
+
+            
         }
 
         internal void BroadcastDisconnected()

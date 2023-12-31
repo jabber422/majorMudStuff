@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using System.Threading;
+using MMudObjects;
+using MMudTerm.Game;
 
 namespace MMudTerm.Session
 {
@@ -36,6 +38,8 @@ namespace MMudTerm.Session
         internal SessionDataObject SessionData { get { return this.m_SessionData; } }
         internal ConnObj Connection { get { return this.m_connObj; } }
         internal SessionState CurrentState { get { return this.m_currentSessionState; } }
+
+        internal MajorMudBbsGame _gameenv;
 
         public SessionController(SessionDataObject si, SessionForm sf)
         {
@@ -150,7 +154,6 @@ namespace MMudTerm.Session
         #region Internals
         #region Internals - commands called from SF
         byte[] StringAsciiNewLineMask = System.Text.Encoding.ASCII.GetBytes(new char[] {'\r'});
-        
 
         internal void Send(string s)
         {

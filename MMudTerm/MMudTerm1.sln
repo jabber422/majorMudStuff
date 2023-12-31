@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMudTerm_Protocols", "..\MMudTerm_Protocols\MMudTerm_Protocols.csproj", "{D921993F-B878-4A6F-9A82-771620B41CCB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMudTerm", "MMudTerm.csproj", "{78D853FC-6A8F-4A06-831B-B39206E6502E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMudObjects", "..\MMudObjects\MMudObjects2\MMudObjects.csproj", "{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MmeDatabaseReader", "..\MmeDatabase\MmeDatabaseReader\MmeDatabaseReader.csproj", "{65610BC7-B607-4DF2-A066-711649043966}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{78D853FC-6A8F-4A06-831B-B39206E6502E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78D853FC-6A8F-4A06-831B-B39206E6502E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78D853FC-6A8F-4A06-831B-B39206E6502E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65610BC7-B607-4DF2-A066-711649043966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65610BC7-B607-4DF2-A066-711649043966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65610BC7-B607-4DF2-A066-711649043966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65610BC7-B607-4DF2-A066-711649043966}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

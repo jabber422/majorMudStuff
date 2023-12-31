@@ -22,6 +22,8 @@ namespace MMudTerm.Session
         SessionController m_controller;
         SessionDataObject m_sessionData;
 
+        Dictionary<int, SessionGameInfo> m_gameInfos;
+
 
         internal TerminalWindow Terminal
         { get { return this.m_term; } }
@@ -43,6 +45,20 @@ namespace MMudTerm.Session
             this.toolStripButtonLogon.Checked = this.m_sessionData.LogonEnabled;
             //this.toolStripButtonMummy.Checked = this.m_sessionData.EnterGameEnabled;
             this.toolStripButtonMummy.Checked = this.m_sessionData.MummyScriptEnabled;
+
+            this.m_gameInfos = new Dictionary<int, SessionGameInfo>();
+            SessionGameInfo m_gameInfo = new SessionGameInfo(this.m_controller);
+            m_gameInfos.Add(m_gameInfo.GetHashCode(), m_gameInfo);
+            m_gameInfo.FormClosing += M_gameInfo_FormClosing;
+            m_gameInfo.Show();
+        }
+
+        private void M_gameInfo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            lock (this.m_gameInfos)
+            {
+                this.m_gameInfos.Remove(sender.GetHashCode());
+            }
         }
 
         private void InitTermWindow()
@@ -61,14 +77,23 @@ namespace MMudTerm.Session
         //if focus is on the session window any key pressed is buffered, enter will send the buffer
         private void term_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)'\r')
+            bool buffer_until_cr = false;
+            if (buffer_until_cr)
             {
-                this._buffer.Add(e.KeyChar);
-                this.m_controller.Send(Encoding.ASCII.GetBytes(this._buffer.ToArray()));
-                this._buffer.Clear();
+                if (e.KeyChar == (char)'\r')
+                {
+                    this._buffer.Add(e.KeyChar);
+                    this.m_controller.Send(Encoding.ASCII.GetBytes(this._buffer.ToArray()));
+                    this._buffer.Clear();
+                }
+                else
+                {
+                    this._buffer.Add(e.KeyChar);
+                }
             }
-            else { 
-                this._buffer.Add(e.KeyChar);
+            else
+            {
+                this.m_controller.Send(new byte[] { (byte)e.KeyChar });
             }
             
             e.Handled = true;
@@ -155,19 +180,6 @@ namespace MMudTerm.Session
                 
         }
 
-        public void SetCombat(bool combatEngaged)
-        {
-            //this.buttonCombatEngaged
-            //if (combatEngaged)
-            //{
-            //    this.buttonCombatEngaged.BackColor = Color.Red;
-            //}
-            //else
-            //{
-            //    this.buttonCombatEngaged.BackColor = System.Drawing.SystemColors.Control;
-            //}
-        }
-
         internal void UpdateState(string state_name)
         {
             if (this.InvokeRequired)
@@ -180,11 +192,15 @@ namespace MMudTerm.Session
             }
         }
 
-        SessionDebugWindow debug_window = null;
         private void button1_Click(object sender, EventArgs e)
         {
-            this.debug_window = new SessionDebugWindow(this.m_controller);
-            debug_window.Show();
+            SessionGameInfo m_gameInfo = new SessionGameInfo(this.m_controller);
+            lock (this.m_gameInfos)
+            {
+                m_gameInfos.Add(m_gameInfo.GetHashCode(), m_gameInfo);
+            }
+            m_gameInfo.FormClosing += M_gameInfo_FormClosing;
+            m_gameInfo.Show();
         }
 
         internal void UpdatePlayerStats(Dictionary<string, string> stats)
@@ -209,38 +225,55 @@ namespace MMudTerm.Session
                     }
                 }
             }
-
-            if (debug_window != null)
-            {
-                debug_window.UpdateStats(stats);
-            }
         }
 
-        internal void UpdateRoom(Dictionary<string, string> room_info)
-        {
-            if (debug_window != null)
-            {
-                debug_window.UpdateRoom(room_info);
-            }
-        }
-
-        internal void UpdateInv(Dictionary<string, string> inv)
-        {
-            if (debug_window != null)
-            {
-                debug_window.UpdateInv(inv);
-            }
-        }
-
-        internal void UpdateCombat(bool in_combat)
+        internal void UpdateCombat()
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action<bool>(UpdateCombat), in_combat);
+                this.Invoke(new Action(UpdateCombat));
             }
             else
             {
-                this.toolStripStatusLabel2.Text = in_combat ? "In Combat" : "Idle";
+                this.toolStripStatusLabel2.Text = this.m_controller._gameenv._player.InCombat ? "In Combat" : "Idle";
+            }
+        }
+
+
+        public void UpdateTick()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateTick));
+            }
+            else
+            {
+                if (this.m_controller._gameenv._player.IsResting)
+                {
+                    this.toolStripStatusLabel2.Text = "Resting";
+                }
+            }
+        }
+
+        public void Update(string token)
+        {
+            lock (this.m_gameInfos)
+            {
+                foreach (SessionGameInfo m_gameInfo in this.m_gameInfos.Values)
+                {
+                    m_gameInfo.Update(token);
+                }
+            }
+
+            //these are here because this form uses both of them in the status bar
+            switch (token)
+            {
+                case "in_combat":
+                    UpdateCombat();
+                    break;
+                case "tick":
+                    UpdateTick();
+                    break;
             }
         }
     }

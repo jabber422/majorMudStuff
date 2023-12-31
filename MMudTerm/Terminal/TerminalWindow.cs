@@ -257,6 +257,11 @@ namespace MMudTerm.Terminal
             }
             Console.WriteLine("End");
         }
+
+        private void TerminalWindow_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
     }
 }
 
