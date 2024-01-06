@@ -40,7 +40,10 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             {
                 vals.Add(val);
             }
-            else
+            else if(p == ANSI_COLOR.Reverse)
+            {
+
+            }else
             {
                 Console.WriteLine("Not a valid ANSI color/attrib value: " + val);
             }

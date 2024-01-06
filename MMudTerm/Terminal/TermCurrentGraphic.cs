@@ -60,6 +60,11 @@
                     this.curBcolor = i;
 #endif
                 }
+                else
+                {
+
+                }
+
             }
         }
 
