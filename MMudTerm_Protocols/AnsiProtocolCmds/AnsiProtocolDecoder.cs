@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace MMudTerm_Protocols.AnsiProtocolCmds
@@ -31,7 +29,8 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                 //append the saved buffer if any
                 buffer = ConcatBuffers(buffer);
 
-                if(commandsForTheTerminalScreen.Count > 0) {
+                if (commandsForTheTerminalScreen.Count > 0)
+                {
                     commandsForTheTerminalScreen.Clear();
                 }
 
@@ -45,7 +44,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     Debug.WriteLine("Recieved telent IAC in ANSI parser, this is bad", this.GetType().Namespace);
 #endif
                         //ignoreing Telnet commands at the front of a buffer
-                        if (buffer.Length >= 3) 
+                        if (buffer.Length >= 3)
                         {
                             //TODO: handle these one day
                             byte[] buf1 = new byte[3];
@@ -63,12 +62,12 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                 }
                 else //if (buffer[0] == 0x1b) // 'ESC'
                 {
-                    
+
                     int idx = this.TokenizeAnsiCommandBuffer(buffer);
 
                     if (idx != -1)
                     {
-                        
+
                     }
 #if DEBUG_2
                     string s = String.Format("Tokenize Completed: BufferIdx= {0}, buffer.len= {1}",
@@ -100,11 +99,11 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
         private int TokenizeAnsiCommandBuffer(byte[] buffer)
         {
             int IDX = 0;
-            
+
 
             for (int idx = 0; idx < buffer.Length; ++idx)
             {
-                
+
                 if (InCommandStruct)
                 {
                     if (HandledAsCommand(buffer[idx]))
@@ -221,20 +220,27 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             {
                 switch (cmd)
                 {
-                    case ANSI_ESC.Graphics: commandsForTheTerminalScreen.Enqueue(new AnsiGraphicsCmd(values));
+                    case ANSI_ESC.Graphics:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiGraphicsCmd(values));
                         break;
-                    case ANSI_ESC.CursorBkwd: commandsForTheTerminalScreen.Enqueue(new AnsiCursorBkwdCmd(values[0]));
+                    case ANSI_ESC.CursorBkwd:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiCursorBkwdCmd(values[0]));
                         break;
-                    case ANSI_ESC.EraseDisplay: commandsForTheTerminalScreen.Enqueue(new AnsiEraseDisplayCmd());
+                    case ANSI_ESC.EraseDisplay:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiEraseDisplayCmd());
                         break;
-                    case ANSI_ESC.EraseLine: commandsForTheTerminalScreen.Enqueue(new AnsiEraseLineCmd());
+                    case ANSI_ESC.EraseLine:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiEraseLineCmd());
                         break;
                     case ANSI_ESC.CursorPosition:
-                    case ANSI_ESC.CursorPositionf: commandsForTheTerminalScreen.Enqueue(new AnsiCursorPosition(values));
+                    case ANSI_ESC.CursorPositionf:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiCursorPosition(values));
                         break;
-                    case ANSI_ESC.CursorUp: commandsForTheTerminalScreen.Enqueue(new AnsiCursorUpCmd(values[0]));
+                    case ANSI_ESC.CursorUp:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiCursorUpCmd(values[0]));
                         break;
-                    case ANSI_ESC.CursorFwd: commandsForTheTerminalScreen.Enqueue(new AnsiCursorFwdCmd(values[0]));
+                    case ANSI_ESC.CursorFwd:
+                        commandsForTheTerminalScreen.Enqueue(new AnsiCursorFwdCmd(values[0]));
                         break;
                     case ANSI_ESC.noIdea: break;
                     default:

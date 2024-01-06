@@ -1,7 +1,5 @@
-﻿using System.Text;
-using System;
-using System.Diagnostics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace MMudTerm_Protocols
 {
@@ -43,7 +41,7 @@ namespace MMudTerm_Protocols
 
         public override void DoCommand(ITermProtocolCmds terminal)
         {
-            
+
 
         }
         public string GetValue()

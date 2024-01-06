@@ -1,5 +1,4 @@
-﻿using System;
-namespace MMudTerm_Protocols.AnsiProtocolCmds
+﻿namespace MMudTerm_Protocols.AnsiProtocolCmds
 {
     /// <summary>
     /// erases the line from carat to max cols

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MMudTerm_Protocols.AnsiProtocolCmds
+﻿namespace MMudTerm_Protocols.AnsiProtocolCmds
 {
     //ansi colors
     public enum ANSI_COLOR : int

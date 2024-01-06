@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MMudTerm_Protocols.AnsiProtocolCmds;
 using System.Diagnostics;
-using System.Text;
 
 namespace MMudTerm_Protocols
 {
@@ -43,7 +41,7 @@ namespace MMudTerm_Protocols
         {
             if (partialMsgBuffer.Length == 0)
                 return buffer;
-            
+
             string s = "";
             #region debug
 #if DEBUG_2
@@ -76,11 +74,11 @@ namespace MMudTerm_Protocols
             Buffer.BlockCopy(partialMsgBuffer, 0, temp, 0, partialMsgBuffer.Length);
             Buffer.BlockCopy(buffer, 0, temp, partialMsgBuffer.Length,
                 temp.Length - partialMsgBuffer.Length);
-            
+
             partialMsgBuffer = new byte[0];
             #region debug
 #if DEBUG
-            
+
             for (int i = 0; i < temp.Length; ++i)
             {
                 s += String.Format("{0:X}-", temp[i]);
@@ -122,7 +120,7 @@ namespace MMudTerm_Protocols
             Buffer.BlockCopy(buffer, fromIdx, partialMsgBuffer, 0, partialMsgBuffer.Length);
             #region debug
 #if DEBUG
-            
+
             for (int i = 0; i < partialMsgBuffer.Length; ++i)
             {
                 s += String.Format("{0:X}-", partialMsgBuffer[i]);
@@ -132,5 +130,5 @@ namespace MMudTerm_Protocols
 #endif
             #endregion
         }
-   }
+    }
 }

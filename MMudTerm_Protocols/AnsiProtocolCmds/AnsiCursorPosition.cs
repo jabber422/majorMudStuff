@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
 
 namespace MMudTerm_Protocols.AnsiProtocolCmds
 {
@@ -23,7 +20,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
                     System.Reflection.MethodBase.GetCurrentMethod().Name,
                     this.GetType().Namespace);
 #endif
-            (terminal as IAnsiProtocolCmds).SetCursorPosition(row-1, col-1); //these -1 are to make the stats screen render properly.. otherwise the view is off by 1
+            (terminal as IAnsiProtocolCmds).SetCursorPosition(row - 1, col - 1); //these -1 are to make the stats screen render properly.. otherwise the view is off by 1
         }
     }
 }

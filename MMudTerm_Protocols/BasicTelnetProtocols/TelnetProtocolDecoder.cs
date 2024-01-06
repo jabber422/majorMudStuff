@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 namespace MMudTerm_Protocols
@@ -27,15 +25,17 @@ namespace MMudTerm_Protocols
                 case TERM_CMD.DATA: //aiString += Encoding.ASCII.GetString(values[0]);
                     TermStringDataCmd datacmd = new TermStringDataCmd(values);
                     string datacmd_str = datacmd.GetValue();
-                    if(datacmd_str.Contains(";"))
+                    if (datacmd_str.Contains(";"))
                     {
 
                     }
                     commandsForTheTerminalScreen.Enqueue(datacmd);
                     break;
-                case TERM_CMD.NL: commandsForTheTerminalScreen.Enqueue(new TermNewLineCmd());
+                case TERM_CMD.NL:
+                    commandsForTheTerminalScreen.Enqueue(new TermNewLineCmd());
                     break;
-                case TERM_CMD.CR: commandsForTheTerminalScreen.Enqueue(new TermCarrigeReturnCmd());
+                case TERM_CMD.CR:
+                    commandsForTheTerminalScreen.Enqueue(new TermCarrigeReturnCmd());
                     break;
                 default:
 #if DEBUG

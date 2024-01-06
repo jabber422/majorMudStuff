@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace MMudTerm_Protocols.AnsiProtocolCmds
 
@@ -40,10 +39,11 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             {
                 vals.Add(val);
             }
-            else if(p == ANSI_COLOR.Reverse)
+            else if (p == ANSI_COLOR.Reverse)
             {
 
-            }else
+            }
+            else
             {
                 Console.WriteLine("Not a valid ANSI color/attrib value: " + val);
             }
@@ -59,6 +59,6 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             (terminal as IAnsiProtocolCmds).SetCurGraphics(vals.ToArray());
         }
 
-        
+
     }
 }

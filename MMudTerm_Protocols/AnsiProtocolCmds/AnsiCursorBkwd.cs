@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-namespace MMudTerm_Protocols.AnsiProtocolCmds
+﻿namespace MMudTerm_Protocols.AnsiProtocolCmds
 {
     /// <summary>
     /// Ansi proto: moves the cursor left x amount of cols
