@@ -22,6 +22,13 @@ namespace MMudTerm.Session
             this._item = item;
             this.label_count_value.Text = item.Quantity.ToString();
             this.label_item_name.Text = item.Name;
+            if(item is EquipableItem)
+            {
+                if((item as EquipableItem).Equiped)
+                {
+                    this.label_item_name.Text += "*";
+                }
+            }
         }
 
         private void button_look_Click(object sender, EventArgs e)
@@ -48,6 +55,16 @@ namespace MMudTerm.Session
         {
             this._controller.Send("buy " + this._item.Name + "\r\n");
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this._controller.Send("equip " + this._item.Name + "\r\n");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            this._controller.Send("remove " + this._item.Name + "\r\n");
         }
     }
 }

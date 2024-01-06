@@ -37,8 +37,7 @@ namespace MMudTerm.Session.SessionStateData
         {
             if(this.m_controller.m_connObj != null && this.m_controller.m_connObj.Connected)
             {
-                this.m_controller.m_connObj.mySocket.Shutdown(SocketShutdown.Both);
-                this.m_controller.m_connObj.mySocket.Close();
+                this.m_controller.m_connObj.Close();
                 this.m_controller.m_connObj = null;
             }
             

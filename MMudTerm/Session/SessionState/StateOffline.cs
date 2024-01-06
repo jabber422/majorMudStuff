@@ -6,9 +6,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MMudTerm.Session.SessionStateData
 {
@@ -31,29 +33,15 @@ namespace MMudTerm.Session.SessionStateData
 
         internal override SessionState Connect()
         {
-            int result = 0;
-            if (this.m_controller.Connection == null)
+           
             {
-                Debug.WriteLine("SessionController - ConnterToServer - ConObj is null, making a new one");
-                this.m_controller.m_connObj = new ConnObj(this.m_controller.m_SessionData.ConnectionInfo.IpA, this.m_controller.m_SessionData.ConnectionInfo.Port);
-                result = 1;
-            }
-
-            if (SocketHandler.Connect(this.m_controller.Connection))
-            {
+                this.m_controller.m_connObj = new TcpClient();
                 this.m_controller.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
-                this.m_controller.m_connObj.Rcvr += new RcvMsgCallback(this.m_controller.ConnHandler_Rcvr);
-                this.m_controller.m_connObj.Disconnected += new EventHandler(this.m_controller.ConnHandler_Disconnected);
-                result = 2;
+                this.m_controller.m_connObj.Connect(this.m_controller.m_SessionData.ConnectionInfo.IpA, this.m_controller.m_SessionData.ConnectionInfo.Port);
+                Task clientToServerTask = this.m_controller.ConnHandler_Rcvr();
                 return new SessionStateConnected(this);
             }
-            else
-            {
-                this.m_controller.m_connObj.mySocket.Close();
-                this.m_controller.m_connObj = null;
-                result = 3;
-            }
-
+ 
             return this;
         }
 
@@ -80,10 +68,10 @@ namespace MMudTerm.Session.SessionStateData
                 {
                     if (!this.IAC_DONE)
                     {
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 1 });
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 0 });
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 251, 0 });
+                        this.m_controller.Send(new byte[] { 255, 253, 3 });
+                        this.m_controller.Send(new byte[] { 255, 253, 1 });
+                        this.m_controller.Send(new byte[] { 255, 253, 0 });
+                        this.m_controller.Send(new byte[] { 255, 251, 0 });
                         this.IAC_DONE = true;
                     }
                     else

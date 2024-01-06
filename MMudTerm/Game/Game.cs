@@ -11,6 +11,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace MMudTerm.Game
 {
@@ -170,17 +171,28 @@ namespace MMudTerm.Game
             common_patterns.Add(@"(\d+) (runic|platinum|gold|silver|copper) drop to the ground\.", ProcessCashDropFromMob);
 
 
-            string verb_pattern_club = "smash|clobber|slam|whap";
-            string verb_pattern_pierce = "lunges|stabs";
-            string verb_pattern_cut = "slices";
-            string verb_pattern_natural = "bites|claws|rips|whips";
-            string verb_pattern_miss = "swipe|flails";
-            string verb = $"(?:{verb_pattern_club}|{verb_pattern_pierce}|{verb_pattern_miss}|{verb_pattern_cut}|{verb_pattern_natural})";
+            string verb_pattern_club_3rd = "smashes|clobbers|slams|whaps";
+            string verb_pattern_pierce_3rd = "lunges|stabs|impales|skewers";
+            string verb_pattern_cut_3rd = "slices|slashes|cuts";
+            string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips";
+            string verb_pattern_miss_3rd = "swipe|flail|snaps";
+            string present_tense_3rd_person_verb = $"{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
 
-            string pattern_do_hit = "You " + verb + @" ([\S ]+) for (\d+) damage!";
+            string verb_pattern_club = "smash|clobber|slam|whap";
+            string verb_pattern_pierce = "lunge|stab|impale|skewer";
+            string verb_pattern_cut = "slice|slash|cut";
+            string verb_pattern_natural = "chomp|bite|claw|rip|whip";
+            string verb_pattern_miss = "swipe|flail|snap";
+
+            string present_tense_1st_person_verb = $"{verb_pattern_club}|{verb_pattern_pierce}|{verb_pattern_miss}|{verb_pattern_cut}|{verb_pattern_natural}";
+
+            string verb = $"(?:{present_tense_1st_person_verb}|{present_tense_3rd_person_verb})";
+
+
+            string pattern_do_hit = @"You (critically |surprise )?" + verb + @" ([\S ]+) for (\d+) damage!";
             common_patterns.Add(pattern_do_hit, ProcessCombatDoHit);
 
-            string pattern_do_miss = "You " + verb + @" at ([\S ]+)!";
+            string pattern_do_miss = @"You " + verb + @" at ([\S ]+)!";
             common_patterns.Add(pattern_do_miss, ProcessCombatDoMiss);
 
             string pattern_rcv_hit = @"The ([\S ]+) " + verb + @" you (?:[\S ]*)for (\d+) damage!";
@@ -190,8 +202,12 @@ namespace MMudTerm.Game
             string pattern_rcv_miss = @"The ([\S ]+) " + verb + @" at you";
             common_patterns.Add(pattern_rcv_miss, ProcessCombatRecieveMiss);
 
-            string hung_up = @"(\S+) just hung up!!!";
+            string hung_up = @"(\S+) just (?:disconnected|hung up)!!!";
             common_patterns.Add(hung_up, ProcessHungUp);
+            
+            string left_the_realm = @"(\S+) just left the Realm\.";
+            common_patterns.Add(left_the_realm, ProcessHungUp);
+
             string entered_the_realm = @"(\S+) just entered the Realm\.";
             common_patterns.Add(entered_the_realm, ProcessEnteredRealm);
 
@@ -240,10 +256,12 @@ namespace MMudTerm.Game
 
         private void ProcessCombatDoHit(Match match, string arg2)
         {
+            //TODO: if 1 is set we had a crit
+            
             //You clobber giant rat for 12 damage!
-            Entity e = new Entity(match.Groups[1].Value);
+            Entity e = new Entity(match.Groups[2].Value);
 
-            int dmg_done = int.Parse(match.Groups[2].Value);
+            int dmg_done = int.Parse(match.Groups[3].Value);
             this._current_combat.PlayerHit(e, dmg_done);
             this.result = "combat";
         }
@@ -346,9 +364,9 @@ namespace MMudTerm.Game
             Match m1 = Regex.Match(arg2, pattern1, RegexOptions.Compiled);
             if (m1.Success)
             {
-                string coin_name = match.Groups[2].Value;
+                string coin_name = m1.Groups[2].Value;
                 Price price = new Price(coin_name);
-                price.ParseMatch(match);
+                price.ParseMatch(m1);
                 List<CarryableItem> coins = price.ToList();
                 this._player.Inventory.Add(coins);
                 this._current_room.Remove(coins);
@@ -522,6 +540,10 @@ namespace MMudTerm.Game
         //processes the player stat block as a whole frame
         private void ProcessStat(Match match, string s)
         {
+            string[] char_creation_work_around = s.Split(new string[] { "SAVESAVE" }, StringSplitOptions.None);
+            if(char_creation_work_around.Length == 2) {
+                s = char_creation_work_around[1];
+                    }
             string pattern_stat = @"(\S+)(?: Class)?:(?:[ \t]+|\*?)(\S+)(?: \S+)?";
             Regex r = new Regex(pattern_stat);
             MatchCollection mc = r.Matches(s);
@@ -545,8 +567,8 @@ namespace MMudTerm.Game
         private void ProcessRoom(Match m, string s)
         {
             Dictionary<string, string> room_info = new Dictionary<string, string>();
-            string[] lines = s.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            room_info["exits"] = lines[lines.Length - 1];
+            string[] tokens = s.Split(new string[] {"Obvious exits:" }, StringSplitOptions.RemoveEmptyEntries);
+            room_info["exits"] = tokens[1].Trim();
             int idx = room_info["exits"].IndexOf('\b');
             while (idx > 0)
             {
@@ -556,65 +578,45 @@ namespace MMudTerm.Game
                 idx = room_info["exits"].IndexOf('\b');
             }
 
-            room_info["name"] = lines[0];
-            room_info["desc"] = "";
-            room_info["items"] = "";
-            room_info["here"] = "";
-
-            int name_index = 0, desc_index = 0, exit_index = lines.Length - 1, items_index = 0, here_index = 0;
-
-            for (int i = 1; i < lines.Length; ++i)
+            tokens = tokens[0].Split(new string[] { "Also here:" }, StringSplitOptions.RemoveEmptyEntries);
+            if(tokens.Length > 1)
             {
-                string line = lines[i];
-                if (line.StartsWith("You notice"))
-                {
-                    items_index = i;
-                }
-                else if (line.StartsWith("Also here:"))
-                {
-                    here_index = i;
-                }
-                else if (line.StartsWith("Obvious exits:"))
-                {
-                    exit_index = i;
-                }
+                room_info["here"] = tokens[1].Trim().Trim('.');
             }
 
-            //items, need to take from items_index to here or exits
-            if (items_index > 0)
+            
+            tokens = tokens[0].Split(new string[] { "You notice " }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length > 1)
             {
-                int end_index = here_index;
-                if (end_index == 0) { end_index = exit_index; }
-
-                string desc = "";
-                //there should be a description block
-                for (int i = items_index; i < end_index; ++i)
-                {
-                    desc += lines[i];
-                }
-                room_info["items"] = desc;
+                room_info["items"] = tokens[1].Trim();
             }
 
-            if (here_index > 0)
+            tokens = tokens[0].Split(new string[] { "    " }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length > 1)
             {
-                string desc = "";
-                //there should be a description block
-                for (int i = here_index; i < exit_index; ++i)
-                {
-                    desc += lines[i];
-                }
-                room_info["here"] = desc;
-                room_info["here"] = room_info["here"].Remove(room_info["here"].Length - 1);
+                room_info["desc"] = tokens[1].Trim();
             }
+
+            tokens = tokens[0].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            room_info["name"] = tokens[tokens.Length -1].Trim();
 
             //TODO: are we looking? did we move? are we in the same room?
             Room room = new Room();
             room.Name = room_info["name"];
-            room.Description = room_info["desc"];
-            List<Entity> entities = new List<Entity>();
-            if (room_info["here"] != null && room_info["here"] != "")
+            if (room.Name.Trim() == "e")
             {
-                foreach (string also_here in room_info["here"].Substring("Also here:".Length).Split(','))
+
+            }
+
+            if (room_info.ContainsKey("desc"))
+            {
+                room.Description = room_info["desc"];
+            }
+
+            List<Entity> entities = new List<Entity>();
+            if (room_info.ContainsKey("here") && room_info["here"] != "")
+            {
+                foreach (string also_here in room_info["here"].Split(','))
                 {
                     Entity entity = new Entity(also_here.Trim());
                     if (this.IsPlayer(entity))
@@ -626,10 +628,10 @@ namespace MMudTerm.Game
                 room.AlsoHere = entities;
             }
 
-            if (room_info["items"] != null && room_info["items"] != "")
+            if (room_info.ContainsKey("items") && room_info["items"] != "")
             {
                 Dictionary<string, Item> items = new Dictionary<string, Item>();
-                foreach (string item_here in room_info["items"].Substring("You notice".Length).Split(','))
+                foreach (string item_here in room_info["items"].Split(','))
                 {
                     string item_here2 = item_here.Trim();
                     if (item_here2.EndsWith(" here."))
@@ -656,7 +658,7 @@ namespace MMudTerm.Game
             }
 
             List<RoomExit> room_exits = new List<RoomExit>();
-            foreach (string exit_here in room_info["exits"].Substring("Obvious exits:".Length).Split(','))
+            foreach (string exit_here in room_info["exits"].Split(','))
             {
                 RoomExit room_exit = new RoomExit(exit_here.Trim());
                 room_exits.Add(room_exit);
@@ -853,7 +855,10 @@ namespace MMudTerm.Game
                         }
                     }
                 }
+                if(last_name == "")
+                {
 
+                }
                 Player new_player = new Player($"{first_name} {last_name}".Trim());
                 new_player.Title = title;
                 new_player.Online = true;
@@ -898,27 +903,35 @@ namespace MMudTerm.Game
 
         private void ProcessTopList(Match m, string s)
         {
-            string[] top_list_parts = s.Split(new string[] { "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\r\n" }, StringSplitOptions.None);
-            string[] top_parts = top_list_parts[0].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            string last_line = top_parts[top_parts.Length - 1];
+            string[] top_list_parts = s.Split(new string[] { "\r\nRank Name" }, StringSplitOptions.None);
+            string[] top_parts = top_list_parts[1].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            string last_line = top_parts[0];
+            last_line = "Rank Name" + last_line;
 
             int rank_idx = last_line.IndexOf("Rank");
             int name_idx = last_line.IndexOf("Name");
             int class_idx = last_line.IndexOf("Class");
             int gang_idx = last_line.IndexOf("Gang");
-
-            string[] bottom_part = top_list_parts[1].Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            int exp_idx = last_line.IndexOf("Experience");
 
             List<Player> who_list = new List<Player>();
-            for (int i = 0; i < bottom_part.Length; i++)
+            for (int i = 2; i < top_parts.Length; i++)
             {
-                string line = bottom_part[i];
+                string line = top_parts[i];
                 if (line == "") { continue; }
 
                 Player player = new Player(line.Substring(name_idx, class_idx - name_idx).Trim());
                 player.Rank = int.Parse(line.Substring(rank_idx, 3));
                 player.Stats.Class = line.Substring(class_idx, gang_idx - class_idx).Trim();
-                player.GangName = line.Substring(gang_idx).Trim();
+                if (exp_idx != -1)
+                {
+                    player.GangName = line.Substring(gang_idx, exp_idx-gang_idx).Trim();
+                }
+                else
+                {//exp is hidden in top
+                    player.GangName = line.Substring(gang_idx).Trim();
+                }
+                player.Exp = double.Parse(line.Substring(exp_idx).Trim());
 
                 who_list.Add(player);
             }
@@ -936,12 +949,14 @@ namespace MMudTerm.Game
                 bool player_found = false;
                 foreach (Player current_player in this._players)
                 {
-                    if (player.Name == current_player.Name)
+                    if (player.FirstName == current_player.FirstName)
                     {
                         player_found = true;
                         if (result == "top")
                         {
                             current_player.Rank = player.Rank;
+                            current_player.Exp = player.Exp;
+
                         }
                         else if (result == "who")
                         {

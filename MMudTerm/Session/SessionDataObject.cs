@@ -155,7 +155,7 @@ namespace MMudTerm.Session
         internal Dictionary<Regex, string> GetLogonDataStrings()
         {
             Dictionary<Regex, string> dict = new Dictionary<Regex, string>();
-            dict.Add(new Regex(@"ID\?"), "ID,2,2");
+            dict.Add(new Regex(@"ID\?"), "ID,2,1");
             //dict.Add(new Regex(@"CON\?"), "CON,bbs.classicmud.com,2323");
             dict.Add(new Regex("Otherwise type \"new\":"), @"jabber"+((char)0x0d).ToString());
             dict.Add(new Regex("Enter your password:"), @"zetafoo" + ((char)0x0d).ToString());

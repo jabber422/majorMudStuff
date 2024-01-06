@@ -35,8 +35,12 @@ namespace MMudTerm.Session.SessionStateData
         internal override SessionState HandleCommands(Queue<TermCmd> cmds)
         {
             string s = "";
+            string q = "";
             foreach (TermCmd c in cmds)
             {
+                string type = c.GetType().ToString();
+                type = type.Remove(0, type.IndexOf(".")+1);
+                q += type + " ";
                 if (c is TermStringDataCmd)
                 {
                     s += (c as TermStringDataCmd).GetValue();
@@ -50,6 +54,8 @@ namespace MMudTerm.Session.SessionStateData
                     s += '\r';
                 }
             }
+            //Console.WriteLine(q +"\r\n");
+
             var new_state = Handle(s);
             return new_state;
         }

@@ -90,7 +90,7 @@ namespace MMudTerm.Session.SessionStateData
 
                     if (this._iac_cnd < 3)
                     {
-                        this.m_controller.m_connObj.Send(new byte[] { 255, 253, 3 });
+                        this.m_controller.Send(new byte[] { 255, 253, 3 });
                         this._iac_cnd++;
                     }
                 }

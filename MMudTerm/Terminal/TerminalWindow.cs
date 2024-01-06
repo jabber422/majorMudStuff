@@ -220,6 +220,7 @@ namespace MMudTerm.Terminal
                     TermCmd cmd = queue.Dequeue();
                     if (cmd is TermStringDataCmd)
                     {
+                        string s = (cmd as TermStringDataCmd).GetValue();
                     }
                     cmd.DoCommand(this.grid);
                 }

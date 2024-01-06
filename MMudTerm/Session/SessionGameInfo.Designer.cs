@@ -117,7 +117,6 @@
             this.button_exp_reset = new System.Windows.Forms.Button();
             this.label54 = new System.Windows.Forms.Label();
             this.label_exphr_value = new System.Windows.Forms.Label();
-            this.combatSessionsControl1 = new CombatSessionsControl(this._controller);
             this.tabControl1.SuspendLayout();
             this.tabPage_stats.SuspendLayout();
             this.tabPage_who.SuspendLayout();
@@ -886,7 +885,6 @@
             // 
             // tabPage_combat
             // 
-            this.tabPage_combat.Controls.Add(this.combatSessionsControl1);
             this.tabPage_combat.Location = new System.Drawing.Point(4, 29);
             this.tabPage_combat.Name = "tabPage_combat";
             this.tabPage_combat.Padding = new System.Windows.Forms.Padding(3);
@@ -894,6 +892,7 @@
             this.tabPage_combat.TabIndex = 4;
             this.tabPage_combat.Text = "Combat";
             this.tabPage_combat.UseVisualStyleBackColor = true;
+            
             // 
             // tabPage_wealth
             // 
@@ -1109,13 +1108,7 @@
             this.label_exphr_value.Size = new System.Drawing.Size(27, 19);
             this.label_exphr_value.TabIndex = 64;
             this.label_exphr_value.Text = "19";
-            // 
-            // combatSessionsControl1
-            // 
-            this.combatSessionsControl1.Location = new System.Drawing.Point(11, 6);
-            this.combatSessionsControl1.Name = "combatSessionsControl1";
-            this.combatSessionsControl1.Size = new System.Drawing.Size(940, 389);
-            this.combatSessionsControl1.TabIndex = 0;
+           
             // 
             // SessionGameInfo
             // 
@@ -1230,6 +1223,6 @@
         private System.Windows.Forms.Button button_exp_reset;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label_exphr_value;
-        private CombatSessionsControl combatSessionsControl1;
+        
     }
 }

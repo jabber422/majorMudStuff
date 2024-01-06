@@ -13,7 +13,7 @@ namespace MmeDatabaseReader
         static void Main(string[] args)
         {
             string myConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;" +
-                               @"Data Source=C:\sandbox\majorMudStuff\MmeDatabase\test.mdb;" +
+                               @"Data Source=e:\Repos\MajorMudStuff\MmeDatabase\test.mdb;" +
                                "Persist Security Info=True;" +
                                "Jet OLEDB:Database Password=myPassword;";
             try
