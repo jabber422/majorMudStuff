@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.IO;
-using MMudTerm.Connection;
 using MMudTerm_Protocols;
 using MMudTerm.Session.SessionStateData;
 using System.Collections.Generic;
@@ -13,6 +12,7 @@ using System.Threading;
 using MMudObjects;
 using MMudTerm.Game;
 using System.Net.Sockets;
+using static MMudTerm.Session.SessionStateData.SessionStateInGame;
 
 namespace MMudTerm.Session
 {
@@ -21,22 +21,32 @@ namespace MMudTerm.Session
     //controler for a specific instance of a connection/character
     public class SessionController : IDisposable
     {
+        //the form that displays the Terminal object and represents a single char on a bbs
         internal SessionForm m_sessionForm;
+        //ip/port type of info for connecting to the bbs
         internal SessionDataObject m_SessionData;
+        //decoder, converts byte's to TerminalIAC commands, raw bytes to ANSI/TELNET commands
         internal ProtocolDecoder m_decoder;
+        //the current state of this controller
+        //Offline -> 
         SessionState m_currentSessionState; //a thread changes this, be careful
-        //SessionState[] m_states;
+        //Our Socket to the server
         internal TcpClient m_connObj;
 
+        //2 threads, 2 queues and 2 semaphores
+        //after the decoder decodes something into IAC object
+        //  it will add the object into two queue's
+        //  one thread/queue drives the Terminal view
+        //  the other thread/queue drives the game processing engine
+        private object _term_q_in_use = new object();
         private Task terminal_term_cmds_task = null;
         ConcurrentQueue<TermCmd> terminal_term_cmds = new ConcurrentQueue<TermCmd>();
         ManualResetEventSlim terminal_term_cmds_event = new ManualResetEventSlim(false);
+
+        private object _state_q_in_use = new object();
         private Task state_term_cmds_task = null;
         ConcurrentQueue<TermCmd> state_term_cmds = new ConcurrentQueue<TermCmd>();
         ManualResetEventSlim state_term_cmds_event = new ManualResetEventSlim(false);
-        private object _term_q_in_use = new object();
-        private object _state_q_in_use = new object();
-
 
         string DBG_CAT = "SessionController";
 
@@ -44,13 +54,18 @@ namespace MMudTerm.Session
         internal SessionDataObject SessionData { get { return this.m_SessionData; } }
         internal SessionState CurrentState { get { return this.m_currentSessionState; } }
 
+        public bool EnterTheGame { get; internal set; }
+
         internal MajorMudBbsGame _gameenv;
+
+        public Macros m_macros;
 
         public SessionController(SessionDataObject si, SessionForm sf)
         {
             this.m_SessionData = si;
             this.m_sessionForm = sf;
             this.m_currentSessionState = new SessionStateOffline(null, this);
+            this.m_macros = new Macros();
         }
 
         private Task StartStateQueueWorkerThread(ManualResetEventSlim term_cmds_event, ConcurrentQueue<TermCmd> term_cmds)
@@ -175,7 +190,7 @@ namespace MMudTerm.Session
 
         internal void Send(string s)
         {
-            Debug.WriteLine("Send | " + s + " |", DBG_CAT);
+            //Debug.WriteLine("Send | " + s + " |", DBG_CAT);
             this.Send(Encoding.ASCII.GetBytes(s));
         }
 
@@ -221,13 +236,35 @@ namespace MMudTerm.Session
             return result;
         }
         #endregion
-              
+
+        //sessionForm starts the teardown,               
         public void Dispose()
         {
-            this.m_connObj?.Close();
+            try
+            {
+                this.m_connObj?.Client.Disconnect(true);
+            } catch { }
             //this.m_currentSessionState.Disconnect();
             //this.m_SessionData.Dispose();
             //this.m_sessionForm.Close();
+        }
+
+        internal void AddListener(NewGameEventHandler mummyScriptHandler)
+        {
+            if(this.CurrentState is SessionStateInGame)
+            {
+                (this.CurrentState as SessionStateInGame).NewGameEvent += mummyScriptHandler;
+            }
+        }
+
+        
+
+        internal void RemoveListender(NewGameEventHandler mummyScriptHandler)
+        {
+            if (this.CurrentState is SessionStateInGame)
+            {
+                (this.CurrentState as SessionStateInGame).NewGameEvent -= mummyScriptHandler;
+            }
         }
     }
 }

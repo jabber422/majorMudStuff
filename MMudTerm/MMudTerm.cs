@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
 using MMudTerm.Session;
@@ -12,12 +13,14 @@ namespace MMudTerm
 {
     public partial class MMudTerm : Form
     {
-        Dictionary<Guid, SessionForm> m_sessions;
+        Dictionary<int, SessionForm> m_sessions;
+        Dictionary<int, BbsAccountPlayerControl> m_bbs_chars;
 
         public MMudTerm()
         {
             InitializeComponent();
-            m_sessions = new Dictionary<Guid, SessionForm>();
+            m_sessions = new Dictionary<int, SessionForm>();
+            m_bbs_chars = new Dictionary<int, BbsAccountPlayerControl>();
         }
 
         #region widget handlers
@@ -67,6 +70,70 @@ namespace MMudTerm
             return false;
         }
 
-        
+        private void button_new_char_Click(object sender, EventArgs e)
+        {
+            BbsAccountPlayerControl control = new BbsAccountPlayerControl(this);
+
+            int current_char_count = this.m_bbs_chars.Count;
+            
+            control.Location = new System.Drawing.Point(7, 26+(current_char_count *150));
+            control.Name = "char" + current_char_count;
+            control.TabIndex = 1+ current_char_count;
+
+            this.m_bbs_chars.Add(control.GetHashCode(), control);
+
+            this.groupBox_chars.SuspendLayout();
+            this.SuspendLayout();
+
+            this.groupBox_chars.Controls.Add(control);
+
+            this.groupBox_chars.ResumeLayout(false);
+            this.ResumeLayout(false);
+        }
+
+        internal int CreateNewSession(List<Tuple<string, string>> list, int bbs_control_hash = 0)
+        {
+            SessionConnectionInfo newData = new SessionConnectionInfo();
+            try
+            {
+                newData.Ip = this.textBox_address.Text;
+                newData.Port = short.Parse(this.textBox_port.Text);
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show("Bad IP!\r\n" + ex.Message);
+                this.textBox_address.Focus();
+                this.textBox_address.SelectAll();
+                return -1;
+            }catch(FormatException ex)
+            {
+                MessageBox.Show("Bad Port!\r\n" + ex.Message);
+                this.textBox_port.Focus();
+                this.textBox_port.SelectAll();
+                return -1;
+            }
+            
+            newData.LogonAutomation = list;
+            newData.BbsControlId = bbs_control_hash;
+
+            SessionForm newSessionForm = new SessionForm(newData);
+            newSessionForm.FormClosed += NewSessionForm_FormClosed;
+
+            newSessionForm.Show();
+            
+            this.m_sessions.Add(newSessionForm.GetHashCode(), newSessionForm);
+
+            return newSessionForm.GetHashCode();
+        }
+
+        private void NewSessionForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            SessionForm form = (sender as SessionForm);
+            BbsAccountPlayerControl control = this.m_bbs_chars[form.m_sessionData.ConnectionInfo.BbsControlId];
+            control.Unlock();
+
+            int hash = form.GetHashCode();
+            this.m_sessions.Remove(hash);
+        }
     }
 }

@@ -1,21 +1,20 @@
 ﻿using global::MMudObjects;
 using global::MMudTerm.Session;
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+
 using System.Diagnostics;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using System.Linq;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Windows.Forms;
+
+
 
 namespace MMudTerm.Game
 {
-
+    //this is a Player's combat against a single target
     public class CombatSession
     {
         public Entity target = null;
@@ -77,10 +76,10 @@ namespace MMudTerm.Game
 
         private CombatSession GetSession(Entity e)
         {
-            if (!this._controller._gameenv._player.InCombat)
-            {
-                this._controller._gameenv._player.InCombat = true;
-            }
+            //if (!this._controller._gameenv._player.InCombat)
+            //{
+            //    this._controller._gameenv._player.InCombat = true;
+            //}
 
             if (!_combats.ContainsKey(e.Name))
             {
@@ -137,11 +136,13 @@ namespace MMudTerm.Game
         private string pattern_inv = @"You are carrying ";
 
         private RegexMatcher _matcher = null;
-
+        public Room _look_room;
         public string result = null;
         string[] coins = new string[] { "platinum piece", "gold crown", "silver noble", "copper farthing" };
 
         SessionController _controller = null;
+
+        public bool EnterTheGame { get; internal set; }
 
         public MajorMudBbsGame(SessionController controller)
         {
@@ -155,7 +156,13 @@ namespace MMudTerm.Game
             common_patterns.Add(@"   Current Adventurers", ProcessWhoList);
             common_patterns.Add(@"You just bought ([\S ]+) for ([\S ]+)\.", ProcessBoughtSomething);
             common_patterns.Add(@"You sold ([\S ]+) for ([\S ]+)\.", ProcessSoldSomething);
+
+
             common_patterns.Add(@"There is no exit in that direction!", ProcessBadRoomMove);
+            common_patterns.Add(@"You are not permitted in that room!", ProcessBadRoomMove);
+            common_patterns.Add(@"There is a closed door in that direction!", ProcessBadRoomMove);
+            common_patterns.Add(@"The door is closed!", ProcessBadRoomMove);
+
             common_patterns.Add(@"You hid ", ProcessHidSomething);
             common_patterns.Add(@"You notice (.*) here.", ProcessSearch);
             common_patterns.Add(@"Attempting to sneak...", ProcessSneak);
@@ -171,35 +178,39 @@ namespace MMudTerm.Game
             common_patterns.Add(@"(\d+) (runic|platinum|gold|silver|copper) drop to the ground\.", ProcessCashDropFromMob);
 
 
-            string verb_pattern_club_3rd = "smashes|clobbers|slams|whaps";
+            string verb_pattern_club_3rd = "smashes|clobbers|slams|whaps|smacks|beats";
             string verb_pattern_pierce_3rd = "lunges|stabs|impales|skewers";
             string verb_pattern_cut_3rd = "slices|slashes|cuts";
-            string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips";
-            string verb_pattern_miss_3rd = "swipe|flail|snaps";
+            string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills";
+            string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";
             string present_tense_3rd_person_verb = $"{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
 
-            string verb_pattern_club = "smash|clobber|slam|whap";
+            string verb_pattern_club = "smash|clobber|slam|whap|smack";
             string verb_pattern_pierce = "lunge|stab|impale|skewer";
             string verb_pattern_cut = "slice|slash|cut";
             string verb_pattern_natural = "chomp|bite|claw|rip|whip";
-            string verb_pattern_miss = "swipe|flail|snap";
+            string verb_pattern_miss = "swipe|flail|snap|lash|swing|shoot a bolt";
+            string verb_pattern_bow = "shoot a bolt at";
 
-            string present_tense_1st_person_verb = $"{verb_pattern_club}|{verb_pattern_pierce}|{verb_pattern_miss}|{verb_pattern_cut}|{verb_pattern_natural}";
+            string present_tense_1st_person_verb = $"{verb_pattern_bow}|{verb_pattern_club}|{verb_pattern_pierce}|{verb_pattern_miss}|{verb_pattern_cut}|{verb_pattern_natural}";
 
             string verb = $"(?:{present_tense_1st_person_verb}|{present_tense_3rd_person_verb})";
 
+            string moves_to_attack = @"(\S+) moves to attack ([A-Za-z ]+)\.";
+            common_patterns.Add(moves_to_attack, ProcessMovesToAttack);
 
-            string pattern_do_hit = @"You (critically |surprise )?" + verb + @" ([\S ]+) for (\d+) damage!";
+            string pattern_do_hit = @"(\S+|You) (critically |surprise )?" + verb + @" ([\S ]+) for (\d+) damage!";
             common_patterns.Add(pattern_do_hit, ProcessCombatDoHit);
 
-            string pattern_do_miss = @"You " + verb + @" at ([\S ]+)!";
+            string pattern_do_miss = @"(\S+|You) " + verb + @" at ([\S ]+)!";
             common_patterns.Add(pattern_do_miss, ProcessCombatDoMiss);
 
+            //The shade chills you with its touch for 1 damage!
             string pattern_rcv_hit = @"The ([\S ]+) " + verb + @" you (?:[\S ]*)for (\d+) damage!";
             common_patterns.Add(pattern_rcv_hit, ProcessCombatRecieveHit);
 
             //The big filthbug claws at you, but your armour deflects the blow!
-            string pattern_rcv_miss = @"The ([\S ]+) " + verb + @" at you";
+            string pattern_rcv_miss = @"The ([\S ]+) " + verb + @" at|for you";
             common_patterns.Add(pattern_rcv_miss, ProcessCombatRecieveMiss);
 
             string hung_up = @"(\S+) just (?:disconnected|hung up)!!!";
@@ -211,15 +222,253 @@ namespace MMudTerm.Game
             string entered_the_realm = @"(\S+) just entered the Realm\.";
             common_patterns.Add(entered_the_realm, ProcessEnteredRealm);
 
+            string pattern_movement = "walks|crawls|scuttles|creeps|sneaks|oozes|flaps|lopes";
+            string pattern_moves = "(?:" + pattern_movement + ")";
+
+            //string moved_into_room =  @"([A-Za-z ]+) walks into the room from the (\S+)\.";
+            //string moved_into_room2 = @"A ([A-Za-z ]+) crawls into the room from the (\S+)\.";
+            string moved_into_room = @"A(?:n)? ([A-Za-z ]+) " + pattern_moves + @" in|into the room from (?:the )?(\S+)\.";
+            common_patterns.Add(moved_into_room, ProcessMovedIntoRoom);
+
+            string moved_into_room2= @"A ([A-Za-z ]+) materializes in the room\.";
+            common_patterns.Add(moved_into_room2, ProcessMovedIntoRoom);
+
+            string moved_out_of_room = @"(\S+) just left to the (\S+)\.";
+            common_patterns.Add(moved_out_of_room, ProcessMovedOutOfRoom);
+
+            List<string> death_msgs = new System.Collections.Generic.List<string>();
+            death_msgs.Add(@" collapes with a dull thump");
+            death_msgs.Add(@" collapses, its legs curling tightly around it");
+            death_msgs.Add(@" collapses with a groan");
+            death_msgs.Add(@" collapses in a filthy heap\.");
+            death_msgs.Add(@" collapses into a broken heap\.");
+            death_msgs.Add(@" falls to the ground with a yelp, and is still");
+            death_msgs.Add(@" dissolves into a puddle of bluish goo");
+            death_msgs.Add(@" falls to the ground with a tortured squeak");
+            death_msgs.Add(@" squeaks loudly, and falls to the ground!");
+            death_msgs.Add(@" crumbles into a pile of dust\.");
+            death_msgs.Add(@"'s wrapping unravels, revealing nothing but dust\.");
+            death_msgs.Add(@" vanishes with an eerie wail\.");
+
+            string dms = String.Join("|", death_msgs);
+
+            string entity_death = @"The ([A-Za-z ]+)(?:" + dms + ")";
+            common_patterns.Add(entity_death, ProcessEntityDeath);
+
+
+            //Cthulhu casts ethereal shield on Cthulhu!
+            string buff_spell_cast = @"(\S+) casts ([a-z ]+) on (\S+)!";
+            common_patterns.Add(buff_spell_cast, ProcessBuffSpellCastSuccess);
+
+            //Cthulhu attempted to cast ethereal shield, but failed.
+            string buff_spell_cast_fail = @"(\S+) attempted to cast ([a-z ]+), but failed.";
+            common_patterns.Add(buff_spell_cast_fail, ProcessBuffSpellCastFailure);
+
+            //The effects of the mummy's curse wears off!
+            string buff_spell_wore_off = @"The effects of the ([A-Za-z ']+) wears off!";
+            common_patterns.Add(buff_spell_wore_off, ProcessBuffSpellWearOff);
+
+            string you_hear_movement = @"You hear movement to the (\S+)";
+            common_patterns.Add(you_hear_movement, ProcessHearMovement);
+
+            string failed_door_open = @"Your attempts to bash through fail!";
+            common_patterns.Add(failed_door_open, ProcessBashDoor);
+
+            string bashed_door_open = @"You bashed the door open\.";
+            common_patterns.Add(bashed_door_open, ProcessBashDoor);
+
+            string open_door = @"The door is now (open|closed)\.";
+            common_patterns.Add(open_door, ProcessOpenDoor);
+
+            string door_close_lock = @"The door to the (S+) just locked!";
+            common_patterns.Add(door_close_lock, ProcessDoorCloseLocked);
+
+            string door_locked = @"The door is locked.";
+            common_patterns.Add(door_locked, ProcessDoorCloseLocked);
+
+
+
             this._matcher = new RegexMatcher(common_patterns);
 
             this._controller = controller;
-            this._player = new Player("THIS_PLAYER");
+            this._player = new Player("You");
             this._current_room = new Room();
             this._players = new List<Player>();
             this._current_combat = new CurrentCombat(this._controller);
         }
 
+        private void ProcessDoorCloseLocked(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string direction = match.Groups[1].Value;
+                this._current_room.DoorOpened(direction, "closed");
+                this.result = "door_closed";
+            }
+        }
+
+        private void ProcessOpenDoor(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string[] tokens = arg2.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                string direction = "Unkown";
+                string msg = "";
+
+                if (tokens.Length == 2)
+                {
+                    direction = tokens[0].Split(' ')[1];
+                }
+
+                string action = match.Groups[1].Value;
+                this._current_room.DoorOpened(direction, action);
+                if (action == "open")
+                {
+                    this.result = "door_open";
+                }
+                else
+                {
+                    this.result = "door_closed";
+                }
+            }
+        }
+
+        private void ProcessBashDoor(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string[] tokens = arg2.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                string direction = "Unkown";
+                string msg = "";
+
+                if (tokens.Length == 2)
+                {
+                    direction = tokens[0].Split(' ')[1];
+                    msg = tokens[1];
+                }
+                else
+                {
+                    msg = tokens[0];
+                }
+
+                bool worked = !msg.Contains(" fail!");
+                this._current_room.BashedDoor(direction, worked);
+                if (worked)
+                {
+                    this.result = "bash_door_success";
+                }
+                else
+                {
+                    this.result = "bash_door_fail";
+                }               
+            }
+        }
+
+        private void ProcessHearMovement(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string direction = match.Groups[1].Value;
+                this.result = "hear_movement";
+            }
+        }
+
+        private void ProcessBuffSpellCastFailure(Match match, string arg2)
+        {
+            if(match.Success)
+            {
+                string caster = match.Groups[1].Value;
+                string spell = match.Groups[2].Value;
+                if (caster == "You")
+                {
+                    this.result = "buff_spell_cast_failure";
+                }
+                else
+                {
+                    this.result = "3rdP_buff_spell_cast_failure";
+                }
+            }
+        }
+
+
+        private void ProcessBuffSpellWearOff(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string spell = match.Groups[1].Value;
+                this.result = "buff_wore_off";
+            }
+        }
+
+        private void ProcessBuffSpellCastSuccess(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string caster = match.Groups[1].Value;
+                string spell = match.Groups[2].Value;
+                string target = match.Groups[3].Value;
+                if (caster == "You")
+                {
+                    this.result = "buff_spell_cast_success";
+                }
+                else {
+                    this.result = "3rdP_buff_spell_cast_success";
+                }
+            }
+        }
+
+        private void ProcessMovedOutOfRoom(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                Entity e = new Entity(match.Groups[1].Value);
+                this._current_room.AlsoHere.Remove(e);
+                this.result = "also_here";
+            }
+        }
+
+        private void ProcessMovesToAttack(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                string attacker_name = match.Groups[1].Value;
+                string target_name = match.Groups[2].Value;
+                if(target_name == "You")
+                {
+                    this.result = "PVP_ATTACKED";
+                }
+                else
+                {
+                    this.result = "3rd_Party_Combat_Start";
+                }
+            }
+        }
+
+        private void ProcessEntityDeath(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                Entity e = new Entity(match.Groups[1].Value);
+                this._controller._gameenv._current_room.AlsoHere.Remove(e);
+                this.result = "entity_death";
+            }
+        }
+
+        private void ProcessMovedIntoRoom(Match match, string arg2)
+        {
+            //string pattern_movement = "walks|crawls|scuttles|creeps";
+            //string pattern_moves = "(?:" + pattern_movement + ")";
+            //string moved_into_room = @"A(?:n)? ([A-Za-z ]+) " + pattern_moves + @" into the room from (?:the )?(\S+)\.";
+            
+            //Match m = Regex.Match(arg2, moved_into_room);
+
+            if (match.Success)
+            {
+                this._current_room.AlsoHere.Add(new Entity(match.Groups[1].Value));
+                this.result = "moved_into_room";
+            }
+            
+        }
 
         private void ProcessEnteredRealm(Match match, string arg2)
         {
@@ -259,36 +508,71 @@ namespace MMudTerm.Game
             //TODO: if 1 is set we had a crit
             
             //You clobber giant rat for 12 damage!
-            Entity e = new Entity(match.Groups[2].Value);
+            Entity attacker = new Entity(match.Groups[1].Value.Trim());
+            Entity e = new Entity(match.Groups[3].Value);
 
-            int dmg_done = int.Parse(match.Groups[3].Value);
-            this._current_combat.PlayerHit(e, dmg_done);
+            int dmg_done = int.Parse(match.Groups[4].Value);
+
+            if (attacker.Name == "You")
+            {
+                this._current_combat.PlayerHit(e, dmg_done);
+            }
+            else
+            {
+                //3rd party attacking something, do we care?
+            }
             this.result = "combat";
         }
 
         private void ProcessCombatRecieveHit(Match match, string arg2)
         {
-            //The kobold thief stabs you for 4 damage!
+            Entity attacker = new Entity(match.Groups[1].Value.Trim());
             Entity e = new Entity(match.Groups[1].Value.Trim());
 
             int dmg_done = int.Parse(match.Groups[2].Value);
-            this._current_combat.PlayerHitBy(e, dmg_done);
+            if (attacker.Name == "You")
+            {
+                this._current_combat.PlayerHitBy(e, dmg_done);
+            }
+            else
+            {
+                //3rd party attacking something, do we care?
+            }
+            
             this.result = "combat";
         }
 
         private void ProcessCombatDoMiss(Match match, string arg2)
         {
+            Entity attacker = new Entity(match.Groups[1].Value.Trim());
             Entity e = new Entity(match.Groups[1].Value.Trim());
             //You swipe at kobold thief!
-            this._current_combat.PlayerMissed(e);
+            
+            if (attacker.Name == "You")
+            {
+                this._current_combat.PlayerMissed(e);
+            }
+            else
+            {
+                //3rd party attacking something, do we care?
+            }
             this.result = "combat";
         }
 
         private void ProcessCombatRecieveMiss(Match match, string arg2)
         {
+            Entity attacker = new Entity(match.Groups[1].Value.Trim());
             //The thin kobold thief lunges at you with their shortsword!
             Entity e = new Entity(match.Groups[1].Value);
-            this._current_combat.PlayerMissedBy(e);
+            
+            if (attacker.Name == "You")
+            {
+                this._current_combat.PlayerMissedBy(e);
+            }
+            else
+            {
+                //3rd party attacking something, do we care?
+            }
             this.result = "combat";
         }
 
@@ -396,6 +680,20 @@ namespace MMudTerm.Game
             this.result = null;
 
             if (data == "") { return; }
+
+            while (data.Contains("\b"))
+            {
+                int backspaceIndex = data.IndexOf('\b');
+                if (backspaceIndex > 0)
+                {
+                    data = data.Remove(backspaceIndex - 1, 2);
+                }
+                else
+                {
+                    // If backspace is the first character, just remove it
+                    data = data.Remove(backspaceIndex, 1);
+                }
+            }
 
             if (this._matcher.TryMatch(data, out match, out callback))
             {
@@ -569,6 +867,17 @@ namespace MMudTerm.Game
             Dictionary<string, string> room_info = new Dictionary<string, string>();
             string[] tokens = s.Split(new string[] {"Obvious exits:" }, StringSplitOptions.RemoveEmptyEntries);
             room_info["exits"] = tokens[1].Trim();
+            int idx2 = room_info["exits"].IndexOf("The room is dimly lit");
+            if (idx2 > 0)
+            {
+                room_info["light"] = "dim";
+                room_info["exits"] = room_info["exits"].Remove(idx2).Trim();
+            }
+            else
+            {
+                room_info["light"] = "normal";
+            }
+            
             int idx = room_info["exits"].IndexOf('\b');
             while (idx > 0)
             {
@@ -600,14 +909,18 @@ namespace MMudTerm.Game
             tokens = tokens[0].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
             room_info["name"] = tokens[tokens.Length -1].Trim();
 
+            if (tokens.Length == 2)
+            {
+                room_info["cause"] = FigureOutCause_Room(tokens[0].Trim());
+            }
+            else
+            {
+                room_info["cause"] = "crlf";
+            }
+
             //TODO: are we looking? did we move? are we in the same room?
             Room room = new Room();
             room.Name = room_info["name"];
-            if (room.Name.Trim() == "e")
-            {
-
-            }
-
             if (room_info.ContainsKey("desc"))
             {
                 room.Description = room_info["desc"];
@@ -619,9 +932,10 @@ namespace MMudTerm.Game
                 foreach (string also_here in room_info["here"].Split(','))
                 {
                     Entity entity = new Entity(also_here.Trim());
-                    if (this.IsPlayer(entity))
+                    Player p = this.IsPlayer(entity);
+                    if(p!= null)
                     {
-                        entity = (entity as Player);
+                        entity = p;
                     }
                     entities.Add(entity);
                 }
@@ -663,35 +977,117 @@ namespace MMudTerm.Game
                 RoomExit room_exit = new RoomExit(exit_here.Trim());
                 room_exits.Add(room_exit);
             }
-            this._current_room = room;
-
             room.RoomExits = room_exits;
-            this._current_combat.UpdateRoom();
-            this.result = "room";
+            room.Light = room_info["light"];
+            room.Cause = room_info["cause"];
+
+            if (room_info["cause"].StartsWith("look,"))
+            {
+                this._look_room = room;
+                this.result = "look_room";
+            }
+            else
+            {
+                this._current_combat.UpdateRoom();
+                this._current_room = room;
+                this.result = "room";
+            }
         }
 
-        private bool IsPlayer(Entity entity)
+        private string FigureOutCause_Room(string v)
+        {
+            //this can be
+            //CRLF
+            //l|lo|loo|look dir
+            if(v == "\r\n")
+            {
+                return "crlf";
+            }
+            Match m = Regex.Match(v, @"(?:l|lo|loo|look) (\S+)");
+            if (m.Success)
+            {
+                return "look," + m.Groups[1].Value.Trim();
+            }
+
+            m = Regex.Match(v, @"(n|s|w|e|ne|nw|se|sw|u|d)");
+            if (m.Success)
+            {
+                return "move," + m.Groups[1].Value.Trim();
+            }
+
+            Console.WriteLine("Unknown Room cause: |" + v + "|");
+            return "";
+        }
+
+        private Player IsPlayer(Entity entity)
         {
             foreach (Player p in this._players)
             {
                 if (p.Name == entity.Name)
-                    return true;
+                    return p;
             }
-            return false;
+            return null;
         }
 
         private void ProcessCombat(Match m, string s)
         {
-            if (s.Contains("*Combat Engaged*"))
+            string cause = "Unknown";
+            string combat_engaged = "";
+            string[] tokens = s.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if (tokens.Length == 2)
             {
-                this._player.InCombat = true;
-                this.result = "in_combat";
+                cause = FigureOutCause_CombatEngage(tokens[0]);
+                combat_engaged = tokens[1];
             }
-            else if (s.Contains("*Combat Off*"))
+            else
             {
-                this.result = "out_of_combat";
-                this._player.InCombat = false;
+                combat_engaged = tokens[0];
             }
+
+            if (combat_engaged.Contains("*Combat Engaged*"))
+            {
+                this._player.IsCombatEngaged = true;
+                this._player.CombatEngagedCause = cause;
+                this.result = "combat_engaged_start";
+            }
+            else if (combat_engaged.Contains("*Combat Off*"))
+            {
+                this.result = "combat_engaged_stop";
+                this._player.CombatEngagedCause = cause;
+                this._player.IsCombatEngaged = false;
+            }
+            else
+            {
+                throw new Exception("this shouldn't ever happen");
+            }
+        }
+
+        private string FigureOutCause_CombatEngage(string v)
+        {
+            string attack_cmd = "";
+            string target = "";
+            string[] tokens = v.Split(' ');
+            switch (tokens[0])
+            {
+                case "a":
+                case "attack":
+                    attack_cmd = "attack";
+                    break;
+                case "aa":
+                case "bash":
+                    attack_cmd = "bash";
+                    break;
+                case "smash":
+                    attack_cmd = "smash";
+                    break;
+                default:
+                    attack_cmd = "spell?";
+                    break;
+
+            }
+
+            target = tokens[1];
+            return attack_cmd + "," + target;
         }
 
         private void ProcessInventory(Match m, string s)

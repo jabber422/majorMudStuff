@@ -35,9 +35,6 @@
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripConnectBtn = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonProxy = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonLogon = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonEnter = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonMummy = new System.Windows.Forms.ToolStripButton();
             this.sessionTermContainer = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
@@ -85,9 +82,6 @@
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripConnectBtn,
-            this.toolStripButtonProxy,
-            this.toolStripButtonLogon,
-            this.toolStripButtonEnter,
             this.toolStripButtonMummy});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -107,46 +101,8 @@
             this.toolStripConnectBtn.Text = "Connect";
             this.toolStripConnectBtn.Click += new System.EventHandler(this.toolStripConnectBtn_Click);
             // 
-            // toolStripButtonProxy
-            // 
-            this.toolStripButtonProxy.Checked = true;
-            this.toolStripButtonProxy.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonProxy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonProxy.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonProxy.Image")));
-            this.toolStripButtonProxy.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonProxy.Name = "toolStripButtonProxy";
-            this.toolStripButtonProxy.Size = new System.Drawing.Size(60, 29);
-            this.toolStripButtonProxy.Text = "Proxy";
-            this.toolStripButtonProxy.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // toolStripButtonLogon
-            // 
-            this.toolStripButtonLogon.Checked = true;
-            this.toolStripButtonLogon.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonLogon.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonLogon.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonLogon.Image")));
-            this.toolStripButtonLogon.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonLogon.Name = "toolStripButtonLogon";
-            this.toolStripButtonLogon.Size = new System.Drawing.Size(67, 29);
-            this.toolStripButtonLogon.Text = "Logon";
-            this.toolStripButtonLogon.Click += new System.EventHandler(this.toolStripButton2_Click);
-            // 
-            // toolStripButtonEnter
-            // 
-            this.toolStripButtonEnter.Checked = true;
-            this.toolStripButtonEnter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonEnter.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButtonEnter.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonEnter.Image")));
-            this.toolStripButtonEnter.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonEnter.Name = "toolStripButtonEnter";
-            this.toolStripButtonEnter.Size = new System.Drawing.Size(56, 29);
-            this.toolStripButtonEnter.Text = "Enter";
-            this.toolStripButtonEnter.Click += new System.EventHandler(this.toolStripButton3_Click);
-            // 
             // toolStripButtonMummy
             // 
-            this.toolStripButtonMummy.Checked = true;
-            this.toolStripButtonMummy.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripButtonMummy.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripButtonMummy.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonMummy.Image")));
             this.toolStripButtonMummy.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -205,10 +161,7 @@
         private System.Windows.Forms.ToolStripButton toolStripConnectBtn;
         private System.Windows.Forms.Panel sessionTermContainer;
         private System.Windows.Forms.ToolStripStatusLabel toolStripConnState;
-        private System.Windows.Forms.ToolStripButton toolStripButtonProxy;
-        private System.Windows.Forms.ToolStripButton toolStripButtonLogon;
         private System.Windows.Forms.ToolStripButton toolStripButtonMummy;
-        private System.Windows.Forms.ToolStripButton toolStripButtonEnter;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;

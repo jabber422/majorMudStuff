@@ -1,16 +1,17 @@
-﻿using MMudTerm.Connection;
+﻿
 using MMudTerm_Protocols;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace MMudTerm.Session.SessionStateData
 {
-    //handles the username password portion of the logon process
-    //the m_controller has a DoLogon T/F that needs to be respected
-    //"new": 
-    //password: 
+    //give a set of msg and responses will attempt to logon and get to the major mud menu
+    //when we spot 'move_to_mud_menu_state' in the stream then state change to 
+    //  SessionStateGameMenu
+
     internal class SessionStateLogon : SessionState
     {
         Dictionary<Regex, string> LogonStrings_Regex;
@@ -35,19 +36,29 @@ namespace MMudTerm.Session.SessionStateData
 
         public SessionStateLogon(SessionState _state) : base(_state, "Logon On")
         {
-            this.LogonStrings_Regex = this.m_controller.SessionData.GetLogonDataStrings();
+            
+            List<Tuple<string,string>> logon_cmds = this.m_controller.SessionData.ConnectionInfo.LogonAutomation;
+            this.LogonStrings_Regex = new Dictionary<Regex, string>();
+            foreach (Tuple<string,string> tup in logon_cmds)
+            {
+                string msg = tup.Item1;
+                string rsp = tup.Item2;
+                this.LogonStrings_Regex.Add(new Regex(msg), rsp + "\r\n");
+            }
+            this.LogonStrings_Regex.Add(new Regex(@"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?"), "n\r\n");
+
             this.LogonSuccess = new Dictionary<Regex, bool>();
             foreach (KeyValuePair<Regex, string> kvp in this.LogonStrings_Regex)
             {
                 this.LogonSuccess.Add(kvp.Key, false);
             }
 
-            this.JumpToInGame = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.m_controller.SessionData.GetJumpToInGameSessionsStrings())
-            {
-                this.JumpToInGame.Add(kvp.Key, false);
+            //this.JumpToInGame = new Dictionary<Regex, bool>();
+            //foreach (KeyValuePair<Regex, string> kvp in this.m_controller.SessionData.GetJumpToInGameSessionsStrings())
+            //{
+            //    this.JumpToInGame.Add(kvp.Key, false);
 
-            }
+            //}
         }
 
         internal override SessionState HandleCommands( Queue<TermCmd> cmds)
@@ -62,11 +73,22 @@ namespace MMudTerm.Session.SessionStateData
                     string msg = (c as TermStringDataCmd).GetValue();
                     this_cmd += msg;
                     //this state is always trying to change to the mud menu state
-                    if (msg == move_to_mud_menu_state)
+                    if (this_cmd.Contains(move_to_mud_menu_state))
                     {
-                        //covers manual logon
-                        //if we ever see '[MAJORMUD]:' switch states
-                        return new SessionStateGameMenu(this);
+                        if (this.m_controller.EnterTheGame)
+                        {
+                            //covers manual logon
+                            //if we ever see '[MAJORMUD]:' switch states
+                            return new SessionStateGameMenu(this);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Not entering the game");
+                        }
+                    }else if (this_cmd.Contains("[HP=") || this_cmd.Contains("Obvious exits:")) {
+                        Console.WriteLine("In Logon state but see game messages... changing to InGameState");
+                        return new SessionStateInGame(this);
+
                     }
 
                     //if the logon control is false we can ignore the buffer
@@ -99,19 +121,19 @@ namespace MMudTerm.Session.SessionStateData
 
             if (this_cmd != "")
             {
-                foreach (Regex r in this.JumpToInGame.Keys)
-                {
-                    Match m = r.Match(this_cmd);
-                    if (m.Success)
-                    {
-                        return new SessionStateInGame(this);
-                    }
-                }
+                //foreach (Regex r in this.JumpToInGame.Keys)
+                //{
+                //    Match m = r.Match(this_cmd);
+                //    if (m.Success)
+                //    {
+                //        return new SessionStateInGame(this);
+                //    }
+                //}
             }
 
             if (LogonComplete)
             {
-                return new SessionStateMenu(this);
+                return new SessionStateGameMenu(this);
             }
             return this;
         }

@@ -8,13 +8,14 @@ using System.Net;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MMudObjects
 {
     public class Entity
     {
         public Entity(string name) { 
-            string verb_pattern_entity = "nasty|big|angry|nasty";
+            string verb_pattern_entity = "nasty|big|angry|nasty|fierce|small|large";
             string noun = $"(?:({verb_pattern_entity}))?" + @"(.*)";
             Match match = Regex.Match(name, noun);
             if (match.Success)
@@ -40,7 +41,17 @@ namespace MMudObjects
         public virtual string FullName { get { return $"{this.Verb} {this.Name}".Trim(); } }
         public virtual string Verb { get; private set; }
 
-        public virtual bool InCombat { get; set; }
+        public virtual bool IsCombatEngaged { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Entity other)
+            {
+                Console.WriteLine($"Comparing {this.Name} to {other.Name}");
+                return this.Name == other.Name; // Example comparison
+            }
+            return false;
+        }
     }
 
     public class NPC : Entity
@@ -274,6 +285,7 @@ namespace MMudObjects
         public PlayerStats Stats { get; set; }
         public bool Online { get; set; }
         public double GainedExp { get; set; }
+        public string CombatEngagedCause { get; set; }
     }
 }
 

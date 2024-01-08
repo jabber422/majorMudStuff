@@ -24,11 +24,20 @@ namespace MMudTerm.Session.SessionStateData
 
         private MajorMudBbsGame _gameenv = null;
 
+        public delegate void NewGameEventHandler(string message);
+
+        // Define the event based on the delegate
+        public event NewGameEventHandler NewGameEvent;
+
         public SessionStateInGame(SessionState _state) : base(_state, "In Game")
         {
             this._gameenv = new MajorMudBbsGame(this.m_controller);
             this.m_controller._gameenv = this._gameenv;
             this._resting = new Regex(@"\((Resting)\)", RegexOptions.Compiled);
+            this.NewGameEvent += this.m_controller.m_sessionForm.Update;
+
+            this.m_controller.Send("stat\r\n");
+            this.m_controller.Send("who\r\n");
         }
         
         //takes a queue of TermCmds and turns it into a string with \r\n preserved...
@@ -80,7 +89,7 @@ namespace MMudTerm.Session.SessionStateData
                 this._gameenv.Process(toProcess);
                 if (this._gameenv.result != null)
                 {
-                    this.m_controller.m_sessionForm.Update(this._gameenv.result);
+                    this.NewGameEvent?.Invoke(this._gameenv.result);
                 }
                 this._gameenv.ProcessTick(match, "");
                 lastProcessedIndex = match.Index + match.Length;

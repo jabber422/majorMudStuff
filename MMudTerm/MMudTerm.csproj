@@ -76,16 +76,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BbsAccountPlayerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BbsAccountPlayerControl.Designer.cs">
+      <DependentUpon>BbsAccountPlayerControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Colors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Colors.settings</DependentUpon>
     </Compile>
-    <Compile Include="Connection\ConnObj.cs" />
-    <Compile Include="Connection\IConnection.cs" />
-    <Compile Include="Connection\SocketHandler.cs" />
     <Compile Include="Data\DataObjects\CharacterData.cs" />
     <Compile Include="Game\Game.cs" />
+    <Compile Include="LogonAutomationMsgRspControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LogonAutomationMsgRspControl.Designer.cs">
+      <DependentUpon>LogonAutomationMsgRspControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="MMudTerm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +103,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BbsAccountPlayerControl.resx">
+      <DependentUpon>BbsAccountPlayerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogonAutomationMsgRspControl.resx">
+      <DependentUpon>LogonAutomationMsgRspControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MMudTerm.resx">
       <DependentUpon>MMudTerm.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,6 +183,7 @@
     <Compile Include="Session\InventoryRowControl.Designer.cs">
       <DependentUpon>InventoryRowControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Session\Macros.cs" />
     <Compile Include="Session\SessionConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>

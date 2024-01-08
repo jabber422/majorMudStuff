@@ -12,7 +12,11 @@ namespace MMudTerm
     {
         public string Name { get; set; }
 
-        public string Ip { get; set; }
+        private string _ip;
+        public string Ip {
+            get { return this._ip; } set {
+                this._ip = Dns.GetHostAddresses(value)[0].ToString();
+            } }
 
         public short Port { get; set; }
 
@@ -23,5 +27,8 @@ namespace MMudTerm
         public bool AutoConnect { get; set; }
 
         public IPAddress IpA{ get{ return IPAddress.Parse(this.Ip); } }
+
+        public List<Tuple<string, string>> LogonAutomation { get; set; }
+        public int BbsControlId { get; internal set; }
     }
 }

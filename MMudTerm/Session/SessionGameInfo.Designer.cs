@@ -30,6 +30,13 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_stats = new System.Windows.Forms.TabPage();
+            this.label54 = new System.Windows.Forms.Label();
+            this.label_exphr_value = new System.Windows.Forms.Label();
+            this.button_exp_reset = new System.Windows.Forms.Button();
+            this.label55 = new System.Windows.Forms.Label();
+            this.label_gained_exp_value = new System.Windows.Forms.Label();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label_total_exp_value = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -86,6 +93,7 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage_inv = new System.Windows.Forms.TabPage();
             this.tabPage_room = new System.Windows.Forms.TabPage();
+            this.label_mega_hash = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label_hidden_items = new System.Windows.Forms.Label();
             this.textBox_items_value = new System.Windows.Forms.TextBox();
@@ -110,19 +118,24 @@
             this.label59 = new System.Windows.Forms.Label();
             this.label58 = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.label_total_exp_value = new System.Windows.Forms.Label();
-            this.label55 = new System.Windows.Forms.Label();
-            this.label_gained_exp_value = new System.Windows.Forms.Label();
-            this.button_exp_reset = new System.Windows.Forms.Button();
-            this.label54 = new System.Windows.Forms.Label();
-            this.label_exphr_value = new System.Windows.Forms.Label();
+            this.label_lr_hash = new System.Windows.Forms.Label();
+            this.textBox_lr_items = new System.Windows.Forms.TextBox();
+            this.textBox_lr_alsohere = new System.Windows.Forms.TextBox();
+            this.label_lr_exits = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
+            this.label_lr_name = new System.Windows.Forms.Label();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
+            this.label_light = new System.Windows.Forms.Label();
+            this.textBox_lr_desc = new System.Windows.Forms.TextBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label_cause = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage_stats.SuspendLayout();
             this.tabPage_who.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage_room.SuspendLayout();
-            this.tabPage_combat.SuspendLayout();
             this.tabPage_wealth.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -138,7 +151,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(962, 436);
+            this.tabControl1.Size = new System.Drawing.Size(962, 823);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage_stats
@@ -209,6 +222,79 @@
             this.tabPage_stats.TabIndex = 0;
             this.tabPage_stats.Text = "Stats";
             this.tabPage_stats.UseVisualStyleBackColor = true;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label54.Location = new System.Drawing.Point(8, 325);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(63, 19);
+            this.label54.TabIndex = 63;
+            this.label54.Text = "Exp/Hr";
+            // 
+            // label_exphr_value
+            // 
+            this.label_exphr_value.AutoSize = true;
+            this.label_exphr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_exphr_value.Location = new System.Drawing.Point(133, 325);
+            this.label_exphr_value.Name = "label_exphr_value";
+            this.label_exphr_value.Size = new System.Drawing.Size(27, 19);
+            this.label_exphr_value.TabIndex = 64;
+            this.label_exphr_value.Text = "19";
+            // 
+            // button_exp_reset
+            // 
+            this.button_exp_reset.Location = new System.Drawing.Point(257, 304);
+            this.button_exp_reset.Name = "button_exp_reset";
+            this.button_exp_reset.Size = new System.Drawing.Size(75, 28);
+            this.button_exp_reset.TabIndex = 62;
+            this.button_exp_reset.Text = "Reset";
+            this.button_exp_reset.UseVisualStyleBackColor = true;
+            this.button_exp_reset.Click += new System.EventHandler(this.button_exp_reset_Click);
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label55.Location = new System.Drawing.Point(8, 306);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(99, 19);
+            this.label55.TabIndex = 59;
+            this.label55.Text = "Gained Exp";
+            this.label55.Click += new System.EventHandler(this.label55_Click);
+            // 
+            // label_gained_exp_value
+            // 
+            this.label_gained_exp_value.AutoSize = true;
+            this.label_gained_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_gained_exp_value.Location = new System.Drawing.Point(133, 306);
+            this.label_gained_exp_value.Name = "label_gained_exp_value";
+            this.label_gained_exp_value.Size = new System.Drawing.Size(27, 19);
+            this.label_gained_exp_value.TabIndex = 60;
+            this.label_gained_exp_value.Text = "19";
+            // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.Location = new System.Drawing.Point(8, 287);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(108, 19);
+            this.label53.TabIndex = 57;
+            this.label53.Text = "Total Exp: ";
+            this.label53.Click += new System.EventHandler(this.label53_Click);
+            // 
+            // label_total_exp_value
+            // 
+            this.label_total_exp_value.AutoSize = true;
+            this.label_total_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_total_exp_value.Location = new System.Drawing.Point(133, 287);
+            this.label_total_exp_value.Name = "label_total_exp_value";
+            this.label_total_exp_value.Size = new System.Drawing.Size(27, 19);
+            this.label_total_exp_value.TabIndex = 58;
+            this.label_total_exp_value.Text = "19";
+            this.label_total_exp_value.Click += new System.EventHandler(this.label54_Click);
             // 
             // label1
             // 
@@ -736,7 +822,7 @@
             this.tabPage_who.Location = new System.Drawing.Point(4, 29);
             this.tabPage_who.Name = "tabPage_who";
             this.tabPage_who.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_who.Size = new System.Drawing.Size(954, 346);
+            this.tabPage_who.Size = new System.Drawing.Size(954, 403);
             this.tabPage_who.TabIndex = 1;
             this.tabPage_who.Text = "Who";
             this.tabPage_who.UseVisualStyleBackColor = true;
@@ -750,7 +836,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(948, 340);
+            this.dataGridView1.Size = new System.Drawing.Size(948, 397);
             this.dataGridView1.TabIndex = 0;
             // 
             // tabPage_inv
@@ -758,13 +844,27 @@
             this.tabPage_inv.Location = new System.Drawing.Point(4, 29);
             this.tabPage_inv.Name = "tabPage_inv";
             this.tabPage_inv.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_inv.Size = new System.Drawing.Size(954, 346);
+            this.tabPage_inv.Size = new System.Drawing.Size(954, 403);
             this.tabPage_inv.TabIndex = 2;
             this.tabPage_inv.Text = "Inventory";
             this.tabPage_inv.UseVisualStyleBackColor = true;
             // 
             // tabPage_room
             // 
+            this.tabPage_room.Controls.Add(this.label_cause);
+            this.tabPage_room.Controls.Add(this.textBox_lr_desc);
+            this.tabPage_room.Controls.Add(this.label70);
+            this.tabPage_room.Controls.Add(this.label_light);
+            this.tabPage_room.Controls.Add(this.label_lr_hash);
+            this.tabPage_room.Controls.Add(this.textBox_lr_items);
+            this.tabPage_room.Controls.Add(this.textBox_lr_alsohere);
+            this.tabPage_room.Controls.Add(this.label_lr_exits);
+            this.tabPage_room.Controls.Add(this.label71);
+            this.tabPage_room.Controls.Add(this.label72);
+            this.tabPage_room.Controls.Add(this.label_lr_name);
+            this.tabPage_room.Controls.Add(this.label74);
+            this.tabPage_room.Controls.Add(this.label75);
+            this.tabPage_room.Controls.Add(this.label_mega_hash);
             this.tabPage_room.Controls.Add(this.textBox1);
             this.tabPage_room.Controls.Add(this.label_hidden_items);
             this.tabPage_room.Controls.Add(this.textBox_items_value);
@@ -778,10 +878,20 @@
             this.tabPage_room.Location = new System.Drawing.Point(4, 29);
             this.tabPage_room.Name = "tabPage_room";
             this.tabPage_room.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_room.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_room.Size = new System.Drawing.Size(954, 790);
             this.tabPage_room.TabIndex = 3;
             this.tabPage_room.Text = "Room";
             this.tabPage_room.UseVisualStyleBackColor = true;
+            // 
+            // label_mega_hash
+            // 
+            this.label_mega_hash.AutoSize = true;
+            this.label_mega_hash.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_mega_hash.Location = new System.Drawing.Point(741, 3);
+            this.label_mega_hash.Name = "label_mega_hash";
+            this.label_mega_hash.Size = new System.Drawing.Size(36, 19);
+            this.label_mega_hash.TabIndex = 89;
+            this.label_mega_hash.Text = "FFF";
             // 
             // textBox1
             // 
@@ -892,7 +1002,6 @@
             this.tabPage_combat.TabIndex = 4;
             this.tabPage_combat.Text = "Combat";
             this.tabPage_combat.UseVisualStyleBackColor = true;
-            
             // 
             // tabPage_wealth
             // 
@@ -911,7 +1020,7 @@
             this.tabPage_wealth.Location = new System.Drawing.Point(4, 29);
             this.tabPage_wealth.Name = "tabPage_wealth";
             this.tabPage_wealth.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_wealth.Size = new System.Drawing.Size(954, 346);
+            this.tabPage_wealth.Size = new System.Drawing.Size(954, 403);
             this.tabPage_wealth.TabIndex = 5;
             this.tabPage_wealth.Text = "Wealth";
             this.tabPage_wealth.UseVisualStyleBackColor = true;
@@ -1036,85 +1145,141 @@
             this.label57.TabIndex = 89;
             this.label57.Text = "Wealth:";
             // 
-            // label53
+            // label_lr_hash
             // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label53.Location = new System.Drawing.Point(8, 287);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(108, 19);
-            this.label53.TabIndex = 57;
-            this.label53.Text = "Total Exp: ";
-            this.label53.Click += new System.EventHandler(this.label53_Click);
+            this.label_lr_hash.AutoSize = true;
+            this.label_lr_hash.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_lr_hash.Location = new System.Drawing.Point(755, 374);
+            this.label_lr_hash.Name = "label_lr_hash";
+            this.label_lr_hash.Size = new System.Drawing.Size(36, 19);
+            this.label_lr_hash.TabIndex = 100;
+            this.label_lr_hash.Text = "FFF";
             // 
-            // label_total_exp_value
+            // textBox_lr_items
             // 
-            this.label_total_exp_value.AutoSize = true;
-            this.label_total_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_total_exp_value.Location = new System.Drawing.Point(133, 287);
-            this.label_total_exp_value.Name = "label_total_exp_value";
-            this.label_total_exp_value.Size = new System.Drawing.Size(27, 19);
-            this.label_total_exp_value.TabIndex = 58;
-            this.label_total_exp_value.Text = "19";
-            this.label_total_exp_value.Click += new System.EventHandler(this.label54_Click);
+            this.textBox_lr_items.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_items.Location = new System.Drawing.Point(79, 417);
+            this.textBox_lr_items.Multiline = true;
+            this.textBox_lr_items.Name = "textBox_lr_items";
+            this.textBox_lr_items.ReadOnly = true;
+            this.textBox_lr_items.Size = new System.Drawing.Size(747, 65);
+            this.textBox_lr_items.TabIndex = 97;
             // 
-            // label55
+            // textBox_lr_alsohere
             // 
-            this.label55.AutoSize = true;
-            this.label55.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label55.Location = new System.Drawing.Point(8, 306);
-            this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(99, 19);
-            this.label55.TabIndex = 59;
-            this.label55.Text = "Gained Exp";
-            this.label55.Click += new System.EventHandler(this.label55_Click);
+            this.textBox_lr_alsohere.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_alsohere.Location = new System.Drawing.Point(79, 493);
+            this.textBox_lr_alsohere.Multiline = true;
+            this.textBox_lr_alsohere.Name = "textBox_lr_alsohere";
+            this.textBox_lr_alsohere.ReadOnly = true;
+            this.textBox_lr_alsohere.Size = new System.Drawing.Size(747, 65);
+            this.textBox_lr_alsohere.TabIndex = 96;
             // 
-            // label_gained_exp_value
+            // label_lr_exits
             // 
-            this.label_gained_exp_value.AutoSize = true;
-            this.label_gained_exp_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_gained_exp_value.Location = new System.Drawing.Point(133, 306);
-            this.label_gained_exp_value.Name = "label_gained_exp_value";
-            this.label_gained_exp_value.Size = new System.Drawing.Size(27, 19);
-            this.label_gained_exp_value.TabIndex = 60;
-            this.label_gained_exp_value.Text = "19";
+            this.label_lr_exits.AutoSize = true;
+            this.label_lr_exits.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lr_exits.Location = new System.Drawing.Point(111, 384);
+            this.label_lr_exits.Name = "label_lr_exits";
+            this.label_lr_exits.Size = new System.Drawing.Size(72, 19);
+            this.label_lr_exits.TabIndex = 95;
+            this.label_lr_exits.Text = "Unknown";
             // 
-            // button_exp_reset
+            // label71
             // 
-            this.button_exp_reset.Location = new System.Drawing.Point(257, 304);
-            this.button_exp_reset.Name = "button_exp_reset";
-            this.button_exp_reset.Size = new System.Drawing.Size(75, 28);
-            this.button_exp_reset.TabIndex = 62;
-            this.button_exp_reset.Text = "Reset";
-            this.button_exp_reset.UseVisualStyleBackColor = true;
-            this.button_exp_reset.Click += new System.EventHandler(this.button_exp_reset_Click);
+            this.label71.AutoSize = true;
+            this.label71.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label71.Location = new System.Drawing.Point(6, 384);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(63, 19);
+            this.label71.TabIndex = 94;
+            this.label71.Text = "Exits:";
             // 
-            // label54
+            // label72
             // 
-            this.label54.AutoSize = true;
-            this.label54.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label54.Location = new System.Drawing.Point(8, 325);
-            this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(63, 19);
-            this.label54.TabIndex = 63;
-            this.label54.Text = "Exp/Hr";
+            this.label72.AutoSize = true;
+            this.label72.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label72.Location = new System.Drawing.Point(10, 421);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(63, 19);
+            this.label72.TabIndex = 93;
+            this.label72.Text = "Items:";
             // 
-            // label_exphr_value
+            // label_lr_name
             // 
-            this.label_exphr_value.AutoSize = true;
-            this.label_exphr_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_exphr_value.Location = new System.Drawing.Point(133, 325);
-            this.label_exphr_value.Name = "label_exphr_value";
-            this.label_exphr_value.Size = new System.Drawing.Size(27, 19);
-            this.label_exphr_value.TabIndex = 64;
-            this.label_exphr_value.Text = "19";
-           
+            this.label_lr_name.AutoSize = true;
+            this.label_lr_name.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lr_name.Location = new System.Drawing.Point(111, 365);
+            this.label_lr_name.Name = "label_lr_name";
+            this.label_lr_name.Size = new System.Drawing.Size(72, 19);
+            this.label_lr_name.TabIndex = 92;
+            this.label_lr_name.Text = "Unknown";
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label74.Location = new System.Drawing.Point(6, 365);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(99, 19);
+            this.label74.TabIndex = 91;
+            this.label74.Text = "Room Name:";
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label75.Location = new System.Drawing.Point(19, 493);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(54, 38);
+            this.label75.TabIndex = 90;
+            this.label75.Text = "Also\rHere:";
+            // 
+            // label_light
+            // 
+            this.label_light.AutoSize = true;
+            this.label_light.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_light.Location = new System.Drawing.Point(741, 22);
+            this.label_light.Name = "label_light";
+            this.label_light.Size = new System.Drawing.Size(36, 19);
+            this.label_light.TabIndex = 101;
+            this.label_light.Text = "FFF";
+            // 
+            // textBox_lr_desc
+            // 
+            this.textBox_lr_desc.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_desc.Location = new System.Drawing.Point(79, 564);
+            this.textBox_lr_desc.Multiline = true;
+            this.textBox_lr_desc.Name = "textBox_lr_desc";
+            this.textBox_lr_desc.ReadOnly = true;
+            this.textBox_lr_desc.Size = new System.Drawing.Size(747, 135);
+            this.textBox_lr_desc.TabIndex = 103;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label70.Location = new System.Drawing.Point(19, 564);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(117, 19);
+            this.label70.TabIndex = 102;
+            this.label70.Text = "Room\\r\\nDesc";
+            // 
+            // label_cause
+            // 
+            this.label_cause.AutoSize = true;
+            this.label_cause.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_cause.Location = new System.Drawing.Point(783, 22);
+            this.label_cause.Name = "label_cause";
+            this.label_cause.Size = new System.Drawing.Size(36, 19);
+            this.label_cause.TabIndex = 104;
+            this.label_cause.Text = "FFF";
             // 
             // SessionGameInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(962, 436);
+            this.ClientSize = new System.Drawing.Size(962, 823);
             this.Controls.Add(this.tabControl1);
             this.Name = "SessionGameInfo";
             this.Text = "SessionGameInfo";
@@ -1125,7 +1290,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage_room.ResumeLayout(false);
             this.tabPage_room.PerformLayout();
-            this.tabPage_combat.ResumeLayout(false);
             this.tabPage_wealth.ResumeLayout(false);
             this.tabPage_wealth.PerformLayout();
             this.ResumeLayout(false);
@@ -1223,6 +1387,19 @@
         private System.Windows.Forms.Button button_exp_reset;
         private System.Windows.Forms.Label label54;
         private System.Windows.Forms.Label label_exphr_value;
-        
+        private System.Windows.Forms.Label label_mega_hash;
+        private System.Windows.Forms.Label label_light;
+        private System.Windows.Forms.Label label_lr_hash;
+        private System.Windows.Forms.TextBox textBox_lr_items;
+        private System.Windows.Forms.TextBox textBox_lr_alsohere;
+        private System.Windows.Forms.Label label_lr_exits;
+        private System.Windows.Forms.Label label71;
+        private System.Windows.Forms.Label label72;
+        private System.Windows.Forms.Label label_lr_name;
+        private System.Windows.Forms.Label label74;
+        private System.Windows.Forms.Label label75;
+        private System.Windows.Forms.TextBox textBox_lr_desc;
+        private System.Windows.Forms.Label label70;
+        private System.Windows.Forms.Label label_cause;
     }
 }

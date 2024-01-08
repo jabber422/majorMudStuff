@@ -21,11 +21,64 @@ namespace MMudObjects
         public Dictionary<string, Item> HiddenItems;
         public List<Entity> AlsoHere;
 
+        public string MegaMudRoomHash { get { return this.MegaMudNameHash + this.MegaMudExitsHash; } }
+        private string MegaMudNameHash { get
+            {
+                long nValue = 0;
+                for (var x = 0; x < this.Name.Length; x++)
+                {
+                    nValue += (x + 1) * this.Name[x];
+                }
+                string result = nValue.ToString("X");
+                result = result.Length > 3 ? result.Substring(result.Length - 3) : result.PadLeft(3, '0');
+
+                return result;
+            }
+        }
+
+        int[] nExitsCalculated = new int[6];
+        string[] sExits = { "N", "S", "E", "W", "NE", "NW", "SE", "SW", "U", "D" };
+        int[] nExitVal = { 1, 4, 1, 4, 1, 4, 1, 4, 1, 4 };
+        int[] nExitPosition = { 5, 5, 4, 4, 3, 3, 2, 2, 1, 1 };
+        
+        private string MegaMudExitsHash { get {
+                
+                for (int i = 0; i < 10; ++i) {
+                    string sExit = sExits[i];
+                    bool found = false;
+                    bool bDoor = false;
+                    foreach(RoomExit ex in this.RoomExits)
+                    {
+                        if(ex.ShortName == sExit) {
+                            bDoor = ex.IsDoor;
+                            found = true; break;
+                        }
+                    }
+
+                    if (found)
+                    {
+                        nExitsCalculated[nExitPosition[i]] += nExitVal[i] * (bDoor ? 2 : 1);
+                    }
+                }
+
+                string result = "";
+                for (var x = 1; x <= 5; x++)
+                {
+                    result += nExitsCalculated[x].ToString("X");
+                }
+
+                return result;
+            }
+        }
+
+
         public string Name { get; set; }
 
         public string Description { get; set; }
 
         Boolean IsSafe { get; set; }
+        public string Light { get; set; }
+        public string Cause { get; set; }
 
         public Room()
         {
@@ -33,11 +86,6 @@ namespace MMudObjects
             this.VisibleItems = new Dictionary<string, Item>();
             this.HiddenItems = new Dictionary<string, Item>();
             this.AlsoHere = new List<Entity>();
-        }
-
-        public void Update(DataChangeItem dci)
-        {
-           
         }
 
         public void Add(CarryableItem item)
@@ -96,6 +144,32 @@ namespace MMudObjects
         public void Remove(List<CarryableItem> items)
         {
             foreach (var item in items) { Remove(item); }
+        }
+
+        public void BashedDoor(string direction, bool worked)
+        {
+            if(direction == "Unkown") { return; }
+            if(!worked) { return; }
+
+            foreach (RoomExit re in this.RoomExits)
+            {
+                if(re.ExitEquals(direction))
+                {
+                    re.OpenDoor(worked);
+                }
+            }
+        }
+
+        public void DoorOpened(string direction, string action)
+        {
+            if (direction == "Unkown") { return; }
+            foreach (RoomExit re in this.RoomExits)
+            {
+                if (re.ExitEquals(direction))
+                {
+                    re.OpenDoor(action == "open" ?true:false);
+                }
+            }
         }
     }
 

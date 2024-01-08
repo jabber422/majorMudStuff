@@ -57,7 +57,12 @@ namespace MMudTerm.Session
                         break;
                     case "room":
                     case "search_found":
+                    case "door_open":
+                    case "door_closed":
                         this.UpdateRoom();
+                        break;
+                    case "look_room":
+                        this.UpdateLookRoom();
                         break;
                     case "in_combat":
                         this.UpdateInCombat();
@@ -79,6 +84,9 @@ namespace MMudTerm.Session
                         break;
                     case "combat":
                         this.UpdateCombat();
+                        break;
+                    default:
+                        Console.WriteLine($"Not used: {token}");
                         break;
                 }
             }
@@ -113,11 +121,12 @@ namespace MMudTerm.Session
             string also_here = "";
             foreach(Entity e in cur_room.AlsoHere)
             {
+                if (e == null) { continue; }
                 also_here += e.Name + ", ";
             }
             textBox_alsohere_value.Text = also_here;
 
-            label_exits_value.Text = String.Join(",", cur_room.RoomExits);
+            label_exits_value.Text = GetExits(cur_room);
 
             string hidden_here = "";
             foreach (Item i in cur_room.HiddenItems.Values)
@@ -125,6 +134,62 @@ namespace MMudTerm.Session
                 hidden_here += i.Name + ", ";
             }
             textBox1.Text = hidden_here;
+
+            this.label_mega_hash.Text = cur_room.MegaMudRoomHash;
+            this.label_light.Text = cur_room.Light;
+            this.label_cause.Text = cur_room.Cause;
+        }
+
+        private string GetExits(Room current_rom)
+        {
+            List<string> tokens = new List<string>();
+            foreach (RoomExit re in current_rom.RoomExits)
+            {
+                if (re.IsDoor)
+                {
+                    string state = re.IsOpen == true ? "open" : "closed";
+                    tokens.Add($"({state}) {re.Exit}");
+                }
+                else
+                {
+                    tokens.Add(re.Exit);
+                }
+            }
+
+            return String.Join(", ", tokens);
+        }
+
+        private void UpdateLookRoom()
+        {
+            Room cur_room = this._controller._gameenv._look_room;
+            label_lr_name.Text = cur_room.Name;
+
+            string items = "";
+            foreach (Item i in cur_room.VisibleItems.Values)
+            {
+                if (i.Quantity > 1)
+                {
+                    items += i.Quantity + " " + i.Name + ", ";
+                }
+                else
+                {
+                    items += i.Name + ", ";
+                }
+            }
+            textBox_lr_items.Text = items;
+
+            string also_here = "";
+            foreach (Entity e in cur_room.AlsoHere)
+            {
+                if (e == null) { continue; }
+                also_here += e.Name + ", ";
+            }
+            textBox_lr_alsohere.Text = also_here;
+            label_lr_exits.Text = GetExits(cur_room);
+
+            this.label_lr_hash.Text = cur_room.MegaMudRoomHash;
+
+            
         }
 
         private void UpdateInCombat()

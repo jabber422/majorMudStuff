@@ -1,5 +1,4 @@
-﻿using MMudTerm.Connection;
-using MMudTerm.Session;
+﻿using MMudTerm.Session;
 using MMudTerm_Protocols;
 using System;
 using System.Collections.Generic;
@@ -33,16 +32,20 @@ namespace MMudTerm.Session.SessionStateData
 
         internal override SessionState Connect()
         {
-           
+            this.m_controller.m_connObj = new TcpClient();
+            this.m_controller.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
+            try
             {
-                this.m_controller.m_connObj = new TcpClient();
-                this.m_controller.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
                 this.m_controller.m_connObj.Connect(this.m_controller.m_SessionData.ConnectionInfo.IpA, this.m_controller.m_SessionData.ConnectionInfo.Port);
-                Task clientToServerTask = this.m_controller.ConnHandler_Rcvr();
-                return new SessionStateConnected(this);
             }
- 
-            return this;
+            catch (Exception e)
+            {
+                Console.WriteLine("Connection failed! " + e.Message);
+                return this;
+            }
+            //start the rcvr thread
+            Task clientToServerTask = this.m_controller.ConnHandler_Rcvr();
+            return new SessionStateConnected(this);
         }
 
         internal override SessionState Disconnect()
@@ -85,72 +88,72 @@ namespace MMudTerm.Session.SessionStateData
         }
     }
 
-    internal class SessionStateMenu : SessionState
-    {
-        Dictionary<Regex, string> MenuStrings_Regex;
-        Dictionary<Regex, bool> MenuSuccess;
+    //internal class SessionStateMenu : SessionState
+    //{
+    //    Dictionary<Regex, string> MenuStrings_Regex;
+    //    Dictionary<Regex, bool> MenuSuccess;
 
-        internal bool MenuComplete
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.MenuSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
+    //    internal bool MenuComplete
+    //    {
+    //        get
+    //        {
+    //            bool result = true;
+    //            foreach (bool b in this.MenuSuccess.Values)
+    //            {
+    //                result &= b;
+    //            }
+    //            return result;
+    //        }
+    //    }
 
-        public SessionStateMenu(SessionState _state) : base(_state, "Server Menu")
-        {
-            this.MenuStrings_Regex = this.m_controller.SessionData.GetMenuDataStrings();
-            this.MenuSuccess = new Dictionary<Regex, bool>();
-            foreach (KeyValuePair<Regex, string> kvp in this.MenuStrings_Regex)
-            {
-                this.MenuSuccess.Add(kvp.Key, false);
-            }
-        }
+    //    public SessionStateMenu(SessionState _state) : base(_state, "Server Menu")
+    //    {
+    //        this.MenuStrings_Regex = this.m_controller.SessionData.GetMenuDataStrings();
+    //        this.MenuSuccess = new Dictionary<Regex, bool>();
+    //        foreach (KeyValuePair<Regex, string> kvp in this.MenuStrings_Regex)
+    //        {
+    //            this.MenuSuccess.Add(kvp.Key, false);
+    //        }
+    //    }
 
-        internal override SessionState HandleCommands( Queue<TermCmd> cmds)
-        {
-            Queue<TermCmd> returnQ = new Queue<TermCmd>();
-            while (cmds.Count > 0)
-            {
-                TermCmd c = cmds.Dequeue();
-                if (c is TermStringDataCmd)
-                {
-                    string msg = (c as TermStringDataCmd).GetValue();
-                    //Console.WriteLine(msg);
-                    if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
-                    {
-                        this.m_controller.Send("N");
-                    }
-                    else
-                    {
-                        foreach (Regex r in this.MenuStrings_Regex.Keys)
-                        {
-                            Match m = r.Match(msg);
-                            if (m.Success)
-                            {
-                                string rsp = this.MenuStrings_Regex[r];
-                                this.m_controller.Send(rsp);
-                                this.MenuSuccess[r] = true;
-                            }
-                        }
-                    }
-                }
-                returnQ.Enqueue(c);
-            }
-            if (MenuComplete)
-            {
-                return new SessionStateGameMenu(this);
-            }
-            return this;
+    //    internal override SessionState HandleCommands( Queue<TermCmd> cmds)
+    //    {
+    //        Queue<TermCmd> returnQ = new Queue<TermCmd>();
+    //        while (cmds.Count > 0)
+    //        {
+    //            TermCmd c = cmds.Dequeue();
+    //            if (c is TermStringDataCmd)
+    //            {
+    //                string msg = (c as TermStringDataCmd).GetValue();
+    //                //Console.WriteLine(msg);
+    //                if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
+    //                {
+    //                    this.m_controller.Send("N");
+    //                }
+    //                else
+    //                {
+    //                    foreach (Regex r in this.MenuStrings_Regex.Keys)
+    //                    {
+    //                        Match m = r.Match(msg);
+    //                        if (m.Success)
+    //                        {
+    //                            string rsp = this.MenuStrings_Regex[r];
+    //                            this.m_controller.Send(rsp);
+    //                            this.MenuSuccess[r] = true;
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            returnQ.Enqueue(c);
+    //        }
+    //        if (MenuComplete)
+    //        {
+    //            return new SessionStateGameMenu(this);
+    //        }
+    //        return this;
             
-        }
-    }
+    //    }
+    //}
 
     internal class SessionStateGameMenu : SessionState
     {
@@ -192,7 +195,7 @@ namespace MMudTerm.Session.SessionStateData
                     //Console.WriteLine(msg);
                     if (Regex.Match(msg, @"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?").Success)
                     {
-                        this.m_controller.Send("N");
+                        this.m_controller.Send("N\r\n");
                     }
                     else
                     {

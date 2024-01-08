@@ -56,6 +56,7 @@ namespace MMudTerm.Session
             string also_here = "";
             foreach (Entity e in this._controller._gameenv._current_room.AlsoHere)
             {
+                if (e == null) { continue; }
                 also_here += e.Name + " ";
             }
             this.label_also_here_value.Text = also_here;
@@ -67,6 +68,7 @@ namespace MMudTerm.Session
                 Entity found = null;
                 foreach (Entity e in this._controller._gameenv._current_room.AlsoHere)
                 {
+                    if (e == null) { continue; }
                     if (e.Name == session.target.Name)
                     {
                         found = e; break;

@@ -11,7 +11,7 @@ using MMudTerm.Session;
 
 namespace MMudTerm.Terminal
 {
-    internal partial class TerminalWindow : UserControl
+    internal partial class TerminalWindow : UserControl, IDisposable
     {
         //Settings vars
         Color _bgColor;
@@ -61,11 +61,26 @@ namespace MMudTerm.Terminal
         //redraw the screen every X milliseconds, causes the carat to blink
         void heartbeat_Tick(object sender, EventArgs e)
         {
-            this.Invoke(refresh);
-            caratVis = !caratVis;
+            if(this.IsDisposed) return;
+
+            try
+            {
+                this.Invoke(refresh);
+                caratVis = !caratVis;
+            }
+            catch (ObjectDisposedException)
+            {
+                //happens when the form is shutting down
+                return;
+            }
         }
 
-        //load session config settings
+
+    
+
+
+
+    //load session config settings
         private void GetConfigSettings()
         {
             this._font = this.SessionData.GetTermFont();
@@ -133,6 +148,7 @@ namespace MMudTerm.Terminal
         protected override void OnHandleDestroyed(EventArgs e)
         {
             heartbeat.Elapsed -= ticker;
+            heartbeat.Enabled = false;
             heartbeat.Stop();
             heartbeat.Dispose();
             base.OnHandleDestroyed(e);
@@ -142,6 +158,7 @@ namespace MMudTerm.Terminal
         //refresh the screen
         private void DoRefresh()
         {
+            if (this.IsDisposed) return;
             this.Refresh();
         }
 
