@@ -42,6 +42,7 @@ namespace MMudObjects
         public virtual string Verb { get; private set; }
 
         public virtual bool IsCombatEngaged { get; set; }
+        public bool BaddieFlag = true;
 
         public override bool Equals(object obj)
         {
@@ -246,6 +247,7 @@ namespace MMudObjects
             this.Equipped = new EquippedItemsInfo();
             this.Abilities = new List<ItemAbility>();
             this.QuestAbilities = new List<QuestAbility>();
+            this.BaddieFlag = false;
             
 
             

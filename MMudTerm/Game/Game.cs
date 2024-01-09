@@ -1,6 +1,7 @@
 ﻿using global::MMudObjects;
 using global::MMudTerm.Session;
-
+using Humanizer;
+using MMudTerm.Session.SessionStateData;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +10,8 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
+using static Humanizer.In;
+
 
 
 
@@ -141,8 +144,90 @@ namespace MMudTerm.Game
         string[] coins = new string[] { "platinum piece", "gold crown", "silver noble", "copper farthing" };
 
         SessionController _controller = null;
+        
 
         public bool EnterTheGame { get; internal set; }
+        
+        bool monitor_combat = false;
+        bool monitor_rest = false;
+        bool monitor_buff = false;
+        bool monitor_get = false;
+        bool monitor_getcoins = false;
+
+        public bool Monitor_Combat
+        {
+            get { return this.monitor_combat; }
+            internal set
+            {
+                if (value)
+                {
+                    (this._controller.CurrentState as SessionStateInGame).NewGameEvent += MajorMudBbsGame_NewGameEvent;
+                }
+                else
+                {
+                    (this._controller.CurrentState as SessionStateInGame).NewGameEvent -= MajorMudBbsGame_NewGameEvent;
+                }
+                this.monitor_combat = value;
+            }
+        }
+        public bool Monitor_Get { get; internal set; }
+        public bool Monitor_GetCoins { get; internal set; }
+        public bool Monitor_Buff { get; internal set; }
+        public bool Monitor_Rest { get; internal set; }
+
+        public void MonitorEnable(bool enable, string name)
+        {
+            
+        }
+
+        private void MajorMudBbsGame_NewGameEvent(string message)
+        {
+            CombatMonitor(message);
+        }
+
+        public void CombatMonitor(string token)
+        {
+            switch (token)
+            {
+                case "room":
+                    //new current room
+                    //are there bad guys?
+                    if (this._current_room.AlsoHere.RoomContainsNPC())
+                    {
+                        if (!this._player.IsCombatEngaged)
+                        {
+                            Entity e = this._current_room.AlsoHere.GetFirst("npc");
+                            this._controller.Send($"a {e.FullName}\r\n");
+                        }
+                    }
+                    //are we already in combat?
+                    //if not attack the first bad guy
+                    
+                    break;
+                case "combat_engaged_start":
+                case "combat_engaged_stop":
+                    bool b = this._player.IsCombatEngaged;
+                    break;
+                case "combat":
+                    if (!this._player.IsCombatEngaged)
+                    {
+                        this._controller.Send("\r\n");
+                    }
+                    break;
+                case "exp":
+                    if (this._player.IsCombatEngaged)
+                    {
+                        this._controller.Send("\r\n");
+                    }
+                    break;
+
+                default:
+                    //Console.WriteLine("Combat - ignored token " + token);
+                    break;
+
+            }
+        }
+
 
         public MajorMudBbsGame(SessionController controller)
         {
@@ -183,12 +268,13 @@ namespace MMudTerm.Game
             string verb_pattern_cut_3rd = "slices|slashes|cuts";
             string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills";
             string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";
-            string present_tense_3rd_person_verb = $"{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
+            string verb_pattern_bow_3rd = "shoots a bolt";
+            string present_tense_3rd_person_verb = $"{verb_pattern_bow_3rd}|{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
 
             string verb_pattern_club = "smash|clobber|slam|whap|smack";
             string verb_pattern_pierce = "lunge|stab|impale|skewer";
             string verb_pattern_cut = "slice|slash|cut";
-            string verb_pattern_natural = "chomp|bite|claw|rip|whip";
+            string verb_pattern_natural = "chomp|bite|claw|rip|whip|punch|kick|jumpkick";
             string verb_pattern_miss = "swipe|flail|snap|lash|swing|shoot a bolt";
             string verb_pattern_bow = "shoot a bolt at";
 
@@ -240,20 +326,24 @@ namespace MMudTerm.Game
             death_msgs.Add(@" collapes with a dull thump");
             death_msgs.Add(@" collapses, its legs curling tightly around it");
             death_msgs.Add(@" collapses with a groan");
+            death_msgs.Add(@" collapses with a grunt.");
             death_msgs.Add(@" collapses in a filthy heap\.");
             death_msgs.Add(@" collapses into a broken heap\.");
             death_msgs.Add(@" falls to the ground with a yelp, and is still");
             death_msgs.Add(@" dissolves into a puddle of bluish goo");
             death_msgs.Add(@" falls to the ground with a tortured squeak");
+            death_msgs.Add(@" falls dead at your feet\.");
             death_msgs.Add(@" squeaks loudly, and falls to the ground!");
             death_msgs.Add(@" crumbles into a pile of dust\.");
             death_msgs.Add(@"'s wrapping unravels, revealing nothing but dust\.");
             death_msgs.Add(@" vanishes with an eerie wail\.");
+            death_msgs.Add(@" falls to the ground with a shrill cry\.");
 
             string dms = String.Join("|", death_msgs);
 
             string entity_death = @"The ([A-Za-z ]+)(?:" + dms + ")";
             common_patterns.Add(entity_death, ProcessEntityDeath);
+            //Your swing at filthbug hits, but glances off its armour.
 
 
             //Cthulhu casts ethereal shield on Cthulhu!
@@ -926,7 +1016,7 @@ namespace MMudTerm.Game
                 room.Description = room_info["desc"];
             }
 
-            List<Entity> entities = new List<Entity>();
+            AlsoHere entities = new AlsoHere();
             if (room_info.ContainsKey("here") && room_info["here"] != "")
             {
                 foreach (string also_here in room_info["here"].Split(','))
@@ -1023,7 +1113,7 @@ namespace MMudTerm.Game
         {
             foreach (Player p in this._players)
             {
-                if (p.Name == entity.Name)
+                if (p.FirstName == entity.Name)
                     return p;
             }
             return null;

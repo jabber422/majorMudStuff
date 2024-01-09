@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using MMudTerm.Terminal;
 using MMudTerm.Session.SessionStateData;
+using static Humanizer.In;
+using System.Runtime.CompilerServices;
 
 namespace MMudTerm.Session
 {
@@ -28,12 +30,85 @@ namespace MMudTerm.Session
         internal TerminalWindow Terminal
         { get { return this.m_term; } }
 
-        //internal SessionDataObject SessionData
-        //{ get { return this.SessionData; } }
+        #region tool bar icons
+        private Bitmap ExtractIconFromBitmap(Bitmap sourceBitmap, Rectangle section)
+        {
+            // Create a new bitmap object with the size of the section
+            Bitmap iconBitmap = new Bitmap(section.Width, section.Height);
 
+            using (Graphics g = Graphics.FromImage(iconBitmap))
+            {
+                // Draw the specified section of the source bitmap to the new one
+                g.DrawImage(sourceBitmap, 0, 0, section, GraphicsUnit.Pixel);
+            }
+
+            return iconBitmap;
+        }
+
+        Color icon_transparent_color = Color.Magenta;
+        private Bitmap GetIcon(int x_mod)
+        {
+            Bitmap allicons = Properties.Resources.BitmapSessionIcons;
+
+            //x3 is connect button, x4 is disconnect
+            Rectangle iconSection = new Rectangle(16 * x_mod, 0, 16, 16); // Set x, y, width, and height accordingly
+            Bitmap icon = ExtractIconFromBitmap(allicons, iconSection);
+            if(icon_transparent_color == Color.Magenta)
+            {
+                icon_transparent_color = icon.GetPixel(0, 0);
+            }
+            icon.MakeTransparent(icon_transparent_color);
+            return icon;
+        }
+
+        List<ToolStripButton> toolStripItems = new List<ToolStripButton>();
+
+        #endregion
         internal SessionForm(SessionConnectionInfo sciData)
         {
             InitializeComponent();
+
+            Bitmap allicons = Properties.Resources.BitmapSessionIcons;
+            
+            //x3 is connect button, x4 is disconnect
+            Rectangle iconSection = new Rectangle(16*3, 0, 16, 16); // Set x, y, width, and height accordingly
+            Bitmap iconBitmap = ExtractIconFromBitmap(allicons, iconSection);
+
+            this.toolStripConnectBtn.Image = GetIcon(3);
+
+            this.toolStripButton_go.Image = GetIcon(11);
+            this.toolStripButton_loop.Image = GetIcon(12);
+            this.toolStripButton_stop.Image = GetIcon(15);
+            this.toolStripButton_all_monitors.Image = GetIcon(17);
+            this.toolStripButton_combat.Image = GetIcon(19);
+            this.toolStripButton_rest.Image = GetIcon(21);
+            this.toolStripButton_buff.Image = GetIcon(22);
+            this.toolStripButton_get.Image = GetIcon(24);
+            this.toolStripButton_getcoins.Image = GetIcon(25);
+
+            //these get locked by all on/all
+            this.toolStripItems.Add(toolStripButton_go);
+            this.toolStripItems.Add(toolStripButton_loop);
+            this.toolStripItems.Add(toolStripButton_stop);
+            this.toolStripItems.Add(toolStripButton_combat);
+            this.toolStripItems.Add(toolStripButton_rest);
+            this.toolStripItems.Add(toolStripButton_buff);
+            this.toolStripItems.Add(toolStripButton_get);
+            this.toolStripItems.Add(toolStripButton_getcoins);
+
+
+
+
+
+            //i need to be able to add or remove toolStripButton
+            //when a button is present
+            //if true it need to 
+
+
+
+
+
+
             this.m_sessionData = new SessionDataObject(sciData);
 
             this.m_controller = new SessionController(this.m_sessionData, this);
@@ -112,6 +187,7 @@ namespace MMudTerm.Session
             if (this.m_controller.m_macros.IsMacro(this.cur_key.KeyCode))
             {
                 string macro = this.m_controller.m_macros.GetMacro(this.cur_key.KeyCode);
+                msg = Encoding.ASCII.GetBytes(macro);
             }
             else
             {
@@ -123,24 +199,23 @@ namespace MMudTerm.Session
             //e.Handled = true;
         }
 
+        string con_state = "Connect";
         private void toolStripConnectBtn_Click(object sender, EventArgs e)
         {
-            string state = this.toolStripConnectBtn.Text;
-            if (state.Equals("Connect"))
+            if (!this.toolStripConnectBtn.Checked)
             {
                 if (this.m_controller.Connect())
                 {
-                    this.toolStripConnectBtn.Text = "Disconnect";
                     this.toolStripConnectBtn.Checked = true;
                 }
             }
-            else if (state.Equals("Disconnect"))
+            else
             {
                 if(this.m_controller.Disconnect())
                 {
-                    this.toolStripConnectBtn.Text = "Connect";
                     this.toolStripConnectBtn.Checked = false;
                 }
+                this.toolStripConnectBtn.Checked = false;
             }
         }
 
@@ -316,6 +391,56 @@ namespace MMudTerm.Session
                     UpdateTick();
                     break;
             }
+        }
+
+        
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            //iconBitmap2.RotateFlip(RotateFlipType.Rotate180FlipX);
+
+            this.m_controller._gameenv.Monitor_Combat = this.toolStripButton_all_monitors.Checked;
+            if (this.toolStripButton_all_monitors.Checked)
+            {
+                foreach(var x in this.toolStripItems)
+                {
+                    x.Enabled = true;
+                }
+                this.toolStripButton_all_monitors.Image.RotateFlip(RotateFlipType.Rotate180FlipX);
+            }
+            else
+            {
+                foreach (var x in this.toolStripItems)
+                {
+                    x.Enabled = false;
+                }
+                this.toolStripButton_all_monitors.Image.RotateFlip(RotateFlipType.Rotate180FlipX);               
+            }
+        }
+
+        private void toolStripButton_combat_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_Combat = this.toolStripButton_combat.Checked;
+        }
+
+        private void toolStripButton_rest_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_Rest = this.toolStripButton_rest.Checked;
+        }
+
+        private void toolStripButton_buff_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_Buff = this.toolStripButton_buff.Checked;
+        }
+
+        private void toolStripButton_get_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_Get = this.toolStripButton_get.Checked;
+        }
+
+        private void toolStripButton_getcoins_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_GetCoins = this.toolStripButton_getcoins.Checked;
         }
     }
 }

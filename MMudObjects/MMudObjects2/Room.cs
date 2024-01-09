@@ -7,6 +7,53 @@ using System.Threading.Tasks;
 
 namespace MMudObjects
 {
+    public class AlsoHere : List<Entity>
+    {
+        public bool RoomContainsNPC()
+        {
+            return this.GetFirst("npc") != null ? true : false;
+        }
+
+        public Entity GetFirst(string search)
+        {
+            switch (search)
+            {
+                case "first":
+                    return this[0];
+                case "player":
+                    foreach(Entity e in this)
+                    {
+                        if(e is Player)
+                        {
+                            return e;
+                        }
+                    }
+                    break;
+                case "npc":
+                    foreach (Entity e in this)
+                    {
+                        if (e is Player)
+                        {
+                            continue;
+                        }
+                        return e;
+                    }
+                    break;
+                case "baddie":
+                    foreach (Entity e in this)
+                    {
+                        if (e is Player)
+                        {
+                            continue;
+                        }
+                        if (e.BaddieFlag) { return e; }
+                    }
+                    break;
+            }
+            return null;
+        }
+    }
+
     public class Room
     {
         int Map { get; set; }
@@ -19,7 +66,7 @@ namespace MMudObjects
         public List<RoomExit> RoomExits;
         public Dictionary<string, Item> VisibleItems;
         public Dictionary<string, Item> HiddenItems;
-        public List<Entity> AlsoHere;
+        public AlsoHere AlsoHere;
 
         public string MegaMudRoomHash { get { return this.MegaMudNameHash + this.MegaMudExitsHash; } }
         private string MegaMudNameHash { get
@@ -85,7 +132,7 @@ namespace MMudObjects
             this.RoomExits = new List<RoomExit>();
             this.VisibleItems = new Dictionary<string, Item>();
             this.HiddenItems = new Dictionary<string, Item>();
-            this.AlsoHere = new List<Entity>();
+            this.AlsoHere = new AlsoHere();
         }
 
         public void Add(CarryableItem item)
