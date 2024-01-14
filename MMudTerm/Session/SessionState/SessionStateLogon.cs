@@ -32,7 +32,7 @@ namespace MMudTerm.Session.SessionStateData
                 string rsp = tup.Item2;
                 this.LogonStrings_Regex.Add(new Regex(msg), rsp + "\r\n");
             }
-            this.LogonStrings_Regex.Add(new Regex(@"\(N\)onstop, \(Q\)uit, or \(C\)ontinue\?"), "n\r\n");
+            this.LogonStrings_Regex.Add(new Regex(@"\(N\)onstop, "), "N");
 
             this.LogonSuccess = new Dictionary<Regex, bool>();
             foreach (KeyValuePair<Regex, string> kvp in this.LogonStrings_Regex)

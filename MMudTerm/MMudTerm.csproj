@@ -82,6 +82,12 @@
     <Compile Include="BbsAccountPlayerControl.Designer.cs">
       <DependentUpon>BbsAccountPlayerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="BbsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BbsControl.Designer.cs">
+      <DependentUpon>BbsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Colors.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -107,6 +113,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BbsAccountPlayerControl.resx">
       <DependentUpon>BbsAccountPlayerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BbsControl.resx">
+      <DependentUpon>BbsControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogonAutomationMsgRspControl.resx">
       <DependentUpon>LogonAutomationMsgRspControl.cs</DependentUpon>
@@ -256,6 +265,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BitmapSessionIcons.bmp" />
+    <None Include="res\BitmapSessionIcons.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

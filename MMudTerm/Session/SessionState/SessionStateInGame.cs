@@ -36,6 +36,7 @@ namespace MMudTerm.Session.SessionStateData
             this._gameenv.NewGameEvent += this.m_controller.m_sessionForm.Update;
 
             this.m_controller.Send("stat\r\n");
+            this.m_controller.Send("i\r\n");
             this.m_controller.Send("who\r\n");
         }
         

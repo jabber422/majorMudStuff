@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MMudTerm_Protocols
@@ -46,7 +47,8 @@ namespace MMudTerm_Protocols
         }
         public string GetValue()
         {
-            return Encoding.ASCII.GetString(this.str);
+            
+            return string.Join("-", this.str);
         }
     }
 }

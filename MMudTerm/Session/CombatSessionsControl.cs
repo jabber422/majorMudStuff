@@ -92,6 +92,17 @@ namespace MMudTerm.Session
                 csc.Location = new Point(10, 10);
                 this.splitContainer1.Panel2.Controls.Add(csc);
             }
+
+            this.textBox_crit.Text = this._controller._gameenv._current_combat.player_crits.ToString();
+            this.textBox_hit.Text = this._controller._gameenv._current_combat.player_hits.ToString();
+            this.textBox_dodge.Text = this._controller._gameenv._current_combat.player_dodge.ToString();
+            this.textBox_hit_avg.Text = this._controller._gameenv._current_combat.player_misses.ToString();
+            
+            this.textBox_hit_rng_min.Text = this._controller._gameenv._current_combat.target_miss_player.ToString();
+            this.textBox_hit_rng_max.Text = this._controller._gameenv._current_combat.target_hit_player.ToString();
+            this.textBox_crit_rng_min.Text = this._controller._gameenv._current_combat.target_crit_player.ToString();
+            this.textBox_crit_rng_max.Text = this._controller._gameenv._current_combat.target_dodge_player.ToString();
+
         }
     }
 }

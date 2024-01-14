@@ -103,6 +103,7 @@ namespace MMudTerm.Session.SessionStateData
         {
         }
 
+        int iac_cnt = 0;
         //Try and handle the telnet IAC stuff here if needed
         internal override SessionState HandleCommands(Queue<TermCmd> cmds)
         {
@@ -111,13 +112,18 @@ namespace MMudTerm.Session.SessionStateData
                 TermCmd c = cmds.Dequeue();
                 if (c is TermIAC)
                 {
+                    iac_cnt++;
+                    Console.WriteLine((c as TermIAC).GetValue());
                     if (!this.IAC_DONE)
                     {
-                        this.m_controller.Send(new byte[] { 255, 253, 3 });
-                        this.m_controller.Send(new byte[] { 255, 253, 1 });
-                        this.m_controller.Send(new byte[] { 255, 253, 0 });
-                        this.m_controller.Send(new byte[] { 255, 251, 0 });
-                        this.IAC_DONE = true;
+                        //this.m_controller.Send(new byte[] { 255, 253, 3 });
+                        //this.m_controller.Send(new byte[] { 255, 253, 1 });
+                        //this.m_controller.Send(new byte[] { 255, 253, 0 });
+                        //this.m_controller.Send(new byte[] { 255, 251, 0 });
+                        if (this.iac_cnt >= 3)
+                        {
+                            this.IAC_DONE = true;
+                        }
                     }
                     else
                     {

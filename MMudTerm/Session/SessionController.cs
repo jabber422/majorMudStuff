@@ -13,6 +13,7 @@ using MMudObjects;
 using MMudTerm.Game;
 using System.Net.Sockets;
 using static MMudTerm.Session.SessionStateData.SessionStateInGame;
+using System.Linq.Expressions;
 
 namespace MMudTerm.Session
 {
@@ -109,7 +110,9 @@ namespace MMudTerm.Session
                     }
                 }catch(Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());   
+                    Debug.WriteLine(ex.ToString());
+                    Debug.WriteLine("handler Thread");
+                    Debug.WriteLine(ex.StackTrace);
                 }
                     
             });
@@ -119,27 +122,36 @@ namespace MMudTerm.Session
         {
             return Task.Run(() =>
             {
-                while (this.running)
+                try
                 {
-                    term_cmds_event.Wait();
-                    //term_cmds_event.Reset();
+                    while (this.running)
+                    {
+                        term_cmds_event.Wait();
+                        //term_cmds_event.Reset();
 
-                    Queue<TermCmd> cmds = new Queue<TermCmd>();
-                    TermCmd cmd;
-                    while (term_cmds.TryDequeue(out cmd))
-                    {
-                        cmds.Enqueue(cmd);
-                    }
+                        Queue<TermCmd> cmds = new Queue<TermCmd>();
+                        TermCmd cmd;
+                        while (term_cmds.TryDequeue(out cmd))
+                        {
+                            cmds.Enqueue(cmd);
+                        }
 
-                    this.m_sessionForm.Terminal.HandleCommands(cmds);
-                    if (term_cmds.IsEmpty)
-                    {
-                        term_cmds_event.Reset();
+                        this.m_sessionForm.Terminal.HandleCommands(cmds);
+                        if (term_cmds.IsEmpty)
+                        {
+                            term_cmds_event.Reset();
+                        }
+                        else
+                        {
+                            term_cmds_event.Set();
+                        }
                     }
-                    else
-                    {
-                        term_cmds_event.Set();
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                    Debug.WriteLine("Terminal Thread");
+                    Debug.WriteLine(ex.StackTrace);
                 }
             });
         }
@@ -175,27 +187,34 @@ namespace MMudTerm.Session
             int bytesRead;
 
             NetworkStream networkStream = this.m_connObj.GetStream();
-
-            while ((bytesRead = await networkStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
+            try
             {
-                byte[] smaller_buffer = new byte[bytesRead];
-                Buffer.BlockCopy(buffer, 0, smaller_buffer, 0, bytesRead);
-                temp.Add(smaller_buffer);
-                Queue<TermCmd> cmds = m_decoder.DecodeBuffer(smaller_buffer);
-
-                while (cmds.Count > 0)
+                while ((bytesRead = await networkStream.ReadAsync(buffer, 0, buffer.Length)) != 0)
                 {
-                    TermCmd c = cmds.Dequeue();
-                    terminal_term_cmds.Enqueue(c);
-                    state_term_cmds.Enqueue(c);
+                    byte[] smaller_buffer = new byte[bytesRead];
+                    Buffer.BlockCopy(buffer, 0, smaller_buffer, 0, bytesRead);
+                    temp.Add(smaller_buffer);
+                    Queue<TermCmd> cmds = m_decoder.DecodeBuffer(smaller_buffer);
+
+                    while (cmds.Count > 0)
+                    {
+                        TermCmd c = cmds.Dequeue();
+                        terminal_term_cmds.Enqueue(c);
+                        state_term_cmds.Enqueue(c);
+                    }
+
+                    this.state_term_cmds_event.Set();
+                    this.terminal_term_cmds_event.Set();
+                    buffer = new byte[1024 * 4];
                 }
 
-                this.state_term_cmds_event.Set();
-                this.terminal_term_cmds_event.Set();
-                buffer = new byte[1024*4];
+                Console.WriteLine("Got 0 bytes!, Disconnected!");
+            }catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                Debug.WriteLine("Rcvr Thread");
+                Debug.WriteLine(ex.StackTrace);
             }
-
-            Console.WriteLine("Got 0 bytes!, Disconnected!");
         }
         #endregion
 

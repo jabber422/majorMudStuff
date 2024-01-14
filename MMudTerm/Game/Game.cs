@@ -28,6 +28,7 @@ namespace MMudTerm.Game
         public int damage_done = 0;
         public int damage_taken = 0;
         public bool IsBeingAttackByThisEntity = false;
+        List<int[]> rounds = new List<int[]>();
 
         public CombatSession(Entity target)
         {
@@ -71,6 +72,17 @@ namespace MMudTerm.Game
         SessionController _controller = null;
         Entity _current_target = null;
 
+        public int player_misses = 0;
+        public int player_hits = 0;
+        public int player_crits = 0;
+        public int player_dodge = 0;
+        
+        public int target_miss_player = 0;
+        public int target_hit_player = 0;
+        public int target_crit_player = 0;
+        public int target_dodge_player = 0;
+
+
         public CurrentCombat(SessionController controller)
         {
             this._controller = controller;
@@ -96,27 +108,47 @@ namespace MMudTerm.Game
         }
 
         //player hit something for some damage
-        internal void PlayerHit(Entity e, int dmg_done)
+        internal void PlayerHit(Entity e, int dmg_done, string crit)
         {
             CombatSession session = GetSession(e);
+            if (crit == "critically")
+            {
+                this.player_crits++;
+            }
+            else //surprise too
+            {
+                this.player_hits++;
+            }
             session.PlayerHit(dmg_done);
             this._current_target = session.target;
         }
 
-        internal void PlayerHitBy(Entity e, int dmg_done)
+        internal void PlayerHitBy(Entity e, int dmg_done, string crit)
         {
             GetSession(e).PlayerHitBy(dmg_done);
+            if (crit == "critically")
+            {
+                this.target_crit_player++;
+                
+            }
+            else
+            {
+                this.target_hit_player++;
+            }
         }
 
-        internal void PlayerMissedBy(Entity e)
+        internal void PlayerMissedBy(Entity e, bool is_dodge=false)
         {
             GetSession(e).PlayerMissedBy();
+            if (is_dodge) this.player_dodge++;else
+            this.target_miss_player++;
         }
 
         internal void PlayerMissed(Entity e)
         {
             CombatSession session = GetSession(e);
             session.PlayerMissed();
+            this.player_misses++;
         }
 
         internal void Remove(List<CombatSession> to_remove)
@@ -680,18 +712,18 @@ namespace MMudTerm.Game
             
             //You clobber giant rat for 12 damage!
             Entity attacker = new Entity(match.Groups[1].Value.Trim());
+            var crit = match.Groups[2].Value;
             Entity target = new Entity(match.Groups[3].Value);
-
             int dmg_done = int.Parse(match.Groups[4].Value);
 
             if (attacker.Name == "You")
             {
                 AddAttackerToRoom(target);
-                this._current_combat.PlayerHit(target, dmg_done);
+                this._current_combat.PlayerHit(target, dmg_done, crit);
             }else if(target.Name == "you")
             {
                 AddAttackerToRoom(attacker);
-                this._current_combat.PlayerMissedBy(attacker);
+                this._current_combat.PlayerHitBy(attacker, dmg_done, crit);
             }
             else
             {
@@ -723,7 +755,7 @@ namespace MMudTerm.Game
             int dmg_done = int.Parse(match.Groups[2].Value);
             if (attacker.Name == "You")
             {
-                this._current_combat.PlayerHitBy(e, dmg_done);
+                this._current_combat.PlayerHitBy(e, dmg_done, "");
             }
             else
             {
@@ -747,7 +779,8 @@ namespace MMudTerm.Game
             else if(target.Name == "you")
             {
                 AddAttackerToRoom(attacker);
-                this._current_combat.PlayerMissedBy(attacker);
+                var is_dodge = arg2.Contains(", but you dodge");
+                this._current_combat.PlayerMissedBy(attacker, is_dodge);
             }
             else
             {
@@ -1156,7 +1189,13 @@ namespace MMudTerm.Game
             {
                 if (m.Success)
                 {
-                    stats.Add(m.Groups[1].Value, m.Groups[2].Value);
+                    try
+                    {
+                        stats.Add(m.Groups[1].Value, m.Groups[2].Value);
+                    }catch(Exception ex)
+                    {
+
+                    }
                 }
             }
 

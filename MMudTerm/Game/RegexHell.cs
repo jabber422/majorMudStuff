@@ -40,6 +40,7 @@ namespace MMudTerm.Game
             death_msgs.Add(@"'s wrapping unravels, revealing nothing but dust\.");
             death_msgs.Add(@" vanishes with an eerie wail\.");
             death_msgs.Add(@" falls to the ground with a shrill cry\.");
+            //The cave bear falls to the ground with a grunt!
             return death_msgs;
         }
 
@@ -180,6 +181,7 @@ namespace MMudTerm.Game
             common_patterns.Add(pattern_do_hit2, EventType.CombatHit);
 
             //Darmius whaps big lashworm for 12 damage!
+            //The cave bear claws at you, but you dodge out of the way!
 
             string pattern_do_miss = @"The MOB VERBS at MOB with ";
             common_patterns.Add(pattern_do_miss, EventType.CombatMiss);
@@ -188,17 +190,17 @@ namespace MMudTerm.Game
             common_patterns.Add(pattern_do_miss2, EventType.CombatMiss);
 
             //The shade chills you with its touch for 1 damage!
-            string pattern_rcv_hit = @"The ([\S ]+) VERBS you (?:[\S ]*)for (\d+) damage!";
-            common_patterns.Add(pattern_rcv_hit, EventType.CombatHitPlayer);
+            //string pattern_rcv_hit = @"The ([\S ]+) VERBS you (?:[\S ]*)for (\d+) damage!";
+            //common_patterns.Add(pattern_rcv_hit, EventType.CombatHitPlayer);
 
             //The big carrion beast snaps at you, but your armour deflects the blow!
             //The big carrion beast snaps at you with its teeth!
             //The big filthbug claws at you, but your armour deflects the blow!
             //The fierce thug swipes at you with their spiked club!
-            string pattern_rcv_miss = @"The MOB VERBS at|for PLAYER!";
-            common_patterns.Add(pattern_rcv_miss, EventType.CombatMissPlayer);
-            string pattern_rcv_miss2 = @"The MOB VERBS at PLAYER with .*";
-            common_patterns.Add(pattern_rcv_miss2, EventType.CombatMissPlayer);
+            //string pattern_rcv_miss = @"The MOB VERBS at|for PLAYER!";
+            //common_patterns.Add(pattern_rcv_miss, EventType.CombatMiss);
+            //string pattern_rcv_miss2 = @"The MOB VERBS at PLAYER with .*";
+            //common_patterns.Add(pattern_rcv_miss2, EventType.CombatMiss);
 
 
 
