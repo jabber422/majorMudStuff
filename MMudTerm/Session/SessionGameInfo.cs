@@ -1,4 +1,5 @@
 ﻿using MMudObjects;
+using MMudTerm.Game;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,7 +18,7 @@ namespace MMudTerm.Session
     public partial class SessionGameInfo : Form
     {
         public SessionController _controller = null;
-        DateTime _exphr_start;
+        
         CombatSessionsControl combatSessionsControl1 = null;
 
         public SessionGameInfo(SessionController controller)
@@ -31,62 +32,69 @@ namespace MMudTerm.Session
 
             InitializeComponent();
             this.tabPage_combat.Controls.Add(this.combatSessionsControl1);
-            _exphr_start = DateTime.Now;
         }
 
-        public void Update(string token)
+        public void Update(EventType token)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action<string>(Update), token);
+                this.Invoke(new Action<EventType>(Update), token);
             }
             else
             {
                 switch (token)
                 {
-                    case "who":
-                    case "top":
+                    case EventType.Who:
+                    case EventType.Top:
+                    case EventType.SomeoneEnteredTheGame:
+                    case EventType.SomeoneLeftTheGame:
+                        
                         this.UpdateWho();
                         break;
-                    case "stats":
-                    case "exp":
+                    case EventType.Stats:
+                    case EventType.ExperienceGain:
                         this.UpdateStats();
                         break;
-                    case "inv":
+                    case EventType.Inventory:
                         this.UpdateInventory();
                         break;
-                    case "room":
-                    case "search_found":
-                    case "door_open":
-                    case "door_closed":
+                    case EventType.Room:
+                    case EventType.SearchFound:
+                    case EventType.DoorOpen:
+                    case EventType.DoorClosed:
+                    case EventType.RoomSomethingMovedInto:
+                    case EventType.RoomSomethingMovedOut:
+                    case EventType.EntityDeath:
                         this.UpdateRoom();
                         break;
-                    case "look_room":
+                    case EventType.RoomLook:
                         this.UpdateLookRoom();
                         break;
-                    case "in_combat":
-                        this.UpdateInCombat();
-                        break;
-                    case "tick":
+                    case EventType.Tick:
                         this.UpdateTick();
                         break;
-                    case "pickup_cash":
-                    case "drop_cash":
-                    case "hid_cash":
-                    case "hid_item":
-                    case "pickup_item":
-                    case "drop_item":
+                    case EventType.PickUpCoins:
+                    case EventType.DropCoins:
+                    case EventType.HidCoins:
+                    case EventType.PickUpItem:
+                    case EventType.DropItem:
+                    case EventType.HidItem:
                         this.UpdateRoom();
                         this.UpdateInventory();
                         break;
-                    case "bought_something":
+                    case EventType.BoughtSomething:
                         this.UpdateInventory();
                         break;
-                    case "combat":
+                    case EventType.Combat:
                         this.UpdateCombat();
                         break;
+                    case EventType.Gossip:
+                        this.richTextBox1.WordWrap = true;
+                        this.richTextBox1.Multiline = true;
+                        this.richTextBox1.Text = string.Join("\r\n",this._controller._gameenv._gossips);
+                        break;
                     default:
-                        Console.WriteLine($"Not used: {token}");
+                        //Console.WriteLine($"Not used: {token}");
                         break;
                 }
             }
@@ -101,7 +109,7 @@ namespace MMudTerm.Session
 
         private void UpdateRoom()
         {
-            this.combatSessionsControl1.Update("room");
+            this.combatSessionsControl1.Update(EventType.Room);
             Room cur_room = this._controller._gameenv._current_room;
             label_roomname_value.Text = cur_room.Name;
 
@@ -119,9 +127,14 @@ namespace MMudTerm.Session
             textBox_items_value.Text = items;
             
             string also_here = "";
-            foreach(Entity e in cur_room.AlsoHere)
+            foreach (Entity e in cur_room.AlsoHere)
             {
                 if (e == null) { continue; }
+                if (e.Verb != "")
+                {
+                    also_here += $"({e.Verb}) ";
+                }
+
                 also_here += e.Name + ", ";
             }
             textBox_alsohere_value.Text = also_here;
@@ -192,14 +205,10 @@ namespace MMudTerm.Session
             
         }
 
-        private void UpdateInCombat()
-        {
-            //this.label56.Text = this._controller._gameenv._player.InCombat.ToString();
-        }
-
+    
         private void UpdateCombat()
         {
-            this.combatSessionsControl1.Update("combat");
+            this.combatSessionsControl1.Update(EventType.Combat);
         }
 
         public void UpdateStats()
@@ -236,7 +245,7 @@ namespace MMudTerm.Session
             label_gained_exp_value.Text = this._controller._gameenv._player.GainedExp.ToString();
             double gained_exp = this._controller._gameenv._player.GainedExp;
             DateTime _now = DateTime.Now;
-            TimeSpan ts = DateTime.Now - this._exphr_start;
+            TimeSpan ts = DateTime.Now - this._controller._exphr_start;
             double hours = ts.TotalHours;
             double rate = gained_exp / hours;
             label_exphr_value.Text = FormatNumber(rate);
@@ -247,11 +256,13 @@ namespace MMudTerm.Session
         {
             if (num >= 1000000)
                 return (num / 1000000D).ToString("0.#") + "M";
-            if (num >= 1000)
+            if (num >= 10000)
                 return (num / 1000D).ToString("0.#") + "K";
 
             return num.ToString("N0");
         }
+
+
 
         public void UpdateInventory()
         {
@@ -403,8 +414,68 @@ namespace MMudTerm.Session
         private void button_exp_reset_Click(object sender, EventArgs e)
         {
             this._controller._gameenv._player.GainedExp = 0;
-            _exphr_start = DateTime.Now;
-            this.Update("exp");
+            this._controller._exphr_start = DateTime.Now;
+            this.Update(EventType.ExperienceGain);
+        }
+
+        //AI wrote this and below, kinda cool and scary
+        private void button1_Click(object sender, EventArgs e)
+        {
+            dataGridView2.Font = new Font(dataGridView1.Font.FontFamily, 12); // Set font size to 12
+            dataGridView2.ReadOnly = false;
+            dataGridView2.EditMode = DataGridViewEditMode.EditOnEnter;
+
+            var editableList = _controller._gameenv._matcher.RegexListwMacros()
+            .Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
+            .ToList();
+
+            dataGridView2.DataSource = editableList;
+            dataGridView2.CellEndEdit += dataGridView2_CellEndEdit;
+
+            this.dataGridView2.AutoGenerateColumns = true;
+            this.dataGridView2.Refresh();
+        }
+
+        private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if (grid != null)
+            {
+                var rowIndex = e.RowIndex;
+                var newKey = grid.Rows[rowIndex].Cells[0].Value.ToString();
+                var newValue = (EventType)grid.Rows[rowIndex].Cells[1].Value;
+
+                var editableList = _controller._gameenv._matcher.RegexListwMacros()
+                .Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
+                .ToList();
+                // Update the list
+                editableList[rowIndex].Key = newKey;
+                editableList[rowIndex].Value = newValue;
+
+                // Update the original dictionary
+                // Note: This assumes that the keys are unique and handles key changes.
+                var oldKey = _controller._gameenv._matcher.RegexListwMacros().ElementAt(rowIndex).Key;
+                if (!oldKey.Equals(newKey))
+                {
+                    _controller._gameenv._matcher.RegexListwMacros().Remove(oldKey);
+                }
+                _controller._gameenv._matcher.RegexListwMacros()[newKey] = newValue;
+
+                _controller._gameenv._matcher.Reload();
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this._controller._gameenv._gossips.Clear();
+            this.richTextBox1.Text = "";
         }
     }
+
+    public class EditableKeyValuePair
+    {
+        public string Key { get; set; }
+        public EventType Value { get; set; }
+    }
+
 }

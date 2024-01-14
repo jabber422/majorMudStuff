@@ -16,23 +16,10 @@ namespace MMudTerm.Session.SessionStateData
     {
         Dictionary<Regex, string> LogonStrings_Regex;
         Dictionary<Regex, bool> LogonSuccess;
-        Dictionary<Regex, bool> JumpToInGame;
 
         string move_to_mud_menu_state = "[MAJORMUD]:";
         private int _iac_cnd;
 
-        internal bool LogonComplete
-        {
-            get
-            {
-                bool result = true;
-                foreach (bool b in this.LogonSuccess.Values)
-                {
-                    result &= b;
-                }
-                return result;
-            }
-        }
 
         public SessionStateLogon(SessionState _state) : base(_state, "Logon On")
         {
@@ -52,13 +39,6 @@ namespace MMudTerm.Session.SessionStateData
             {
                 this.LogonSuccess.Add(kvp.Key, false);
             }
-
-            //this.JumpToInGame = new Dictionary<Regex, bool>();
-            //foreach (KeyValuePair<Regex, string> kvp in this.m_controller.SessionData.GetJumpToInGameSessionsStrings())
-            //{
-            //    this.JumpToInGame.Add(kvp.Key, false);
-
-            //}
         }
 
         internal override SessionState HandleCommands( Queue<TermCmd> cmds)
@@ -77,9 +57,8 @@ namespace MMudTerm.Session.SessionStateData
                     {
                         if (this.m_controller.EnterTheGame)
                         {
-                            //covers manual logon
-                            //if we ever see '[MAJORMUD]:' switch states
-                            return new SessionStateGameMenu(this);
+                            this.m_controller.SendLine("enter");
+                            return new SessionStateInGame(this);
                         }
                         else
                         {
@@ -105,7 +84,6 @@ namespace MMudTerm.Session.SessionStateData
                             this.LogonSuccess[r] = true;
                         }
                     }
-                    
                 }
                 else if (c is TermIAC)
                 {
@@ -115,8 +93,7 @@ namespace MMudTerm.Session.SessionStateData
                         this.m_controller.Send(new byte[] { 255, 253, 3 });
                         this._iac_cnd++;
                     }
-                }
-                
+                }                
             }
 
             if (this_cmd != "")
@@ -131,10 +108,9 @@ namespace MMudTerm.Session.SessionStateData
                 //}
             }
 
-            if (LogonComplete)
-            {
-                return new SessionStateGameMenu(this);
-            }
+            
+            //return new SessionStateGameMenu(this);
+            
             return this;
         }
     }

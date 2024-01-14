@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MMudTerm_Protocols.AnsiProtocolCmds
 
@@ -41,7 +42,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
             }
             else if (p == ANSI_COLOR.Reverse)
             {
-
+                Debug.WriteLine("Impl colo reverse some day");
             }
             else
             {

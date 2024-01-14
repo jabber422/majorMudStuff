@@ -93,6 +93,19 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.tabPage_inv = new System.Windows.Forms.TabPage();
             this.tabPage_room = new System.Windows.Forms.TabPage();
+            this.label_cause = new System.Windows.Forms.Label();
+            this.textBox_lr_desc = new System.Windows.Forms.TextBox();
+            this.label70 = new System.Windows.Forms.Label();
+            this.label_light = new System.Windows.Forms.Label();
+            this.label_lr_hash = new System.Windows.Forms.Label();
+            this.textBox_lr_items = new System.Windows.Forms.TextBox();
+            this.textBox_lr_alsohere = new System.Windows.Forms.TextBox();
+            this.label_lr_exits = new System.Windows.Forms.Label();
+            this.label71 = new System.Windows.Forms.Label();
+            this.label72 = new System.Windows.Forms.Label();
+            this.label_lr_name = new System.Windows.Forms.Label();
+            this.label74 = new System.Windows.Forms.Label();
+            this.label75 = new System.Windows.Forms.Label();
             this.label_mega_hash = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label_hidden_items = new System.Windows.Forms.Label();
@@ -118,25 +131,25 @@
             this.label59 = new System.Windows.Forms.Label();
             this.label58 = new System.Windows.Forms.Label();
             this.label57 = new System.Windows.Forms.Label();
-            this.label_lr_hash = new System.Windows.Forms.Label();
-            this.textBox_lr_items = new System.Windows.Forms.TextBox();
-            this.textBox_lr_alsohere = new System.Windows.Forms.TextBox();
-            this.label_lr_exits = new System.Windows.Forms.Label();
-            this.label71 = new System.Windows.Forms.Label();
-            this.label72 = new System.Windows.Forms.Label();
-            this.label_lr_name = new System.Windows.Forms.Label();
-            this.label74 = new System.Windows.Forms.Label();
-            this.label75 = new System.Windows.Forms.Label();
-            this.label_light = new System.Windows.Forms.Label();
-            this.textBox_lr_desc = new System.Windows.Forms.TextBox();
-            this.label70 = new System.Windows.Forms.Label();
-            this.label_cause = new System.Windows.Forms.Label();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabPage_regex = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button2 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage_stats.SuspendLayout();
             this.tabPage_who.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage_room.SuspendLayout();
             this.tabPage_wealth.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage_regex.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -147,11 +160,17 @@
             this.tabControl1.Controls.Add(this.tabPage_room);
             this.tabControl1.Controls.Add(this.tabPage_combat);
             this.tabControl1.Controls.Add(this.tabPage_wealth);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage_regex);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(962, 823);
+            this.tabControl1.Size = new System.Drawing.Size(1123, 1032);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage_stats
@@ -218,7 +237,7 @@
             this.tabPage_stats.Location = new System.Drawing.Point(4, 29);
             this.tabPage_stats.Name = "tabPage_stats";
             this.tabPage_stats.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_stats.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_stats.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_stats.TabIndex = 0;
             this.tabPage_stats.Text = "Stats";
             this.tabPage_stats.UseVisualStyleBackColor = true;
@@ -822,7 +841,7 @@
             this.tabPage_who.Location = new System.Drawing.Point(4, 29);
             this.tabPage_who.Name = "tabPage_who";
             this.tabPage_who.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_who.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_who.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_who.TabIndex = 1;
             this.tabPage_who.Text = "Who";
             this.tabPage_who.UseVisualStyleBackColor = true;
@@ -836,7 +855,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 62;
             this.dataGridView1.RowTemplate.Height = 28;
-            this.dataGridView1.Size = new System.Drawing.Size(948, 397);
+            this.dataGridView1.Size = new System.Drawing.Size(1109, 993);
             this.dataGridView1.TabIndex = 0;
             // 
             // tabPage_inv
@@ -844,7 +863,7 @@
             this.tabPage_inv.Location = new System.Drawing.Point(4, 29);
             this.tabPage_inv.Name = "tabPage_inv";
             this.tabPage_inv.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_inv.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_inv.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_inv.TabIndex = 2;
             this.tabPage_inv.Text = "Inventory";
             this.tabPage_inv.UseVisualStyleBackColor = true;
@@ -878,10 +897,140 @@
             this.tabPage_room.Location = new System.Drawing.Point(4, 29);
             this.tabPage_room.Name = "tabPage_room";
             this.tabPage_room.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_room.Size = new System.Drawing.Size(954, 790);
+            this.tabPage_room.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_room.TabIndex = 3;
             this.tabPage_room.Text = "Room";
             this.tabPage_room.UseVisualStyleBackColor = true;
+            // 
+            // label_cause
+            // 
+            this.label_cause.AutoSize = true;
+            this.label_cause.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_cause.Location = new System.Drawing.Point(783, 22);
+            this.label_cause.Name = "label_cause";
+            this.label_cause.Size = new System.Drawing.Size(36, 19);
+            this.label_cause.TabIndex = 104;
+            this.label_cause.Text = "FFF";
+            // 
+            // textBox_lr_desc
+            // 
+            this.textBox_lr_desc.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_desc.Location = new System.Drawing.Point(79, 564);
+            this.textBox_lr_desc.Multiline = true;
+            this.textBox_lr_desc.Name = "textBox_lr_desc";
+            this.textBox_lr_desc.ReadOnly = true;
+            this.textBox_lr_desc.Size = new System.Drawing.Size(747, 135);
+            this.textBox_lr_desc.TabIndex = 103;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label70.Location = new System.Drawing.Point(19, 564);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(117, 19);
+            this.label70.TabIndex = 102;
+            this.label70.Text = "Room\\r\\nDesc";
+            // 
+            // label_light
+            // 
+            this.label_light.AutoSize = true;
+            this.label_light.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_light.Location = new System.Drawing.Point(741, 22);
+            this.label_light.Name = "label_light";
+            this.label_light.Size = new System.Drawing.Size(36, 19);
+            this.label_light.TabIndex = 101;
+            this.label_light.Text = "FFF";
+            // 
+            // label_lr_hash
+            // 
+            this.label_lr_hash.AutoSize = true;
+            this.label_lr_hash.Font = new System.Drawing.Font("Consolas", 8F);
+            this.label_lr_hash.Location = new System.Drawing.Point(755, 374);
+            this.label_lr_hash.Name = "label_lr_hash";
+            this.label_lr_hash.Size = new System.Drawing.Size(36, 19);
+            this.label_lr_hash.TabIndex = 100;
+            this.label_lr_hash.Text = "FFF";
+            // 
+            // textBox_lr_items
+            // 
+            this.textBox_lr_items.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_items.Location = new System.Drawing.Point(79, 417);
+            this.textBox_lr_items.Multiline = true;
+            this.textBox_lr_items.Name = "textBox_lr_items";
+            this.textBox_lr_items.ReadOnly = true;
+            this.textBox_lr_items.Size = new System.Drawing.Size(747, 65);
+            this.textBox_lr_items.TabIndex = 97;
+            // 
+            // textBox_lr_alsohere
+            // 
+            this.textBox_lr_alsohere.Font = new System.Drawing.Font("Consolas", 8.25F);
+            this.textBox_lr_alsohere.Location = new System.Drawing.Point(79, 493);
+            this.textBox_lr_alsohere.Multiline = true;
+            this.textBox_lr_alsohere.Name = "textBox_lr_alsohere";
+            this.textBox_lr_alsohere.ReadOnly = true;
+            this.textBox_lr_alsohere.Size = new System.Drawing.Size(747, 65);
+            this.textBox_lr_alsohere.TabIndex = 96;
+            // 
+            // label_lr_exits
+            // 
+            this.label_lr_exits.AutoSize = true;
+            this.label_lr_exits.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lr_exits.Location = new System.Drawing.Point(111, 384);
+            this.label_lr_exits.Name = "label_lr_exits";
+            this.label_lr_exits.Size = new System.Drawing.Size(72, 19);
+            this.label_lr_exits.TabIndex = 95;
+            this.label_lr_exits.Text = "Unknown";
+            // 
+            // label71
+            // 
+            this.label71.AutoSize = true;
+            this.label71.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label71.Location = new System.Drawing.Point(6, 384);
+            this.label71.Name = "label71";
+            this.label71.Size = new System.Drawing.Size(63, 19);
+            this.label71.TabIndex = 94;
+            this.label71.Text = "Exits:";
+            // 
+            // label72
+            // 
+            this.label72.AutoSize = true;
+            this.label72.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label72.Location = new System.Drawing.Point(10, 421);
+            this.label72.Name = "label72";
+            this.label72.Size = new System.Drawing.Size(63, 19);
+            this.label72.TabIndex = 93;
+            this.label72.Text = "Items:";
+            // 
+            // label_lr_name
+            // 
+            this.label_lr_name.AutoSize = true;
+            this.label_lr_name.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_lr_name.Location = new System.Drawing.Point(111, 365);
+            this.label_lr_name.Name = "label_lr_name";
+            this.label_lr_name.Size = new System.Drawing.Size(72, 19);
+            this.label_lr_name.TabIndex = 92;
+            this.label_lr_name.Text = "Unknown";
+            // 
+            // label74
+            // 
+            this.label74.AutoSize = true;
+            this.label74.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label74.Location = new System.Drawing.Point(6, 365);
+            this.label74.Name = "label74";
+            this.label74.Size = new System.Drawing.Size(99, 19);
+            this.label74.TabIndex = 91;
+            this.label74.Text = "Room Name:";
+            // 
+            // label75
+            // 
+            this.label75.AutoSize = true;
+            this.label75.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label75.Location = new System.Drawing.Point(19, 493);
+            this.label75.Name = "label75";
+            this.label75.Size = new System.Drawing.Size(54, 38);
+            this.label75.TabIndex = 90;
+            this.label75.Text = "Also\rHere:";
             // 
             // label_mega_hash
             // 
@@ -998,7 +1147,7 @@
             this.tabPage_combat.Location = new System.Drawing.Point(4, 29);
             this.tabPage_combat.Name = "tabPage_combat";
             this.tabPage_combat.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_combat.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_combat.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_combat.TabIndex = 4;
             this.tabPage_combat.Text = "Combat";
             this.tabPage_combat.UseVisualStyleBackColor = true;
@@ -1020,7 +1169,7 @@
             this.tabPage_wealth.Location = new System.Drawing.Point(4, 29);
             this.tabPage_wealth.Name = "tabPage_wealth";
             this.tabPage_wealth.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage_wealth.Size = new System.Drawing.Size(954, 403);
+            this.tabPage_wealth.Size = new System.Drawing.Size(1115, 999);
             this.tabPage_wealth.TabIndex = 5;
             this.tabPage_wealth.Text = "Wealth";
             this.tabPage_wealth.UseVisualStyleBackColor = true;
@@ -1145,141 +1294,120 @@
             this.label57.TabIndex = 89;
             this.label57.Text = "Wealth:";
             // 
-            // label_lr_hash
+            // tabPage1
             // 
-            this.label_lr_hash.AutoSize = true;
-            this.label_lr_hash.Font = new System.Drawing.Font("Consolas", 8F);
-            this.label_lr_hash.Location = new System.Drawing.Point(755, 374);
-            this.label_lr_hash.Name = "label_lr_hash";
-            this.label_lr_hash.Size = new System.Drawing.Size(36, 19);
-            this.label_lr_hash.TabIndex = 100;
-            this.label_lr_hash.Text = "FFF";
+            this.tabPage1.Controls.Add(this.button2);
+            this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 29);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage1.TabIndex = 6;
+            this.tabPage1.Text = "tabPage1";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // textBox_lr_items
+            // tabPage2
             // 
-            this.textBox_lr_items.Font = new System.Drawing.Font("Consolas", 8.25F);
-            this.textBox_lr_items.Location = new System.Drawing.Point(79, 417);
-            this.textBox_lr_items.Multiline = true;
-            this.textBox_lr_items.Name = "textBox_lr_items";
-            this.textBox_lr_items.ReadOnly = true;
-            this.textBox_lr_items.Size = new System.Drawing.Size(747, 65);
-            this.textBox_lr_items.TabIndex = 97;
+            this.tabPage2.Location = new System.Drawing.Point(4, 29);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage2.TabIndex = 7;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // textBox_lr_alsohere
+            // tabPage3
             // 
-            this.textBox_lr_alsohere.Font = new System.Drawing.Font("Consolas", 8.25F);
-            this.textBox_lr_alsohere.Location = new System.Drawing.Point(79, 493);
-            this.textBox_lr_alsohere.Multiline = true;
-            this.textBox_lr_alsohere.Name = "textBox_lr_alsohere";
-            this.textBox_lr_alsohere.ReadOnly = true;
-            this.textBox_lr_alsohere.Size = new System.Drawing.Size(747, 65);
-            this.textBox_lr_alsohere.TabIndex = 96;
+            this.tabPage3.Location = new System.Drawing.Point(4, 29);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage3.TabIndex = 8;
+            this.tabPage3.Text = "tabPage3";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // label_lr_exits
+            // tabPage4
             // 
-            this.label_lr_exits.AutoSize = true;
-            this.label_lr_exits.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_lr_exits.Location = new System.Drawing.Point(111, 384);
-            this.label_lr_exits.Name = "label_lr_exits";
-            this.label_lr_exits.Size = new System.Drawing.Size(72, 19);
-            this.label_lr_exits.TabIndex = 95;
-            this.label_lr_exits.Text = "Unknown";
+            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage4.TabIndex = 9;
+            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // label71
+            // tabPage5
             // 
-            this.label71.AutoSize = true;
-            this.label71.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label71.Location = new System.Drawing.Point(6, 384);
-            this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(63, 19);
-            this.label71.TabIndex = 94;
-            this.label71.Text = "Exits:";
+            this.tabPage5.Location = new System.Drawing.Point(4, 29);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage5.TabIndex = 10;
+            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // label72
+            // tabPage_regex
             // 
-            this.label72.AutoSize = true;
-            this.label72.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label72.Location = new System.Drawing.Point(10, 421);
-            this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(63, 19);
-            this.label72.TabIndex = 93;
-            this.label72.Text = "Items:";
+            this.tabPage_regex.Controls.Add(this.button1);
+            this.tabPage_regex.Controls.Add(this.dataGridView2);
+            this.tabPage_regex.Location = new System.Drawing.Point(4, 29);
+            this.tabPage_regex.Name = "tabPage_regex";
+            this.tabPage_regex.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage_regex.Size = new System.Drawing.Size(1115, 999);
+            this.tabPage_regex.TabIndex = 11;
+            this.tabPage_regex.Text = "Regex Hell";
+            this.tabPage_regex.UseVisualStyleBackColor = true;
             // 
-            // label_lr_name
+            // button1
             // 
-            this.label_lr_name.AutoSize = true;
-            this.label_lr_name.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_lr_name.Location = new System.Drawing.Point(111, 365);
-            this.label_lr_name.Name = "label_lr_name";
-            this.label_lr_name.Size = new System.Drawing.Size(72, 19);
-            this.label_lr_name.TabIndex = 92;
-            this.label_lr_name.Text = "Unknown";
+            this.button1.Location = new System.Drawing.Point(857, 103);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(98, 41);
+            this.button1.TabIndex = 1;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label74
+            // dataGridView2
             // 
-            this.label74.AutoSize = true;
-            this.label74.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label74.Location = new System.Drawing.Point(6, 365);
-            this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(99, 19);
-            this.label74.TabIndex = 91;
-            this.label74.Text = "Room Name:";
+            this.dataGridView2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(3, 225);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.RowHeadersWidth = 62;
+            this.dataGridView2.RowTemplate.Height = 28;
+            this.dataGridView2.Size = new System.Drawing.Size(1104, 778);
+            this.dataGridView2.TabIndex = 0;
             // 
-            // label75
+            // richTextBox1
             // 
-            this.label75.AutoSize = true;
-            this.label75.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label75.Location = new System.Drawing.Point(19, 493);
-            this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(54, 38);
-            this.label75.TabIndex = 90;
-            this.label75.Text = "Also\rHere:";
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Location = new System.Drawing.Point(6, 39);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ReadOnly = true;
+            this.richTextBox1.Size = new System.Drawing.Size(1109, 952);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
             // 
-            // label_light
+            // button2
             // 
-            this.label_light.AutoSize = true;
-            this.label_light.Font = new System.Drawing.Font("Consolas", 8F);
-            this.label_light.Location = new System.Drawing.Point(741, 22);
-            this.label_light.Name = "label_light";
-            this.label_light.Size = new System.Drawing.Size(36, 19);
-            this.label_light.TabIndex = 101;
-            this.label_light.Text = "FFF";
-            // 
-            // textBox_lr_desc
-            // 
-            this.textBox_lr_desc.Font = new System.Drawing.Font("Consolas", 8.25F);
-            this.textBox_lr_desc.Location = new System.Drawing.Point(79, 564);
-            this.textBox_lr_desc.Multiline = true;
-            this.textBox_lr_desc.Name = "textBox_lr_desc";
-            this.textBox_lr_desc.ReadOnly = true;
-            this.textBox_lr_desc.Size = new System.Drawing.Size(747, 135);
-            this.textBox_lr_desc.TabIndex = 103;
-            // 
-            // label70
-            // 
-            this.label70.AutoSize = true;
-            this.label70.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label70.Location = new System.Drawing.Point(19, 564);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(117, 19);
-            this.label70.TabIndex = 102;
-            this.label70.Text = "Room\\r\\nDesc";
-            // 
-            // label_cause
-            // 
-            this.label_cause.AutoSize = true;
-            this.label_cause.Font = new System.Drawing.Font("Consolas", 8F);
-            this.label_cause.Location = new System.Drawing.Point(783, 22);
-            this.label_cause.Name = "label_cause";
-            this.label_cause.Size = new System.Drawing.Size(36, 19);
-            this.label_cause.TabIndex = 104;
-            this.label_cause.Text = "FFF";
+            this.button2.Location = new System.Drawing.Point(486, 3);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 37);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "Clear";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // SessionGameInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(962, 823);
+            this.ClientSize = new System.Drawing.Size(1123, 1032);
             this.Controls.Add(this.tabControl1);
             this.Name = "SessionGameInfo";
             this.Text = "SessionGameInfo";
@@ -1292,6 +1420,9 @@
             this.tabPage_room.PerformLayout();
             this.tabPage_wealth.ResumeLayout(false);
             this.tabPage_wealth.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage_regex.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1401,5 +1532,15 @@
         private System.Windows.Forms.TextBox textBox_lr_desc;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.Label label_cause;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage_regex;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

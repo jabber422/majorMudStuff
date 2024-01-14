@@ -10,6 +10,7 @@ using MMudTerm.Terminal;
 using MMudTerm.Session.SessionStateData;
 using static Humanizer.In;
 using System.Runtime.CompilerServices;
+using MMudTerm.Game;
 
 namespace MMudTerm.Session
 {
@@ -25,7 +26,6 @@ namespace MMudTerm.Session
         internal SessionDataObject m_sessionData;
 
         Dictionary<int, SessionGameInfo> m_gameInfos;
-
 
         internal TerminalWindow Terminal
         { get { return this.m_term; } }
@@ -127,6 +127,8 @@ namespace MMudTerm.Session
             this.components.Add(m_gameInfo);
             
             m_gameInfo.Show();
+
+            this.m_controller.EnterTheGame = this.toolStripButton_all_monitors.Checked;
         }
 
         private void M_gameInfo_FormClosing(object sender, FormClosingEventArgs e)
@@ -167,22 +169,6 @@ namespace MMudTerm.Session
         //if focus is on the session window any key pressed is buffered, enter will send the buffer
         private void term_KeyPress(object sender, KeyPressEventArgs e)
         {
-            //    bool buffer_until_cr = false;
-            //    if (buffer_until_cr)
-            //    {
-            //        if (e.KeyChar == (char)'\r')
-            //        {
-            //            this._buffer.Add(e.KeyChar);
-            //            this.m_controller.Send(Encoding.ASCII.GetBytes(this._buffer.ToArray()));
-            //            this._buffer.Clear();
-            //        }
-            //        else
-            //        {
-            //            this._buffer.Add(e.KeyChar);
-            //        }
-            //    }
-            //    else
-            //    {
             byte[] msg = null;
             if (this.m_controller.m_macros.IsMacro(this.cur_key.KeyCode))
             {
@@ -193,20 +179,24 @@ namespace MMudTerm.Session
             {
                 msg = new byte[] { (byte)e.KeyChar };
             }
-            this.m_controller.Send(msg);
-            //    }
 
-            //e.Handled = true;
+            this.m_controller.user_has_send_blocked = this.cur_key.KeyCode == Keys.Enter ? false : true;
+            this.m_controller.Send(msg);
         }
 
         string con_state = "Connect";
-        private void toolStripConnectBtn_Click(object sender, EventArgs e)
+        private async void toolStripConnectBtn_Click(object sender, EventArgs e)
         {
             if (!this.toolStripConnectBtn.Checked)
             {
-                if (this.m_controller.Connect())
+                this.toolStripConnectBtn.Enabled = false;
+                this.m_controller._gameenv.Monitor_On = this.toolStripButton_all_monitors.Checked;
+                var result = await this.m_controller.ConnectAsync();
+                this.toolStripConnectBtn.Enabled = true;
+                if (result) 
                 {
                     this.toolStripConnectBtn.Checked = true;
+                    this.toolStripConnectBtn.Image = GetIcon(4);
                 }
             }
             else
@@ -215,6 +205,7 @@ namespace MMudTerm.Session
                 {
                     this.toolStripConnectBtn.Checked = false;
                 }
+                this.toolStripConnectBtn.Image = GetIcon(3);
                 this.toolStripConnectBtn.Checked = false;
             }
         }
@@ -228,24 +219,6 @@ namespace MMudTerm.Session
             
         }
 
-        internal void HandleDisconnected()
-        {
-            //throw new NotImplementedException();
-            //TODO: does the view need to do anything?
-        }
-
-        private void HandleStateOnline(object sender, object data)
-        {
-            this.toolStripConnectBtn.Text = "Disconnect";
-            this.toolStripConnState.Text = "Online";
-        }
-
-        private void HandleStateOffline(object sender, object data)
-        {
-            this.toolStripConnectBtn.Text = "Connect";
-            this.toolStripConnState.Text = "Offline";
-        }
-
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             this.m_sessionData.MummyScriptEnabled = !this.toolStripButtonMummy.Checked;
@@ -253,47 +226,13 @@ namespace MMudTerm.Session
 
             if (this.m_sessionData.MummyScriptEnabled)
             {
-                this.m_controller.AddListener(MummyScriptHandler);
+                //this.m_controller.AddListener(MummyScriptHandler);
             }
             else
             {
-                this.m_controller.RemoveListender(MummyScriptHandler);
+                //this.m_controller.RemoveListender(MummyScriptHandler);
             }
                 
-        }
-
-        bool in_mummy_room = true;
-        public void MummyScriptHandler(string token)
-        {
-            //Start this from the Mummy Room, like a Mega Path
-            switch (token)
-            {
-                case "room":
-                    break;
-                case "in_combat":
-                    //MoveIfRoomEmpty();
-                    break;
-                case "entity_death":
-                    MoveIfRoomEmpty();
-                    break;
-
-            }
-        }
-
-        private void MoveIfRoomEmpty()
-        {
-            if(this.m_controller._gameenv._current_room.AlsoHere.Count == 0)
-            {
-                Console.WriteLine("Room is empty");
-                if (false)//this.m_controller._gameenv._player.InCombat)
-                {
-                    Console.WriteLine("Player in combat, won't move");
-                }
-                else
-                {
-                    this.m_controller.Send("s\r\nn\r\naa mummy\r\n");
-                }
-            }
         }
 
         internal void UpdateState(string state_name)
@@ -304,7 +243,7 @@ namespace MMudTerm.Session
             }
             else
             {
-                this.toolStripStatusLabel1.Text = state_name;
+                this.toolStripStatusLabel1_state.Text = state_name;
             }
         }
 
@@ -331,12 +270,12 @@ namespace MMudTerm.Session
                 {
                     if (stats["Resting"] == "Resting")
                     {
-                        this.toolStripStatusLabel2.Text = "Resting";
+                        this.toolStripStatusLabel_status.Text = "Resting";
                     }else if(stats["Resting"] == "No")
                     {
-                        if (this.toolStripStatusLabel2.Text == "Resting")
+                        if (this.toolStripStatusLabel_status.Text == "Resting")
                         {
-                            this.toolStripStatusLabel2.Text = "Idle";
+                            this.toolStripStatusLabel_status.Text = "Idle";
                         }
                     }
                 }
@@ -351,7 +290,8 @@ namespace MMudTerm.Session
             }
             else
             {
-                this.toolStripStatusLabel2.Text = this.m_controller._gameenv._player.IsCombatEngaged ? "In Combat" : "Idle";
+                this.toolStripStatusLabel_status.Text = 
+                    this.m_controller._gameenv._player.IsCombatEngaged ? "In Combat" : "Idle";
             }
         }
 
@@ -364,14 +304,35 @@ namespace MMudTerm.Session
             }
             else
             {
+                
                 if (this.m_controller._gameenv._player.IsResting)
                 {
-                    this.toolStripStatusLabel2.Text = "Resting";
+                    this.toolStripStatusLabel_status.Text = "Resting";
                 }
+                else if(!this.m_controller._gameenv._player.IsCombatEngaged)
+                {
+                    this.toolStripStatusLabel_status.Text = "Idle";
+                }
+                double gained_exp = this.m_controller._gameenv._player.GainedExp;
+                DateTime _now = DateTime.Now;
+                TimeSpan ts = DateTime.Now - this.m_controller._exphr_start;
+                double hours = ts.TotalHours;
+                double rate = gained_exp / hours;
+                this.toolStripStatusLabel__xphr.Text = FormatNumber(rate) + " exp/hr";
+                
             }
         }
+        public static string FormatNumber(double num)
+        {
+            if (num >= 1000000)
+                return (num / 1000000D).ToString("0.#") + "M";
+            if (num >= 10000)
+                return (num / 1000D).ToString("0.#") + "K";
 
-        public void Update(string token)
+            return num.ToString("N0");
+        }
+
+        public void Update(EventType token)
         {
             lock (this.m_gameInfos)
             {
@@ -384,22 +345,38 @@ namespace MMudTerm.Session
             //these are here because this form uses both of them in the status bar
             switch (token)
             {
-                case "in_combat":
+                case EventType.Combat:
                     UpdateCombat();
                     break;
-                case "tick":
+                case EventType.Tick:
                     UpdateTick();
+                    break;
+                case EventType.Room:
+                    UpdateRoomName();
                     break;
             }
         }
 
-        
+        private void UpdateRoomName()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateRoomName));
+            }
+            else
+            {
+                if (this.m_controller._gameenv?._current_room != null)
+                {
+                    this.toolStripStatusLabel_currentroom.Text = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+                }
+            }
+        }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             //iconBitmap2.RotateFlip(RotateFlipType.Rotate180FlipX);
 
-            this.m_controller._gameenv.Monitor_Combat = this.toolStripButton_all_monitors.Checked;
+            this.m_controller._gameenv.Monitor_On = this.toolStripButton_all_monitors.Checked;
             if (this.toolStripButton_all_monitors.Checked)
             {
                 foreach(var x in this.toolStripItems)

@@ -23,27 +23,24 @@ namespace MMudTerm.Session
             
         }
 
-        internal void Update(string token)
+        internal void Update(EventType token)
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action<string>(Update), token);
+                this.Invoke(new Action<EventType>(Update), token);
             }
             else
             {
                 switch (token)
                 {
-                    case "room":
-                    case "search_found":
+                    case EventType.Room:
+                    case EventType.SearchFound:
                         this.UpdateRoom();
                         break;
-                    case "in_combat":
-                        //this.UpdateInCombat();
-                        break;
-                    case "tick":
+                    case EventType.Tick:
                         //this.UpdateTick();
                         break;
-                    case "combat":
+                    case EventType.Combat:
                         this.UpdateCombat();
                         break;
                 }

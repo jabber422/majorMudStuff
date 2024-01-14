@@ -40,8 +40,8 @@ namespace MMudTerm.Session
         //  the other thread/queue drives the game processing engine
         private object _term_q_in_use = new object();
         private Task terminal_term_cmds_task = null;
-        ConcurrentQueue<TermCmd> terminal_term_cmds = new ConcurrentQueue<TermCmd>();
-        ManualResetEventSlim terminal_term_cmds_event = new ManualResetEventSlim(false);
+        internal ConcurrentQueue<TermCmd> terminal_term_cmds = new ConcurrentQueue<TermCmd>();
+        internal ManualResetEventSlim terminal_term_cmds_event = new ManualResetEventSlim(false);
 
         private object _state_q_in_use = new object();
         private Task state_term_cmds_task = null;
@@ -60,44 +60,58 @@ namespace MMudTerm.Session
 
         public Macros m_macros;
 
+        internal DateTime _exphr_start;
+
         public SessionController(SessionDataObject si, SessionForm sf)
         {
             this.m_SessionData = si;
             this.m_sessionForm = sf;
             this.m_currentSessionState = new SessionStateOffline(null, this);
             this.m_macros = new Macros();
+            //if no input after 10 seconds, send a \r\n
+            _exphr_start = DateTime.Now;
+            this._gameenv = new MajorMudBbsGame(this);
         }
+
+        
 
         private Task StartStateQueueWorkerThread(ManualResetEventSlim term_cmds_event, ConcurrentQueue<TermCmd> term_cmds)
         {
             //This is the thread that runs the game basically.  It will constantly look for new TermCmds and 
             return Task.Run(() =>
             {
-                while (true) // Replace with a proper condition for stopping
+                try
                 {
-                    term_cmds_event.Wait();
-                    //Console.WriteLine("Unlocked");
-                    
-                    Queue<TermCmd> cmds = new Queue<TermCmd>();
-                    TermCmd cmd;
-                    while (term_cmds.TryDequeue(out cmd))
+                    while (this.running) // Replace with a proper condition for stopping
                     {
-                        cmds.Enqueue(cmd);
-                    }
+                        term_cmds_event.Wait();
+                        //Console.WriteLine("Unlocked");
 
-                    // Process cmd
-                    this.m_currentSessionState = this.m_currentSessionState.HandleCommands(cmds);
+                        Queue<TermCmd> cmds = new Queue<TermCmd>();
+                        TermCmd cmd;
+                        while (term_cmds.TryDequeue(out cmd))
+                        {
+                            cmds.Enqueue(cmd);
+                        }
 
-                    // Check if there are more items in the queue
-                    if (term_cmds.IsEmpty)
-                    {
-                        term_cmds_event.Reset();
+                        // Process cmd
+                        this.m_currentSessionState = this.m_currentSessionState.HandleCommands(cmds);
+
+                        // Check if there are more items in the queue
+                        if (term_cmds.IsEmpty)
+                        {
+                            term_cmds_event.Reset();
+                        }
+                        else
+                        {
+                            term_cmds_event.Set();
+                        }
                     }
-                    else
-                    {
-                        term_cmds_event.Set();
-                    }
+                }catch(Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());   
                 }
+                    
             });
         }
 
@@ -105,7 +119,7 @@ namespace MMudTerm.Session
         {
             return Task.Run(() =>
             {
-                while (true) 
+                while (this.running)
                 {
                     term_cmds_event.Wait();
                     //term_cmds_event.Reset();
@@ -168,7 +182,7 @@ namespace MMudTerm.Session
                 Buffer.BlockCopy(buffer, 0, smaller_buffer, 0, bytesRead);
                 temp.Add(smaller_buffer);
                 Queue<TermCmd> cmds = m_decoder.DecodeBuffer(smaller_buffer);
-                //Console.WriteLine(cmds.Count);
+
                 while (cmds.Count > 0)
                 {
                     TermCmd c = cmds.Dequeue();
@@ -188,14 +202,61 @@ namespace MMudTerm.Session
         #region Internals
         #region Internals - commands called from SF
 
+        public bool user_has_send_blocked = false;
         internal void Send(string s)
         {
-            //Debug.WriteLine("Send | " + s + " |", DBG_CAT);
-            this.Send(Encoding.ASCII.GetBytes(s));
+            if(this.send_buffer_timer == null)
+            {
+                this.send_buffer_timer = new System.Timers.Timer(100);
+                this.send_buffer_timer.Elapsed += Send_buffer_timer_Elapsed;
+            }
+            
+            this.send_buffer_timer.Stop();
+            this.send_buffer.Add(s);
+            this.send_buffer_timer.Start();
+            
+        }
+
+        //this buffers duplicate sequential commands that come from the automation
+        //you can see this in the text block when you gain xp and something enters the room
+        //both events say, 'check the room' which causes two \r\n \r\n and two room prints
+        private void Send_buffer_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (this.send_buffer.Count == 0) return;
+            List<string> buffered_send_list = new List<string>();
+            string last = "";
+            foreach(string s in this.send_buffer) {
+                if (s == last)
+                {
+                    continue;
+                }
+                buffered_send_list.Add(s);
+                last = s;
+            }
+            this.send_buffer = new List<string>();
+
+            foreach (string s in buffered_send_list)
+            {
+                this.Send(Encoding.ASCII.GetBytes(s));
+            }
+        }
+
+        internal void SendLine(string s = "\r\n")
+        {
+            if (s.EndsWith("\r\n"))
+            {
+                this.Send(s);
+            }
+            else
+            {
+                this.Send(s + "\r\n");
+            }
         }
 
         internal void Send(byte[] p)
         {
+            this._gameenv?.idle_input_timer.Stop();
+            this._gameenv?.idle_input_timer.Start();
             if (this.m_connObj != null && this.m_connObj.Connected)
             {
                 NetworkStream ns = this.m_connObj.GetStream();
@@ -205,19 +266,39 @@ namespace MMudTerm.Session
                 }
             }
         }
-       
+
+        object send_buffer_timer_state = null;
+        System.Timers.Timer send_buffer_timer = null;
+        private List<string> send_buffer = new List<string>();
+
+        private bool running;
+
+
+
         #endregion
         #endregion
         #region API of SessionView
+        public async Task<bool> ConnectAsync()
+        {
+            return await Task.Run(() =>
+            {
+                // Perform intensive calculations
+                return Connect();
+            });
+        }
         internal bool Connect()
         {
+            //this needs to be threaded, connection fails lock up the gui thread for a long time
+            this.running = true;
             if (this.state_term_cmds_task == null)
             {
                 this.state_term_cmds_task = StartStateQueueWorkerThread(state_term_cmds_event, state_term_cmds);
             }
-            if (this.terminal_term_cmds_task == null) {
-                this.terminal_term_cmds_task = StartTerminalQueueWorkerThread(state_term_cmds_event, terminal_term_cmds);
-                }
+            if (this.terminal_term_cmds_task == null)
+            {
+                this.terminal_term_cmds_task = StartTerminalQueueWorkerThread(terminal_term_cmds_event, terminal_term_cmds);
+            }
+            this._gameenv?.idle_input_timer.Start();
 
             bool result = false;
             this.m_currentSessionState = this.m_currentSessionState.Connect();
@@ -232,7 +313,16 @@ namespace MMudTerm.Session
         {
             bool result = false;
             this.m_currentSessionState = this.m_currentSessionState.Disconnect();
-            if (this.m_currentSessionState is SessionStateOffline) { result = true; }
+            if (this.m_currentSessionState is SessionStateOffline)
+            {
+                this.running = false;
+                //need to send a queue of commands, lets the awaits consume them, then let the thread end gracefully
+                this.state_term_cmds_task.Wait();
+                this.terminal_term_cmds_task.Wait();
+                this._gameenv.idle_input_timer.Stop();
+                this.send_buffer_timer.Stop();
+                result = true;
+            }
             return result;
         }
         #endregion
@@ -249,22 +339,22 @@ namespace MMudTerm.Session
             //this.m_sessionForm.Close();
         }
 
-        internal void AddListener(NewGameEventHandler mummyScriptHandler)
-        {
-            if(this.CurrentState is SessionStateInGame)
-            {
-                (this.CurrentState as SessionStateInGame).NewGameEvent += mummyScriptHandler;
-            }
-        }
+        //internal void AddListener(NewGameEventHandler mummyScriptHandler)
+        //{
+        //    if(this.CurrentState is SessionStateInGame)
+        //    {
+        //        (this.CurrentState as SessionStateInGame).NewGameEvent += mummyScriptHandler;
+        //    }
+        //}
 
         
 
-        internal void RemoveListender(NewGameEventHandler mummyScriptHandler)
-        {
-            if (this.CurrentState is SessionStateInGame)
-            {
-                (this.CurrentState as SessionStateInGame).NewGameEvent -= mummyScriptHandler;
-            }
-        }
+        //internal void RemoveListender(NewGameEventHandler mummyScriptHandler)
+        //{
+        //    if (this.CurrentState is SessionStateInGame)
+        //    {
+        //        (this.CurrentState as SessionStateInGame).NewGameEvent -= mummyScriptHandler;
+        //    }
+        //}
     }
 }

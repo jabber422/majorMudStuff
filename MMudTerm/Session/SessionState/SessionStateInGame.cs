@@ -17,24 +17,23 @@ namespace MMudTerm.Session.SessionStateData
 {
     internal class SessionStateInGame : SessionState
     {
-        private string pattern_tick = @"\[HP=(\d+)(?:/MA=(\d+))?\]:(?: \((\w+)\))?";
+        private string pattern_tick = @"\[HP=(\d+)(?:/(?:KAI|MA)=(\d+))?\]:(?: \((\w+)\))?";
         
         private Regex _resting = null;
         private StringBuilder buffer = new StringBuilder();
 
         private MajorMudBbsGame _gameenv = null;
 
-        public delegate void NewGameEventHandler(string message);
+        //public delegate void NewGameEventHandler(EventType message);
 
         // Define the event based on the delegate
-        public event NewGameEventHandler NewGameEvent;
+        //public event NewGameEventHandler NewGameEvent;
 
         public SessionStateInGame(SessionState _state) : base(_state, "In Game")
         {
-            this._gameenv = new MajorMudBbsGame(this.m_controller);
-            this.m_controller._gameenv = this._gameenv;
+            this._gameenv = this.m_controller._gameenv;
             this._resting = new Regex(@"\((Resting)\)", RegexOptions.Compiled);
-            this.NewGameEvent += this.m_controller.m_sessionForm.Update;
+            this._gameenv.NewGameEvent += this.m_controller.m_sessionForm.Update;
 
             this.m_controller.Send("stat\r\n");
             this.m_controller.Send("who\r\n");
@@ -87,11 +86,17 @@ namespace MMudTerm.Session.SessionStateData
             {
                 string toProcess = bufferContent.Substring(lastProcessedIndex, match.Index - lastProcessedIndex);
                 this._gameenv.Process(toProcess);
-                if (this._gameenv.result != null)
+                if (this._gameenv.result != EventType.None)
                 {
-                    this.NewGameEvent?.Invoke(this._gameenv.result);
+                    //Console.WriteLine("-------------------------------");
+                    //Console.WriteLine(this._gameenv.result);
+                    //Console.WriteLine(incomingString);
+                    //Console.WriteLine("-------------------------------");
+
+                    this._gameenv.HandleNewGameEvent(this._gameenv.result);
                 }
                 this._gameenv.ProcessTick(match, "");
+                this._gameenv.HandleNewGameEvent(this._gameenv.result);
                 lastProcessedIndex = match.Index + match.Length;
             }
 

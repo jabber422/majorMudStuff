@@ -15,7 +15,12 @@ namespace MMudObjects
     public class Entity
     {
         public Entity(string name) { 
-            string verb_pattern_entity = "nasty|big|angry|nasty|fierce|small|large";
+            
+            if(name == "" || name == null || name.Contains("dodge") || (name.Contains("you") ))// && name != "you"))
+            {
+
+            }
+            string verb_pattern_entity = "nasty|big|angry|nasty|fierce|small|large|fat|thin|short|tall";
             string noun = $"(?:({verb_pattern_entity}))?" + @"(.*)";
             Match match = Regex.Match(name, noun);
             if (match.Success)
@@ -428,6 +433,8 @@ public class PlayerStats
             return cp;
         }
     }
+
+    public double NextLevelExp { get; set; }
 
     public PlayerStats()
     {

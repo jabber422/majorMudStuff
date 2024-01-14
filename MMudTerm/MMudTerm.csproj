@@ -88,7 +88,9 @@
       <DependentUpon>Colors.settings</DependentUpon>
     </Compile>
     <Compile Include="Data\DataObjects\CharacterData.cs" />
+    <Compile Include="Game\EventTypes.cs" />
     <Compile Include="Game\Game.cs" />
+    <Compile Include="Game\RegexHell.cs" />
     <Compile Include="LogonAutomationMsgRspControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

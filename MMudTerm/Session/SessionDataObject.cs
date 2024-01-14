@@ -53,10 +53,10 @@ namespace MMudTerm.Session
         Color BackGroundColor = Color.Black;
 
         FontFamily font = FontFamily.GenericMonospace;
-        int fontSize = 12;
+        int fontSize = 16;
         Font termFont;
 
-        int rows = 25;
+        int rows = 40;
         int cols = 80;
 
         //init
