@@ -1,7 +1,10 @@
-﻿using System;
+﻿using MMudObjects;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace MMudTerm.Game
 {
@@ -14,7 +17,7 @@ namespace MMudTerm.Game
         private List<string> _death_msgs;
 
         private string mob_name_pattern = @"([A-Za-z ]+)";
-        private string player_name_pattern = @"(\S+|You)";
+        private string player_name_pattern = @"(\S+|[Yy]ou)";
 
 
         public RegexHell()
@@ -32,15 +35,16 @@ namespace MMudTerm.Game
             death_msgs.Add(@" collapses in a filthy heap\.");
             death_msgs.Add(@" collapses into a broken heap\.");
             death_msgs.Add(@" falls to the ground with a yelp, and is still");
-            death_msgs.Add(@" dissolves into a puddle of bluish goo");
+            death_msgs.Add(@" falls to the ground with a shrill cry\.");
+            death_msgs.Add(@" falls to the ground with a grunt!");
             death_msgs.Add(@" falls to the ground with a tortured squeak");
+            death_msgs.Add(@" dissolves into a puddle of bluish goo");
             death_msgs.Add(@" falls dead at your feet\.");
             death_msgs.Add(@" squeaks loudly, and falls to the ground!");
             death_msgs.Add(@" crumbles into a pile of dust\.");
             death_msgs.Add(@"'s wrapping unravels, revealing nothing but dust\.");
             death_msgs.Add(@" vanishes with an eerie wail\.");
-            death_msgs.Add(@" falls to the ground with a shrill cry\.");
-            //The cave bear falls to the ground with a grunt!
+
             return death_msgs;
         }
 
@@ -51,7 +55,7 @@ namespace MMudTerm.Game
             string verb_pattern_club_3rd = "smashes|clobbers|slams|whaps|smacks|beats";
             string verb_pattern_pierce_3rd = "lunges|stabs|impales|skewers";
             string verb_pattern_cut_3rd = "slices|slashes|cuts";
-            string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills";
+            string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills|punches|kicks|jumpkicks";
             string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";
             string verb_pattern_bow_3rd = "shoots a bolt";
             string present_tense_3rd_person_verb = $"{verb_pattern_bow_3rd}|{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
@@ -153,13 +157,18 @@ namespace MMudTerm.Game
             //common_patterns.Add(@"(\d+) (runic|platinum|gold|silver|copper) drop to the ground\.", ProcessCashDropFromEntity);
 
 
-            
+
 
             //
-           // string pattern_movement = "walks|crawls|scuttles|creeps|sneaks|oozes|flaps|lopes";
+            // string pattern_movement = "walks|crawls|scuttles|creeps|sneaks|oozes|flaps|lopes";
 
             //
-            
+
+            //[HP= 85 / KAI = 2]:***
+
+            //Sorry to interrupt here, but the server will be shutting
+            //down in 5 minutes for the nightly "auto-cleanup"
+            //process.Please finish up and log off... thank you!
 
 
 
@@ -183,34 +192,31 @@ namespace MMudTerm.Game
             //Darmius whaps big lashworm for 12 damage!
             //The cave bear claws at you, but you dodge out of the way!
 
-            string pattern_do_miss = @"The MOB VERBS at MOB with ";
+            string pattern_do_miss = @"The MOB VERBS at PLAYER with ";
             common_patterns.Add(pattern_do_miss, EventType.CombatMiss);
+            string pattern_do_miss3 = @"The MOB VERBS at PLAYER!";
+            common_patterns.Add(pattern_do_miss3, EventType.CombatMiss);
+            string pattern_do_miss5 = @"The MOB VERBS at PLAYER, but PLAYER dodge out of the way!";
+            common_patterns.Add(pattern_do_miss5, EventType.CombatMiss);
             string pattern_do_miss2 = @"PLAYER VERBS at MOB with ";
+
             //string pattern_do_miss = @"(\S+|You) " + verb + @" at ([\S ]+)";
             common_patterns.Add(pattern_do_miss2, EventType.CombatMiss);
+            string pattern_do_miss4 = @"PLAYER VERBS at MOB!";
+            common_patterns.Add(pattern_do_miss4, EventType.CombatMiss);
 
-            //The shade chills you with its touch for 1 damage!
-            //string pattern_rcv_hit = @"The ([\S ]+) VERBS you (?:[\S ]*)for (\d+) damage!";
-            //common_patterns.Add(pattern_rcv_hit, EventType.CombatHitPlayer);
 
-            //The big carrion beast snaps at you, but your armour deflects the blow!
-            //The big carrion beast snaps at you with its teeth!
-            //The big filthbug claws at you, but your armour deflects the blow!
-            //The fierce thug swipes at you with their spiked club!
-            //string pattern_rcv_miss = @"The MOB VERBS at|for PLAYER!";
-            //common_patterns.Add(pattern_rcv_miss, EventType.CombatMiss);
-            //string pattern_rcv_miss2 = @"The MOB VERBS at PLAYER with .*";
-            //common_patterns.Add(pattern_rcv_miss2, EventType.CombatMiss);
+//------------------------------------
 
 
 
-            string hung_up = @"(\S+) just (?:disconnected|hung up)!!!";
+            string hung_up = @"PLAYER just (?:disconnected|hung up)!!!";
             common_patterns.Add(hung_up, EventType.SomeoneLeftTheGame);
 
-            string left_the_realm = @"(\S+) just left the Realm\.";
+            string left_the_realm = @"PLAYER just left the Realm\.";
             common_patterns.Add(left_the_realm, EventType.SomeoneLeftTheGame);
 
-            string entered_the_realm = @"(\S+) just entered the Realm\.";
+            string entered_the_realm = @"PLAYER just entered the Realm\.";
             common_patterns.Add(entered_the_realm, EventType.SomeoneEnteredTheGame);
 
 
@@ -277,8 +283,8 @@ namespace MMudTerm.Game
 
             string gos = @"PLAYER (gossips|auctions): (.*)";
             common_patterns.Add(gos, EventType.Gossip);
-            
 
+            //The room is very dark - you can't see anything
 
             //Health:    53/75    [70%]  Kai:   4/4   [100%]
             return common_patterns;

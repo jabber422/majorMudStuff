@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MMudTerm));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,14 +37,12 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.groupBox_chars = new System.Windows.Forms.GroupBox();
             this.button_new_character = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.button_new_bbs = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox_chars.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -58,13 +57,12 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(649, 33);
+            this.menuStrip1.Size = new System.Drawing.Size(649, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -75,27 +73,27 @@
             this.loadSessionToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(54, 29);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
             // newSessionToolStripMenuItem
             // 
             this.newSessionToolStripMenuItem.Name = "newSessionToolStripMenuItem";
-            this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(218, 34);
+            this.newSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.newSessionToolStripMenuItem.Text = "&New Session";
             this.newSessionToolStripMenuItem.Click += new System.EventHandler(this.newSessionToolStripMenuItem_Click);
             // 
             // loadSessionToolStripMenuItem
             // 
             this.loadSessionToolStripMenuItem.Name = "loadSessionToolStripMenuItem";
-            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(218, 34);
+            this.loadSessionToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.loadSessionToolStripMenuItem.Text = "&Load Session";
             this.loadSessionToolStripMenuItem.Click += new System.EventHandler(this.loadSessionToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(218, 34);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             // 
             // tabPage1
@@ -108,7 +106,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 33);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -118,28 +116,15 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.groupBox_chars);
-            this.splitContainer1.Size = new System.Drawing.Size(649, 822);
-            this.splitContainer1.SplitterDistance = 206;
+            this.splitContainer1.Panel2.AutoScroll = true;
+            this.splitContainer1.Panel2.Controls.Add(this.button_new_character);
+            this.splitContainer1.Size = new System.Drawing.Size(649, 831);
+            this.splitContainer1.SplitterDistance = 208;
             this.splitContainer1.TabIndex = 7;
-            // 
-            // groupBox_chars
-            // 
-            this.groupBox_chars.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox_chars.AutoSize = true;
-            this.groupBox_chars.Controls.Add(this.button_new_character);
-            this.groupBox_chars.Location = new System.Drawing.Point(26, 21);
-            this.groupBox_chars.Name = "groupBox_chars";
-            this.groupBox_chars.Size = new System.Drawing.Size(585, 551);
-            this.groupBox_chars.TabIndex = 5;
-            this.groupBox_chars.TabStop = false;
-            this.groupBox_chars.Text = "Characters";
             // 
             // button_new_character
             // 
-            this.button_new_character.Location = new System.Drawing.Point(553, 0);
+            this.button_new_character.Location = new System.Drawing.Point(611, 0);
             this.button_new_character.Name = "button_new_character";
             this.button_new_character.Size = new System.Drawing.Size(26, 31);
             this.button_new_character.TabIndex = 0;
@@ -147,38 +132,37 @@
             this.button_new_character.UseVisualStyleBackColor = true;
             this.button_new_character.Click += new System.EventHandler(this.button_new_char_Click);
             // 
-            // button1
+            // button_new_bbs
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(611, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(26, 31);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "+";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button_new_bbs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_new_bbs.Location = new System.Drawing.Point(611, 12);
+            this.button_new_bbs.Name = "button_new_bbs";
+            this.button_new_bbs.Size = new System.Drawing.Size(26, 31);
+            this.button_new_bbs.TabIndex = 1;
+            this.button_new_bbs.Text = "+";
+            this.button_new_bbs.UseVisualStyleBackColor = true;
+            this.button_new_bbs.Click += new System.EventHandler(this.Button_newbbs_Click);
             // 
             // MMudTerm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(649, 877);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button_new_bbs);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "MMudTerm";
-            this.Text = "Form1";
+            this.Text = "MegaMud2";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox_chars.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -194,8 +178,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox_chars;
+        private System.Windows.Forms.Button button_new_bbs;
         private System.Windows.Forms.Button button_new_character;
     }
 }

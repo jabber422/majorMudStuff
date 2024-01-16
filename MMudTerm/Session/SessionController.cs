@@ -353,6 +353,7 @@ namespace MMudTerm.Session
             {
                 this.m_connObj?.Client.Disconnect(true);
             } catch { }
+            this.running = false;
             //this.m_currentSessionState.Disconnect();
             //this.m_SessionData.Dispose();
             //this.m_sessionForm.Close();

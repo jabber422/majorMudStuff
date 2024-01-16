@@ -250,6 +250,7 @@ namespace MMudTerm.Terminal
         //helping out the GC
         internal void CleanUp()
         {
+            this.heartbeat.Stop();
             this._font.Dispose();
             this._pallet.Clear(); this._pallet = null;
             this._bColor = null;

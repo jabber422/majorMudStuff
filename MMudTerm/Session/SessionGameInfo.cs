@@ -148,7 +148,7 @@ namespace MMudTerm.Session
             }
             textBox1.Text = hidden_here;
 
-            this.label_mega_hash.Text = cur_room.MegaMudRoomHash;
+            this.label_mega_hash.Text = cur_room.MegaMudRoomHash.ToString("X");
             this.label_light.Text = cur_room.Light;
             this.label_cause.Text = cur_room.Cause;
         }
@@ -200,7 +200,7 @@ namespace MMudTerm.Session
             textBox_lr_alsohere.Text = also_here;
             label_lr_exits.Text = GetExits(cur_room);
 
-            this.label_lr_hash.Text = cur_room.MegaMudRoomHash;
+            this.label_lr_hash.Text = cur_room.MegaMudRoomHash.ToString();
 
             
         }
@@ -320,15 +320,6 @@ namespace MMudTerm.Session
             this.label58.Text = purse.wealth.ToString();
         }
 
-        private void Label_Click(object sender, EventArgs e)
-        {
-            Label clickedLabel = sender as Label;
-            if (clickedLabel != null)
-            {
-                MessageBox.Show($"You clicked: {clickedLabel.Text}");
-                // Implement your click logic here
-            }
-        }
 
         public void UpdateWho()
         {

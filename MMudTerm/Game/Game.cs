@@ -1,23 +1,11 @@
 ﻿using global::MMudObjects;
 using global::MMudTerm.Session;
-using Humanizer;
-using MMudTerm.Session.SessionStateData;
+
 using System;
 using System.Collections.Generic;
 
 using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using static Humanizer.In;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
-
-
-
-
 
 namespace MMudTerm.Game
 {
@@ -82,10 +70,12 @@ namespace MMudTerm.Game
         public int target_crit_player = 0;
         public int target_dodge_player = 0;
 
+        public object AttackString { get; internal set; }
 
         public CurrentCombat(SessionController controller)
         {
             this._controller = controller;
+            this.AttackString = "a";
         }
 
         public void UpdateRoom()
@@ -382,7 +372,7 @@ namespace MMudTerm.Game
                     Entity e = this._current_room.AlsoHere.GetFirst("npc");
                     if (e != null)
                     {
-                        this._controller.Send($"a {e.FullName}\r\n");
+                        this._controller.Send($"{this._current_combat.AttackString} {e.FullName}\r\n");
                     }
                 }
             }

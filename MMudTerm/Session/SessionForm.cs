@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using MMudTerm.Terminal;
 using MMudTerm.Session.SessionStateData;
-using static Humanizer.In;
+
 using System.Runtime.CompilerServices;
 using MMudTerm.Game;
 
@@ -67,6 +67,7 @@ namespace MMudTerm.Session
         internal SessionForm(SessionConnectionInfo sciData)
         {
             InitializeComponent();
+            this.components = new System.ComponentModel.Container();
 
             Bitmap allicons = Properties.Resources.BitmapSessionIcons;
             
@@ -114,6 +115,7 @@ namespace MMudTerm.Session
             this.m_controller = new SessionController(this.m_sessionData, this);
 
             this.m_term = new TerminalWindow(this.m_sessionData);
+            this.components.Add(m_term);
             InitTermWindow();
 
             this.m_gameInfos = new Dictionary<int, SessionGameInfo>();
@@ -367,7 +369,7 @@ namespace MMudTerm.Session
             {
                 if (this.m_controller._gameenv?._current_room != null)
                 {
-                    this.toolStripStatusLabel_currentroom.Text = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+                    this.toolStripStatusLabel_currentroom.Text = this.m_controller._gameenv._current_room.MegaMudRoomHash.ToString();
                 }
             }
         }
@@ -419,5 +421,41 @@ namespace MMudTerm.Session
         {
             this.m_controller._gameenv.Monitor_GetCoins = this.toolStripButton_getcoins.Checked;
         }
+
+        private void toolStripButton_go_Click(object sender, EventArgs e)
+        {
+            long curren_room_hash = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+            string room_to_walk_to = "";
+
+            using (GotoLoopSelectForm frm = new GotoLoopSelectForm())
+            {
+                
+                DialogResult result = frm.ShowDialog();
+                if (result != DialogResult.OK) return;
+
+                room_to_walk_to = frm.Answer;
+            }
+
+            long to_room_hash = PathingCache.Rooms[room_to_walk_to];
+            try
+            {
+                var path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+            }catch(Exception ex)
+            {
+
+            }
+
+
+
+
+        }
+
+
+    }
+
+    public class DialogEventArgs : EventArgs
+    {
+        public string AdditionalInfo { get; set; }
+        // Add other properties as needed
     }
 }

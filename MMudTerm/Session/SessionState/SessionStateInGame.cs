@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms.VisualStyles;
 using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
@@ -34,7 +35,7 @@ namespace MMudTerm.Session.SessionStateData
             this._gameenv = this.m_controller._gameenv;
             this._resting = new Regex(@"\((Resting)\)", RegexOptions.Compiled);
             this._gameenv.NewGameEvent += this.m_controller.m_sessionForm.Update;
-
+            this.m_controller.Send("\r\n");
             this.m_controller.Send("stat\r\n");
             this.m_controller.Send("i\r\n");
             this.m_controller.Send("who\r\n");

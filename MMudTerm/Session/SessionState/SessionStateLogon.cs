@@ -20,7 +20,6 @@ namespace MMudTerm.Session.SessionStateData
         string move_to_mud_menu_state = "[MAJORMUD]:";
         private int _iac_cnd;
 
-
         public SessionStateLogon(SessionState _state) : base(_state, "Logon On")
         {
             
@@ -73,10 +72,10 @@ namespace MMudTerm.Session.SessionStateData
                     //if the logon control is false we can ignore the buffer
                     if (!this.m_controller.m_SessionData.LogonEnabled) { return this; }
 
-                    Console.WriteLine(msg);
+                    Console.WriteLine(this_cmd);
                     foreach (Regex r in this.LogonStrings_Regex.Keys)
                     {
-                        Match m = r.Match(msg);
+                        Match m = r.Match(this_cmd);
                         if (m.Success)
                         {
                             string rsp = this.LogonStrings_Regex[r];

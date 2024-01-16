@@ -6,6 +6,7 @@ using System.Diagnostics;
 using MMudTerm_Protocols;
 using MMudTerm_Protocols.AnsiProtocolCmds;
 using System.Text.RegularExpressions;
+using MMudTerm.Session;
 
 namespace MMudTerm
 {
@@ -17,6 +18,9 @@ namespace MMudTerm
         [STAThread]
         static void Main()
         {
+
+            //var paths = PathingCache.Load();
+            //PathingCache.GetPath();
 //#if NO_TEST
 #if DEBUG
             Debug.AutoFlush = true;

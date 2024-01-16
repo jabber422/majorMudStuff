@@ -68,7 +68,13 @@ namespace MMudObjects
         public Dictionary<string, Item> HiddenItems;
         public AlsoHere AlsoHere;
 
-        public string MegaMudRoomHash { get { return this.MegaMudNameHash + this.MegaMudExitsHash; } }
+        public long MegaMudRoomHash
+        {
+            get
+            {
+                return Convert.ToInt64($"{this.MegaMudNameHash}{this.MegaMudExitsHash}", 16);
+            }
+        }
         private string MegaMudNameHash { get
             {
                 long nValue = 0;
@@ -83,13 +89,13 @@ namespace MMudObjects
             }
         }
 
-        int[] nExitsCalculated = new int[6];
+        
         string[] sExits = { "N", "S", "E", "W", "NE", "NW", "SE", "SW", "U", "D" };
         int[] nExitVal = { 1, 4, 1, 4, 1, 4, 1, 4, 1, 4 };
         int[] nExitPosition = { 5, 5, 4, 4, 3, 3, 2, 2, 1, 1 };
         
         private string MegaMudExitsHash { get {
-                
+                int[] nExitsCalculated = new int[6];
                 for (int i = 0; i < 10; ++i) {
                     string sExit = sExits[i];
                     bool found = false;
