@@ -1,6 +1,6 @@
 ﻿using global::MMudObjects;
 using global::MMudTerm.Session;
-
+using MmeDatabaseReader;
 using System;
 using System.Collections.Generic;
 
@@ -31,11 +31,13 @@ namespace MMudTerm.Game
         internal void PlayerHit(int dmg_done)
         {
             this.damage_taken += dmg_done;
+            this.target.damage_taken += dmg_done;
         }
 
         internal void PlayerHitBy(int dmg_done)
         {
             this.damage_done += dmg_done;
+            
             BeingAttackByThisEntity();
         }
 
@@ -330,7 +332,7 @@ namespace MMudTerm.Game
                 //what do we care about?
                 case EventType.Tick:
                     if (this._player.Stats.MaxHits <= 0) return;
-                    var player_health = this._player.Stats.CurHits / this._player.Stats.MaxHits;
+                    var player_health = (float)this._player.Stats.CurHits / (float)this._player.Stats.MaxHits;
                     if (player_health < 0.75)
                     {
                         Debug.WriteLine("Player should rest");
@@ -341,7 +343,12 @@ namespace MMudTerm.Game
                         }
                         if (this._player.IsCombatEngaged)
                         {
-                            Debug.WriteLine("Player is in comat and can not rest");
+                            Debug.WriteLine("Player is in combat and can not rest");
+                            return;
+                        }
+                        if (this._current_room.AlsoHere.RoomContainsNPC())
+                        {
+                            Debug.WriteLine("NPC in room, can't rest");
                             return;
                         }
 
@@ -403,7 +410,7 @@ namespace MMudTerm.Game
                     break;
                 
                 default:
-                    Console.WriteLine("Combat - ignored token " + message);
+                    //Console.WriteLine("Combat - ignored token " + message);
                     break;
             }
         }
@@ -453,22 +460,23 @@ namespace MMudTerm.Game
                 }
             }
 
+            Debug.WriteLine("------------------------------------");
+            Debug.WriteLine("Data: " + data.Trim() );
             if (this._matcher.TryMatch(data, out match, out e))
             {
-                Console.WriteLine($"\r\nE: {e}, data: {data.Trim()}");
+                Debug.WriteLine($"--> {e} <--");
                 for (int i = 0; i < match.Groups.Count; ++i)
                 {
-                    Console.WriteLine($"Match: {match.Groups[i].Value}");
+                    Console.WriteLine($"\tMatch: {match.Groups[i].Value}");
                 }
                 callback(e, match, data);
             }
             else
             {
                 result = EventType.None;
-                Debug.WriteLine("------------Unknown------");
-                Debug.WriteLine(data);
-                Debug.WriteLine("------------------------------------");
+                Debug.WriteLine("Not Matched");               
             }
+            Debug.WriteLine("------------------------------------\r\n");
         }
 
 
@@ -599,6 +607,7 @@ namespace MMudTerm.Game
             if (match.Success)
             {
                 Entity e = new Entity(match.Groups[1].Value);
+                e = MmeDatabaseReader.MMudData.GetNpc(e);
                 this._current_room.AlsoHere.Remove(e);
                 this.result = EventType.RoomSomethingMovedOut;
             }
@@ -628,6 +637,7 @@ namespace MMudTerm.Game
             if (match.Success)
             {
                 Entity e = new Entity(match.Groups[1].Value);
+                e = MmeDatabaseReader.MMudData.GetNpc(e);
                 var x = this._controller._gameenv._current_room.AlsoHere.Remove(e);
                 if (!x)
                 {
@@ -651,7 +661,9 @@ namespace MMudTerm.Game
 
             if (match.Success)
             {
-                this._current_room.AlsoHere.Add(new Entity(match.Groups[1].Value));
+                Entity e = new Entity(match.Groups[1].Value);
+                e = MmeDatabaseReader.MMudData.GetNpc(e);
+                this._current_room.AlsoHere.Add(e);
                 this.result = EventType.RoomSomethingMovedInto;
             }
             
@@ -708,10 +720,12 @@ namespace MMudTerm.Game
 
             if (attacker.Name == "You")
             {
+                target = MmeDatabaseReader.MMudData.GetNpc(target);
                 AddAttackerToRoom(target);
                 this._current_combat.PlayerHit(target, dmg_done, crit);
             }else if(target.Name == "you")
             {
+                attacker = MmeDatabaseReader.MMudData.GetNpc(attacker);
                 AddAttackerToRoom(attacker);
                 this._current_combat.PlayerHitBy(attacker, dmg_done, crit);
             }
@@ -733,26 +747,8 @@ namespace MMudTerm.Game
                 if (e.FullName == target.FullName) return;
             }
 
-            this._current_room.AlsoHere.Add(target);
-        }
-
-        private void ProcessCombatRecieveHit(Match match, string arg2)
-        {
-            Entity attacker = new Entity(match.Groups[1].Value.Trim());
-            Entity e = new Entity(match.Groups[1].Value.Trim());
-            AddAttackerToRoom(e);
-
-            int dmg_done = int.Parse(match.Groups[2].Value);
-            if (attacker.Name == "You")
-            {
-                this._current_combat.PlayerHitBy(e, dmg_done, "");
-            }
-            else
-            {
-                //3rd party attacking something, do we care?
-            }
             
-            this.result = EventType.Combat;
+            this._current_room.AlsoHere.Add(target);
         }
 
         private void ProcessCombatDoMiss(Match match, string arg2)
@@ -763,32 +759,16 @@ namespace MMudTerm.Game
 
             if (attacker.Name == "You")
             {
+                target = MmeDatabaseReader.MMudData.GetNpc(target);
                 AddAttackerToRoom(target);
                 this._current_combat.PlayerMissed(target);
             }
             else if(target.Name == "you")
             {
+                attacker = MmeDatabaseReader.MMudData.GetNpc(attacker);
                 AddAttackerToRoom(attacker);
                 var is_dodge = arg2.Contains(", but you dodge");
                 this._current_combat.PlayerMissedBy(attacker, is_dodge);
-            }
-            else
-            {
-                //3rd party attacking something, do we care?
-            }
-            this.result = EventType.Combat;
-        }
-
-        private void ProcessCombatRecieveMiss(Match match, string arg2)
-        {
-            Entity attacker = new Entity(match.Groups[1].Value.Trim());
-            //The thin kobold thief lunges at you with their shortsword!
-            Entity e = new Entity(match.Groups[1].Value);
-            AddAttackerToRoom(e);
-
-            if (attacker.Name == "You")
-            {
-                this._current_combat.PlayerMissedBy(e);
             }
             else
             {
@@ -848,7 +828,7 @@ namespace MMudTerm.Game
                 string coin_name = match.Groups[2].Value;
                 Price price = new Price(coin_name);
                 price.ParseMatch(match);
-                List<CarryableItem> coins = price.ToList();
+                List<Item> coins = price.ToList();
                 this._player.Inventory.Remove(coins);
                 this._current_room.Add(coins);
                 this.result = EventType.DropCoins;
@@ -860,7 +840,7 @@ namespace MMudTerm.Game
             if (match.Success)
             {
                 //picked up item
-                CarryableItem item = new CarryableItem(match.Groups[1].Value);
+                Item item = new Item(match.Groups[1].Value);
                 this._player.Inventory.Remove(item);
                 this._current_room.Add(item);
                 this.result = EventType.DropItem;
@@ -876,7 +856,7 @@ namespace MMudTerm.Game
                 string coin_name = m1.Groups[2].Value;
                 Price price = new Price(coin_name);
                 price.ParseMatch(m1);
-                List<CarryableItem> coins = price.ToList();
+                List<Item> coins = price.ToList();
                 this._player.Inventory.Add(coins);
                 this._current_room.Remove(coins);
                 this.result = EventType.PickUpCoins;
@@ -888,8 +868,8 @@ namespace MMudTerm.Game
             if (m2.Success)
             {
                 //picked up item
-                CarryableItem item = new CarryableItem(m2.Groups[1].Value);
-
+                Item item = new Item(m2.Groups[1].Value);
+                item = MMudData.GetItem(item);
                 this._player.Inventory.Add(item);
                 this._current_room.Remove(item);
                 this.result = EventType.PickUpItem;
@@ -916,6 +896,10 @@ namespace MMudTerm.Game
                     break;
                 case EventType.Rest:
                     ProcessResting(match, data);
+                    break;
+                case EventType.EquippedArmor:
+                case EventType.EquippedWeapon:
+                    ProcessEquippedSomething(match, data);
                     break;
                 case EventType.Top:
                     ProcessTopList(match, data);
@@ -1013,6 +997,21 @@ namespace MMudTerm.Game
             }
         }
 
+        private void ProcessEquippedSomething(Match match, string data)
+        {
+            if (match.Success)
+            {
+                Item i = new Item(match.Groups[1].Value);
+                i = MMudData.GetItem(i);
+                i.Equiped = true;
+                this.result = EventType.EquippedArmor;
+                if (data.Contains(" holding "))
+                {
+                    this.result = EventType.EquippedWeapon;
+                }
+            }
+        }
+
         private void ProcessGossip(Match match, string data)
         {
             if (match.Success)
@@ -1072,9 +1071,9 @@ namespace MMudTerm.Game
                 name = line.Substring(0, quantity_idx).Trim();
                 quantity = int.Parse(tokens[i].Substring(quantity_idx, 5).Trim());
                 cost = new Price(tokens[i].Substring(price_idx - 4).Trim());
-                PurchasableItem shop_item = new PurchasableItem(name, quantity, cost);
-                shop_item.useable = line.Contains("(You can't use)") ? false : true;
-                shop_item.too_powerful = line.Contains("(Too powerful)") ? true : false;
+                //PurchasableItem shop_item = new PurchasableItem(name, quantity, cost);
+                //shop_item.useable = line.Contains("(You can't use)") ? false : true;
+                //shop_item.too_powerful = line.Contains("(Too powerful)") ? true : false;
             }
 
             this.result = EventType.ShopList;
@@ -1110,7 +1109,7 @@ namespace MMudTerm.Game
                 Price price = new Price();
                 price.ParseMatch(m1);
 
-                List<CarryableItem> item = price.ToList();
+                List<Item> item = price.ToList();
                 this._player.Inventory.Remove(item);
                 this._current_room.Add_Hidden(item);
                 this.result = EventType.HidCoins;
@@ -1122,7 +1121,7 @@ namespace MMudTerm.Game
             if (m2.Success)
             {
                 //picked up item
-                CarryableItem item = new CarryableItem(m2.Groups[1].Value);
+                Item item = new Item(m2.Groups[1].Value);
                 this._player.Inventory.Remove(item);
                 this._current_room.Add_Hidden(item);
                 this.result = EventType.HidItem;
@@ -1136,11 +1135,11 @@ namespace MMudTerm.Game
 
         private void ProcessSoldSomething(Match match, string arg2)
         {
-            CarryableItem item_bought = null;
-            List<CarryableItem> cost_as_items = null;
+            Item item_bought = null;
+            List<Item> cost_as_items = null;
             if (match.Success)
             {
-                item_bought = new CarryableItem(match.Groups[1].Value);
+                item_bought = new Item(match.Groups[1].Value);
                 cost_as_items = new Price(match.Groups[2].Value.Trim()).ToList();
             }
             this._player.Inventory.Remove(item_bought);
@@ -1150,12 +1149,12 @@ namespace MMudTerm.Game
 
         private void ProcessBoughtSomething(Match match, string arg2)
         {
-            CarryableItem item_bought = null;
-            List<CarryableItem> cost_as_items = null;
+            Item item_bought = null;
+            List<Item> cost_as_items = null;
 
             if (match.Success)
             {
-                item_bought = new CarryableItem(match.Groups[1].Value);
+                item_bought = new Item(match.Groups[1].Value);
                 cost_as_items = new Price(match.Groups[2].Value.Trim()).ToList();
             }
             this._player.Inventory.Add(item_bought);
@@ -1170,6 +1169,7 @@ namespace MMudTerm.Game
             if(char_creation_work_around.Length == 2) {
                 s = char_creation_work_around[1];
                     }
+            //This regex matches everything... except level... wtf
             string pattern_stat = @"(\S+)(?: Class)?:(?:[ \t]+|\*?)(\S+)(?: \S+)?";
             Regex r = new Regex(pattern_stat);
             MatchCollection mc = r.Matches(s);
@@ -1188,6 +1188,11 @@ namespace MMudTerm.Game
                     }
                 }
             }
+
+            //the : in Level:
+            var start_idx = s.IndexOf("Level:") + "Level:".Length;
+            var level_string = s.Substring(s.IndexOf("Level")+"Level".Length+1, s.IndexOf("Stealth")- start_idx).Trim();
+            stats.Add("Level", level_string);
 
             this._player.Stats = new PlayerStats(stats);
             this.result = EventType.Stats;
@@ -1252,7 +1257,7 @@ namespace MMudTerm.Game
                 room_info["cause"] = "crlf";
             }
 
-            //TODO: are we looking? did we move? are we in the same room?
+            
             Room room = new Room();
             room.Name = room_info["name"];
             if (room_info.ContainsKey("desc"))
@@ -1271,6 +1276,10 @@ namespace MMudTerm.Game
                     {
                         entity = p;
                     }
+                    else
+                    {
+                        entity = MmeDatabaseReader.MMudData.GetNpc(entity);
+                    }
                     entities.Add(entity);
                 }
                 room.AlsoHere = entities;
@@ -1282,9 +1291,10 @@ namespace MMudTerm.Game
                 foreach (string item_here in room_info["items"].Split(','))
                 {
                     string item_here2 = item_here.Trim();
-                    if (item_here2.EndsWith(" here."))
+                    if (item_here2.EndsWith("here."))
                     {
-                        item_here2 = item_here2.Remove(item_here.IndexOf(" here."));
+                        var x = item_here2.IndexOf("here.");
+                        item_here2 = item_here2.Remove(x-1).Trim();
                     }
 
                     Item i = null;
@@ -1293,11 +1303,13 @@ namespace MMudTerm.Game
                     if (m4.Success)
                     {
                         i = new Item(m4.Groups[2].Value.Trim());
+                        i = MMudData.GetItem(i);
                         i.Quantity = int.Parse(m4.Groups[1].Value);
                     }
                     else
                     {
                         i = new Item(item_here2);
+                        i = MMudData.GetItem(i);
                     }
 
                     items.Add(i.Name, i);
@@ -1476,7 +1488,10 @@ namespace MMudTerm.Game
             carry = carry.Replace("\r\n", " ");
 
             int keys_idx = carry.IndexOf("You have no keys.");
-            carry = carry.Remove(keys_idx);
+            if (keys_idx > -1)
+            {
+                carry = carry.Remove(keys_idx);
+            }
             inv.Add("carry", carry);
             inv.Add("cash", lines[cash_index]);
             inv.Add("enc", lines[enc_index]);
@@ -1484,7 +1499,7 @@ namespace MMudTerm.Game
             string pattern = @"(\d+\s+)?([a-zA-Z\s]+?)(?:\s*\(([^)]+)\))?(?=\s*,|\s*$)";
             MatchCollection mc = Regex.Matches(carry, pattern);
 
-            Dictionary<string, CarryableItem> items = new Dictionary<string, CarryableItem>();
+            Dictionary<string, Item> items = new Dictionary<string, Item>();
             foreach (Match m3 in mc)
             {
                 if (m3.Success)
@@ -1499,31 +1514,19 @@ namespace MMudTerm.Game
                     if (item_name == "()") { continue; }
                     if (item_name == "") { continue; }
 
-                    CarryableItem item = new CarryableItem(item_name);
+                    Item item = new Item(item_name);
                     if (count == 0) { count = 1; }
                     item.Quantity = count;
 
 
                     if (m3.Groups[3].Value != string.Empty)
                     {
-                        item = new EquipableItem(item);
-                        (item as EquipableItem).Equiped = true;
-                        (item as EquipableItem).Location = m3.Groups[3].Value;
+                        item.Equiped = true;
                     }
 
                     if (items.ContainsKey(item.Name))
                     {
-                        //this happens when you have an item named 'foo' in your inv
-                        //  and an item named 'foo (Worn)' in your inv.
-                        //  You have 2 foo's
                         items[item.Name].Quantity += item.Quantity;
-                        if (item is EquipableItem && !(items[item.Name] is EquipableItem))
-                        {
-                            //if we have a foo in our inv and we found an equipped foo
-                            EquipableItem new_item = item as EquipableItem;
-                            new_item.Quantity += items[item.Name].Quantity;
-                            items[item.Name] = new_item;
-                        }
                     }
                     else
                     {

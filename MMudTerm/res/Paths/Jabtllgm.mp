@@ -1,0 +1,11 @@
+[][Fizban the Fabulous]
+[JABT:Jungle:Abandoned Temple]
+[LLGM:Jungle:Large Mound]
+F0240054:71E00014:7:-1:0:::
+F0240054:0000:d
+0E910002:0040:n
+7D700009:0040:n
+7D700005:0040:n
+7D700005:0040:n
+7D700005:0040:n
+7D700004:0000:go hole

@@ -1,0 +1,11 @@
+[][Winterhawk]
+[ARAA:Arlysia:Aeriana's Apothecary]
+[BKOA:Arlysia:Bank of Arlysia]
+16500010:D4F00041:7:-1:0:::
+16500010:0000:e
+9CB00045:0000:s
+9CB00015:0000:s
+9D400055:0000:w
+9C000050:0000:w
+9C000050:0000:w
+9C000055:0000:s

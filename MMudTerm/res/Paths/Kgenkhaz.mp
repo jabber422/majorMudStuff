@@ -1,0 +1,10 @@
+[][]
+[KGEN:Khazarad:Dwarven General Store]
+[KHAZ:Khazarad:Khazarad Center]
+31400001:19800051:6:-1:0:::
+31400001:0000:n
+3B900055:0000:e
+3B900055:0000:e
+3B900052:0000:e
+19800045:0000:n
+19800014:0000:e

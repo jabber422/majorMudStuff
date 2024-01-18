@@ -1,0 +1,14 @@
+[][]
+[HTOP:Black Caves:Hilltop Fortress]
+[TALI:Dragon's Teeth Hills:Dragon's Teeth Hills (Talisman)]
+36600094:C4F04050:10:-1:0:::
+36600094:0000:w
+2EE00065:0000:s
+2EE00045:0000:s
+2EE00045:0000:s
+2EE00011:0000:e
+2EE00054:0000:s
+A4A00055:0000:s
+FB480011:0000:d
+84420010:0000:e
+84400040:0000:s[pull lever]

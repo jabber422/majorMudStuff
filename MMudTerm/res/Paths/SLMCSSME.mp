@@ -1,0 +1,12 @@
+[][Winterhawk]
+[SLMC:Slums:Slum Crossroads]
+[SSME:Slums:Strange Mansion, Entrance]
+ABC00055:88900049:8:-1:0:::
+ABC00055:0000:s
+A0700005:0000:s
+F3900015:0000:s
+A0700005:0000:s
+F3900015:0000:s
+A0700005:0000:s
+F3900045:0000:w
+A0700052:0000:@party ring chime

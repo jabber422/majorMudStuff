@@ -1,0 +1,14 @@
+[][Fizban the Fabulous]
+[BHNL:Barren Hills:Narrow Ledge]
+[LCGH:Lost City:Deranged Priest]
+D0100100:84000001:10:-1:0:::
+D0100100:0000:climb vine
+F8100004:0000:s
+F8100005:0000:s
+F8100501:0000:nw
+F8105000:0000:sw
+F8100104:0000:s
+F8101001:0000:se
+F8101400:0000:climb branch
+C0300004:0000:s
+C0340001:0000:d

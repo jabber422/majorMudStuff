@@ -48,6 +48,7 @@ namespace MMudObjects
 
         public virtual bool IsCombatEngaged { get; set; }
         public bool BaddieFlag = true;
+        public int damage_taken = 0;
 
         public override bool Equals(object obj)
         {
@@ -68,25 +69,33 @@ namespace MMudObjects
             this.Attacks = new List<MonsterAttackInfo>();
             this.RegenRooms = new List<Room>();
         }
-        string Id { get; set; }
-        int Exp { get; set; }
-        int Regen { get; set; }
-        EnumNpcType Type { get; set; }
-        EnumNpcAlignment Alignment { get; set; }
-        int Health { get; set; }
-        int HealthRegen { get; set; }
-        int AC { get; set; }
-        int DR { get; set; }
-        int MR { get; set; }
-        int FollowPercentage { get; set; }
-        int CharmLevel { get; set; }
-        List<ItemAbility> Abilities { get; set; }
 
-        List<MonsterAttackInfo> Attacks { get; set; }
+        public NPC(Entity e) :base(e.Name)
+        {
+            this.Abilities = new List<ItemAbility>();
+            this.Attacks = new List<MonsterAttackInfo>();
+            this.RegenRooms = new List<Room>();
+        }
 
-        List<Room> RegenRooms { get; set; }
-
-        int Magic { get; set; }
+        public string Id { get; set; }
+        public int Exp { get; set; }
+        public int Regen { get; set; }
+        public EnumNpcType Type { get; set; }
+        public EnumNpcAlignment Alignment { get; set; }
+        public int Health { get; set; }
+        public int HealthRegen { get; set; }
+        public int AC { get; set; }
+        public int DR { get; set; }
+        public int MR { get; set; }
+        public int FollowPercentage { get; set; }
+        public int CharmLevel { get; set; }
+        public List<ItemAbility> Abilities { get; set; }
+        
+        public List<MonsterAttackInfo> Attacks { get; set; }
+        
+        public List<Room> RegenRooms { get; set; }
+        
+        public int Magic { get; set; }
     }
 
     public class Purse
@@ -98,9 +107,9 @@ namespace MMudObjects
         public int copper = 0;
         public int wealth = 0;
 
-        public Purse(List<CarryableItem> coins)
+        public Purse(List<Item> coins)
         {
-            foreach(CarryableItem coin in coins)
+            foreach(Item coin in coins)
             {
                 switch (coin.Name)
                 {
@@ -121,7 +130,7 @@ namespace MMudObjects
 
     public class Inventory
     {
-        private Dictionary<string, CarryableItem> items = null;
+        private Dictionary<string, Item> items = null;
         public string weight
         {
             get { return this.current_weight + "/" + this.max_weight; }
@@ -133,16 +142,16 @@ namespace MMudObjects
         public int current_weight = 0; 
         public int max_weight = 0;
 
-        public Dictionary<string, CarryableItem> Items {  get { return this.items; } }
+        public Dictionary<string, Item> Items {  get { return this.items; } }
 
         public Inventory()
         {
-            this.items = new Dictionary<string, CarryableItem> ();
+            this.items = new Dictionary<string, Item> ();
             this.weight = "0/0";
         }
 
         //sets the current inventory, based on the 'inv' command in game
-        public void SetInventory(Dictionary<string, CarryableItem> items, string weight)
+        public void SetInventory(Dictionary<string, Item> items, string weight)
         {
             this.items = items;
             this.weight = weight;
@@ -151,10 +160,10 @@ namespace MMudObjects
         public Purse GetPurse()
         {
             string[] coin_names = new string[] { "runic coins", "platinum pieces", "gold crons", "silver nobles", "copper farthings" };
-            List<CarryableItem> coins = new List<CarryableItem> ();
+            List<Item> coins = new List<Item> ();
             foreach(string coin_name in coin_names)
             {
-                CarryableItem new_coin = null;
+                Item new_coin = null;
                 bool result = this.Items.TryGetValue(coin_name, out new_coin);
                 if (result) { coins.Add(new_coin); }
             }
@@ -162,7 +171,7 @@ namespace MMudObjects
             return new Purse(coins);
         }
 
-        public void Add(List<CarryableItem> items)
+        public void Add(List<Item> items)
         {
             foreach(var item in items)
             {
@@ -170,7 +179,7 @@ namespace MMudObjects
             }
         }
 
-        public void Add(CarryableItem item)
+        public void Add(Item item)
         {
             if (this.items.ContainsKey(item.Name))
             {
@@ -183,7 +192,7 @@ namespace MMudObjects
             }
         }
 
-        public void Remove(List<CarryableItem> items)
+        public void Remove(List<Item> items)
         {
             foreach (var item in items)
             {
@@ -191,7 +200,7 @@ namespace MMudObjects
             }
         }
 
-        public void Remove(CarryableItem item)
+        public void Remove(Item item)
         {
             if (this.items.ContainsKey(item.Name))
             {
@@ -208,7 +217,7 @@ namespace MMudObjects
             }
         }
 
-        public CarryableItem GetItem(string coin_name)
+        public Item GetItem(string coin_name)
         {
             List<string> item_names = this.items.Keys.ToList();
             if (item_names.Contains(coin_name))
@@ -249,7 +258,7 @@ namespace MMudObjects
             this.Stats.Name = this.Name;
             this.Room = new Room();
             this.Inventory = new Inventory();
-            this.Equipped = new EquippedItemsInfo();
+            //this.Equipped = new EquippedItemsInfo();
             this.Abilities = new List<ItemAbility>();
             this.QuestAbilities = new List<QuestAbility>();
             this.BaddieFlag = false;
@@ -259,7 +268,7 @@ namespace MMudObjects
         }
 
         public Inventory Inventory { get; set; }
-        public virtual EquippedItemsInfo Equipped { get; set; }
+        //public virtual EquippedItemsInfo Equipped { get; set; }
 
         public virtual int Rank { get; set; }
 

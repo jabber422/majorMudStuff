@@ -91,7 +91,13 @@ namespace MMudTerm.Session
                     case EventType.Gossip:
                         this.richTextBox1.WordWrap = true;
                         this.richTextBox1.Multiline = true;
-                        this.richTextBox1.Text = string.Join("\r\n",this._controller._gameenv._gossips);
+                        foreach(string s in this._controller._gameenv._gossips)
+                        {
+                            this.richTextBox1.AppendText(s + "\r\n");
+                        }
+
+                        //this won't line wrap... why??
+                        //this.richTextBox1.Text = string.Join("\r\n",this._controller._gameenv._gossips);
                         break;
                     default:
                         //Console.WriteLine($"Not used: {token}");
@@ -218,6 +224,7 @@ namespace MMudTerm.Session
             label9.Text = stats.FirstName + " " + stats.LastName;
             label10.Text = stats.Race;
             label11.Text = stats.Class;
+            label24.Text = stats.Level.ToString();
             label12.Text = stats.CurHits.ToString();
             label47.Text = stats.MaxHits.ToString();
             label48.Text = stats.CurMana.ToString();
@@ -266,14 +273,14 @@ namespace MMudTerm.Session
 
         public void UpdateInventory()
         {
-            List<CarryableItem> items = new List<CarryableItem> ();
-            Dictionary<string, CarryableItem> items_ = this._controller._gameenv._player.Inventory.Items;
+            List<Item> items = new List<Item> ();
+            Dictionary<string, Item> items_ = this._controller._gameenv._player.Inventory.Items;
             items = items_.Values.ToList ();
             this.tabPage_inv.Controls.Clear();
 
             
             int yPos = 0;
-            foreach (CarryableItem item in items)
+            foreach (Item item in items)
             {
                 InventoryRowControl new_item = new InventoryRowControl(this._controller, item);
                 new_item.Location = new Point(0, yPos);

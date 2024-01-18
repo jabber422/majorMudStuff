@@ -11,6 +11,9 @@ using MMudTerm.Session.SessionStateData;
 
 using System.Runtime.CompilerServices;
 using MMudTerm.Game;
+using System.Diagnostics;
+using MMudObjects;
+using System.Threading.Tasks;
 
 namespace MMudTerm.Session
 {
@@ -86,6 +89,8 @@ namespace MMudTerm.Session
             this.toolStripButton_buff.Image = GetIcon(22);
             this.toolStripButton_get.Image = GetIcon(24);
             this.toolStripButton_getcoins.Image = GetIcon(25);
+            this.toolStripButton_get_all.Image = GetIcon(44);
+            this.toolStripButton_equip_all.Image = GetIcon(46);
 
             //these get locked by all on/all
             this.toolStripItems.Add(toolStripButton_go);
@@ -369,7 +374,15 @@ namespace MMudTerm.Session
             {
                 if (this.m_controller._gameenv?._current_room != null)
                 {
-                    this.toolStripStatusLabel_currentroom.Text = this.m_controller._gameenv._current_room.MegaMudRoomHash.ToString();
+                    string known_room = "";
+                    if (PathingCache.Rooms != null)
+                    {
+                        if (PathingCache.Rooms.ContainsValue(this.m_controller._gameenv._current_room.MegaMudRoomHash))
+                        {
+                            known_room = "KNOWN ROOM - ";
+                        }
+                    }
+                    this.toolStripStatusLabel_currentroom.Text = $"{known_room}" + this.m_controller._gameenv._current_room.MegaMudRoomHash.ToString("X");
                 }
             }
         }
@@ -424,38 +437,243 @@ namespace MMudTerm.Session
 
         private void toolStripButton_go_Click(object sender, EventArgs e)
         {
-            long curren_room_hash = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+            
+
+            toolStripButton_stop.Checked = false;
+            toolStripButton_go.Checked = true;
+            toolStripButton_loop.Checked = false;
+
+            _current_path = GoTo();
+
+            if(_current_path == null)
+            {
+                toolStripButton_stop.Checked = true;
+                toolStripButton_go.Checked = false;
+                toolStripButton_loop.Checked = false;
+            }
+        }
+
+        internal void PathWalkerFinished()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(PathWalkerFinished));
+            }
+            else
+            {
+                toolStripButton_stop.Checked = true;
+                toolStripButton_go.Checked = false;
+                toolStripButton_loop.Checked = false;
+            }
+        }
+
+        PathWalker _current_path = null;
+
+        private void toolStripButton_stop_Click(object sender, EventArgs e)
+        {
+            toolStripButton_stop.Checked = true;
+            toolStripButton_go.Checked = false;
+            toolStripButton_loop.Checked = false;
+            this._current_path.Active = false;
+        }
+
+        private void toolStripButton_loop_Click(object sender, EventArgs e)
+        {
+            
+            toolStripButton_stop.Checked = false;
+            toolStripButton_go.Checked = false;
+            toolStripButton_loop.Checked = true;
+
+            _current_path = Loop();
+        }
+
+        private string AskWhere(bool is_loop = false)
+        {
             string room_to_walk_to = "";
 
-            using (GotoLoopSelectForm frm = new GotoLoopSelectForm())
+            using (GotoLoopSelectForm frm = new GotoLoopSelectForm(is_loop))
             {
-                
+
                 DialogResult result = frm.ShowDialog();
-                if (result != DialogResult.OK) return;
+                if (result != DialogResult.OK) return null; ;
 
                 room_to_walk_to = frm.Answer;
             }
-
-            long to_room_hash = PathingCache.Rooms[room_to_walk_to];
-            try
-            {
-                var path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
-            }catch(Exception ex)
-            {
-
-            }
-
-
-
-
+            return room_to_walk_to;
         }
 
+        private PathWalker Loop()
+        {
+            throw new NotImplementedException();
+        }
+
+        private PathWalker GoTo()
+        {
+            long curren_room_hash = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+            string room_to_walk_to = AskWhere();
+            if (room_to_walk_to == null) return null;
+
+            long to_room_hash = PathingCache.Rooms[room_to_walk_to];
+            List<MudPath> path = null;
+            path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+
+            return new PathWalker(path, this.m_controller);
+        }
+
+        private void toolStripButton_get_all_Click(object sender, EventArgs e)
+        {
+            this.toolStripButton_get_all.Enabled = false;
+            this.toolStripButton_get_all.Checked = true;
+            GetAllScript getall = new GetAllScript(this.m_controller, toolStripButton_get_all_Click_callback);
+            getall.Execute();
+        }
+
+        //unlock the button when the above script is complete
+        private void toolStripButton_get_all_Click_callback()
+        {
+            if (this.InvokeRequired) {
+                this.Invoke(new Action(toolStripButton_get_all_Click_callback));
+            }
+            else
+            {
+                this.toolStripButton_get_all.Enabled = true;
+                this.toolStripButton_get_all.Checked = false;
+            }
+        }
+
+        private void toolStripButton_equip_all_Click(object sender, EventArgs e)
+        {
+            this.toolStripButton_equip_all.Enabled = false;
+            this.toolStripButton_equip_all.Checked = true;
+            EquipAllScript getall = new EquipAllScript(this.m_controller, toolStripButton_equip_all_Click_callback);
+            getall.Execute();
+        }
+
+        private void toolStripButton_equip_all_Click_callback()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(toolStripButton_equip_all_Click_callback));
+            }
+            else
+            {
+                this.toolStripButton_equip_all.Enabled = true;
+                this.toolStripButton_equip_all.Checked = false;
+            }
+        }
 
     }
 
-    public class DialogEventArgs : EventArgs
+    public class PathWalker : IDisposable
     {
-        public string AdditionalInfo { get; set; }
-        // Add other properties as needed
+        SessionController m_controller;
+        private List<MudPath> path;
+        int path_index = 0;
+        int step_index = 0;
+        private MudPath endroom;
+
+        public bool Active { get; set; }
+
+        public PathWalker(List<MudPath> path, SessionController m_controller)
+        {
+            this.path = path;
+            this.m_controller = m_controller;
+            this.m_controller._gameenv.NewGameEvent += _gameenv_NewGameEvent;
+            this.endroom = this.path[this.path.Count - 1];
+        }
+
+        private void _gameenv_NewGameEvent(EventType message)
+        {
+            switch (message)
+            {
+                case EventType.Room:
+                    MoveToNextRoom();
+                    break;
+                case EventType.BadRoomMove:
+                    if (step_index == 0)
+                    {
+                        path_index--;
+                    }
+                    else
+                    {
+                        step_index--;
+                    }
+                    break;
+                case EventType.BadRoomMoveClosedDoor:
+                    if (step_index == 0)
+                    {
+                        path_index--;
+                    }
+                    else
+                    {
+                        step_index--;
+                    }
+                    break;
+                case EventType.BashDoorSuccess:
+                    this.m_controller.SendLine();
+                    break;
+            }
+        }
+
+        private void MoveToNextRoom()
+        {
+            if (this.m_controller._gameenv._player.IsCombatEngaged && this.m_controller._gameenv.Monitor_Combat)
+            {
+                //in combat and comat is on, don't move
+                Debug.WriteLine("Won't move, in combat and combat is on");
+                return;
+            }
+            var player_health = this.m_controller._gameenv._player.Stats.CurHits / this.m_controller._gameenv._player.Stats.MaxHits;
+            if (this.m_controller._gameenv._player.IsResting && this.m_controller._gameenv.Monitor_Rest)
+            {
+                Debug.WriteLine("Won't move, need to rest and resting is on");
+                return;
+            }
+
+            var current_room = this.m_controller._gameenv._current_room;
+            if(current_room.MegaMudRoomHash == this.endroom.EndRoomHashCode)
+            {
+                //done
+                this.m_controller._gameenv.NewGameEvent -= _gameenv_NewGameEvent;
+                this.m_controller.PathWalkerFinished();
+                return;
+            }
+            var next_step = path[path_index].Steps[step_index];
+            
+            if(current_room.MegaMudRoomHash == next_step.RoomHashCode)
+            {
+                foreach(RoomExit exit in current_room.RoomExits)
+                {
+                    if(exit.ShortName.ToUpper() != next_step.Direction.ToUpper()) continue;
+                    if(exit.IsDoor && !exit.IsOpen)
+                    {
+                        this.m_controller.SendLine("bash " + next_step.Direction);
+                        return;
+                    }
+                    
+                }
+                this.m_controller.SendLine(next_step.Direction);
+                step_index++;
+                if(step_index >= path[path_index].Steps.Count)
+                {
+                    step_index = 0;
+                    path_index++;
+                }
+            }
+
+
+            
+        }
+
+        public void Dispose()
+        {
+            this.m_controller._gameenv.NewGameEvent -= _gameenv_NewGameEvent;
+        }
+
+        public class DialogEventArgs : EventArgs
+        {
+            public string AdditionalInfo { get; set; }
+            // Add other properties as needed
+        }
     }
 }

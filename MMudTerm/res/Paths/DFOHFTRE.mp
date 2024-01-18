@@ -1,0 +1,15 @@
+[][Winterhawk]
+[DFOH:Darkwood Forest:Darkwood Forest, Outside Hidden Keep]
+[FTRE:Trainers:Tree House (Aldreth)]
+F1904020:D8200020:11:-1:0:::
+F1904020:0000:sw
+F4E04100:0000:sw
+F4E00140:0000:w
+F4E00050:0000:w
+F4E00410:0000:nw
+F4E01001:0000:n
+F4E00404:0000:nw
+F4E05400:0000:nw
+F4E01040:0000:w
+F4E00051:0000:w
+85B00090:0000:w

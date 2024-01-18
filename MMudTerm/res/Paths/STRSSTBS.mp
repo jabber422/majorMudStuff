@@ -1,0 +1,13 @@
+[][Winterhawk]
+[STRS:Sewers:Sewer Tunnel, River Street]
+[STBS:Sewers:Sewer Tunnel, Brass street]
+E9510050:E9510005:9:-1:0:::
+E9510050:0000:e
+E9500050:0000:e
+E9500050:0000:e
+E9500050:0000:e
+E9501040:0000:se
+E9501400:0000:se
+E9500404:0000:s
+E9500005:0000:s
+E9500005:0000:s

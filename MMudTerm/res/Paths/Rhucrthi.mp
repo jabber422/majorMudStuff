@@ -1,0 +1,11 @@
+[][]
+[RHUC:Rhudaur:Rhudaur Center]
+[RTHI:Rhudaur:Rhudaur Thieve's Guild]
+7AD00055:61500000:7:-1:0:::
+7AD00055:0000:w
+C1E00051:0000:w
+D8200015:0000:go alley
+4C900055:0001:s
+4C900005:0001:s
+4C900015:0001:e
+DCE00040:0001:s[search s]

@@ -1,0 +1,14 @@
+[][Fizban the Fabulous]
+[SRRF:Northern Forests:Silver River, River's Fork]
+[NSSF:Northern Forests:Silver River, Small Fork]
+2C604410:F3904500:10:-1:0:::
+2C604410:0000:e
+39900140:0000:ne
+39904100:0000:ne
+39904100:0000:ne
+39904010:0000:e
+39900044:0000:s
+39901001:0000:se
+39900404:0000:s
+39901001:0000:se
+39901400:0000:se

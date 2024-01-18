@@ -1,0 +1,12 @@
+[][Fizban the Fabulous]
+[SLLA:Ocean:Slimeworm Lair]
+[M7WS:Ocean:Wounded Sailor]
+C1400000:55E00040:8:-1:0:::
+C1400000:0000:go hole
+C1400050:0000:w
+C1400410:0000:nw
+C1405040:0000:w
+C1400510:0000:nw
+C1400140:0000:w
+C1400410:0000:nw
+C1411000:0000:u

@@ -1,0 +1,13 @@
+[][]
+[GOBC:Darkwood Forest:Goblin Caves]
+[GOB1:Darkwood Forest:Goblin Caves (Slime Beast fork)]
+4D400050:89505100:9:-1:0:::
+4D400050:0000:e
+6FC01040:0001:se
+6FC00410:0001:e
+6FC00050:0001:e
+6FC01040:0001:se
+6FC00410:0001:e
+6FC00050:0001:e
+6FC00050:0001:e
+6FC00140:0001:ne

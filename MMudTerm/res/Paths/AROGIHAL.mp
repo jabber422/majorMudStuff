@@ -1,0 +1,12 @@
+[][Spork ZSpoon]
+[AROG:Arlysia:An Open Grave]
+[IHAL:Arlysia:Intersection of Haven Street & Long Stre]
+11010000:E3F00015:8:-1:0:::
+11010000:0000:u
+2B040054:0000:s
+2B000059:0400:s
+7E900056:0000:e
+7E900050:0000:e
+7E900050:0000:e
+E8600045:0000:s
+E8600005:0000:s

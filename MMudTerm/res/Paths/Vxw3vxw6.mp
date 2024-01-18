@@ -1,0 +1,12 @@
+[][]
+[VXW3:Black Wastelands:Wastelands Vortex (DTH)]
+[VXW6:Black Wastelands:Wastelands Vortex (Mossy Tunnels)]
+ED100015:ED100504:8:-1:0:::
+ED100015:0000:s
+ED000041:0000:w
+ED000050:0000:w
+ED004010:0000:sw
+ED000140:0000:w
+ED004011:0000:sw
+ED000140:0000:w
+ED004010:0000:sw

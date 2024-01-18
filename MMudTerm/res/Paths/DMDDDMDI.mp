@@ -1,0 +1,13 @@
+[][Winterhawk]
+[DMDD:Dwarven Mines:Mithril Mine, Down to Diamond mines]
+[DMDI:Dwarven Mines:Diamond Mine Tunnel, Cart Ramp]
+84440004:19410004:9:-1:0:::
+84440004:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d
+57550000:0000:d

@@ -70,5 +70,8 @@ namespace MMudTerm.Game
         DoorLocked,
         TelepathRcvd,
         Gossip,
+        BadRoomMoveClosedDoor,
+        EquippedArmor,
+        EquippedWeapon,
     }
 }

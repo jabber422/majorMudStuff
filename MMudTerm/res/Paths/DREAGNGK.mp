@@ -1,0 +1,10 @@
+[][Merlin]
+[DREA:Black Fort:Dreary Village]
+[GNGK:Gang Houses:Entrance Black House Room]
+85500056:57800814:6:-1:0:::
+85500056:0000:e
+85500055:0000:e
+05D00050:0000:e
+05D00050:0000:n
+75800000:0000:n
+75800001:0000:n

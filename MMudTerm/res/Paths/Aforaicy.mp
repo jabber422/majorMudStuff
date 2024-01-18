@@ -1,0 +1,12 @@
+[][]
+[AFOR:Ancient Ruin:Ancient Ruin Ice Forge]
+[AICY:Ancient Ruin:Ancient Ruin Icy Building]
+E0900040:E6D80002:8:-1:0:::
+E0900040:0001:w
+2AE00011:0001:n
+FF500144:0001:ne
+59305000:0001:se
+59300404:0001:s
+59300005:0001:s
+59304001:0001:sw
+F2A20100:0001:u

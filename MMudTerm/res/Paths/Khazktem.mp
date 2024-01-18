@@ -1,0 +1,10 @@
+[][]
+[KHAZ:Khazarad:Khazarad Center]
+[KTEM:Khazarad:Dwarven Temple Healer]
+19800051:8A200014:6:-1:0:::
+19800051:0000:e
+19800044:0000:s
+7DB00055:0000:e
+D1600054:0000:e
+D1600055:0000:e
+D1600055:0000:n

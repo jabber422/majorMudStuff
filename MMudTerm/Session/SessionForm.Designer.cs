@@ -52,6 +52,8 @@
             this.toolStripButton_getcoins = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.sessionTermContainer = new System.Windows.Forms.Panel();
+            this.toolStripButton_get_all = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton_equip_all = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -132,7 +134,9 @@
             this.toolStripButton_buff,
             this.toolStripButton_get,
             this.toolStripButton_getcoins,
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.toolStripButton_get_all,
+            this.toolStripButton_equip_all});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -180,6 +184,7 @@
             this.toolStripButton_stop.Name = "toolStripButton_stop";
             this.toolStripButton_stop.Size = new System.Drawing.Size(28, 28);
             this.toolStripButton_stop.Text = "toolStripButton1";
+            this.toolStripButton_stop.Click += new System.EventHandler(this.toolStripButton_stop_Click);
             // 
             // toolStripButton_loop
             // 
@@ -190,6 +195,7 @@
             this.toolStripButton_loop.Name = "toolStripButton_loop";
             this.toolStripButton_loop.Size = new System.Drawing.Size(28, 28);
             this.toolStripButton_loop.Text = "toolStripButton8";
+            this.toolStripButton_loop.Click += new System.EventHandler(this.toolStripButton_loop_Click);
             // 
             // toolStripSeparator1
             // 
@@ -289,6 +295,26 @@
             this.sessionTermContainer.Size = new System.Drawing.Size(1006, 663);
             this.sessionTermContainer.TabIndex = 2;
             // 
+            // toolStripButton_get_all
+            // 
+            this.toolStripButton_get_all.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_get_all.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_get_all.Image")));
+            this.toolStripButton_get_all.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_get_all.Name = "toolStripButton_get_all";
+            this.toolStripButton_get_all.Size = new System.Drawing.Size(28, 28);
+            this.toolStripButton_get_all.Text = "toolStripButton2";
+            this.toolStripButton_get_all.Click += new System.EventHandler(this.toolStripButton_get_all_Click);
+            // 
+            // toolStripButton_equip_all
+            // 
+            this.toolStripButton_equip_all.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_equip_all.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_equip_all.Image")));
+            this.toolStripButton_equip_all.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_equip_all.Name = "toolStripButton_equip_all";
+            this.toolStripButton_equip_all.Size = new System.Drawing.Size(28, 28);
+            this.toolStripButton_equip_all.Text = "toolStripButton2";
+            this.toolStripButton_equip_all.Click += new System.EventHandler(this.toolStripButton_equip_all_Click);
+            // 
             // SessionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -336,5 +362,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel__xphr;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_currentroom;
+        private System.Windows.Forms.ToolStripButton toolStripButton_get_all;
+        private System.Windows.Forms.ToolStripButton toolStripButton_equip_all;
     }
 }

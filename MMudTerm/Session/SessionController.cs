@@ -359,6 +359,11 @@ namespace MMudTerm.Session
             //this.m_sessionForm.Close();
         }
 
+        internal void PathWalkerFinished()
+        {
+            this.m_sessionForm.PathWalkerFinished();
+        }
+
         //internal void AddListener(NewGameEventHandler mummyScriptHandler)
         //{
         //    if(this.CurrentState is SessionStateInGame)
@@ -367,7 +372,7 @@ namespace MMudTerm.Session
         //    }
         //}
 
-        
+
 
         //internal void RemoveListender(NewGameEventHandler mummyScriptHandler)
         //{

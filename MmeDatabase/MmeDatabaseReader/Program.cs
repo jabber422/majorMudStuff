@@ -13,42 +13,45 @@ namespace MmeDatabaseReader
         static void Main(string[] args)
         {
             string myConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;" +
-                               @"Data Source=e:\Repos\MajorMudStuff\MmeDatabase\test.mdb;" +
-                               "Persist Security Info=True;" +
-                               "Jet OLEDB:Database Password=myPassword;";
+                   @"Data Source=master.mdb;" +
+                   "Persist Security Info=True;" +
+                   "Jet OLEDB:Database Password=myPassword;";
+
             try
             {
-                // Open OleDb Connection
-                OleDbConnection myConnection = new OleDbConnection();
-                myConnection.ConnectionString = myConnectionString;
-                myConnection.Open();
+                MMudData.GetNpc(new MMudObjects.Entity("giant rat"));
 
-                string getDbName = @"SELECT MSysObjects.Name AS table_name " +
-                    @"FROM MSysObjects " +
-                    "WHERE(((Left([Name], 1)) <> \"~\") " +
-                    "AND((Left([Name], 4)) <> \"MSys\") " +
-                    @"AND((MSysObjects.Type)In(1, 4, 6))) " +
-                    @"order by MSysObjects.Name";
-                string getAllTableNames = "" +
-                    "SELECT Name, 'Summoned By' "+
-                    "FROM   Monsters " +
-                    "WHERE(RegenTime <> 0)";
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
+                {
+                    myConnection.Open();
+
+                    string getDbName = @""+
+                        "SELECT *" +
+                        "FROM   Monsters " +
+                        "WHERE(RegenTime <> 0)";
 
 
-                // Execute Queries
-                OleDbCommand cmd = myConnection.CreateCommand();
-                cmd.CommandText = getAllTableNames;
-                    
-                OleDbDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection); // close conn after complete
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
+                    {
+                        using (OleDbDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
 
-                // Load the result into a DataTable
-                DataTable myDataTable = new DataTable();
-                myDataTable.Load(reader);
+                            // Print table names
+                            foreach (DataRow row in myDataTable.Rows)
+                            {
+                                Console.WriteLine(row[0].ToString() + " - " + row[1].ToString());
+                            }
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("OLEDB Connection FAILED: " + ex.Message);
+                Console.WriteLine("An error occurred: " + ex.Message);
             }
+
 
             Console.ReadKey();
         }

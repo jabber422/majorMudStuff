@@ -1,0 +1,8 @@
+[][]
+[VXW1:Black Wastelands:Wastelands Vortex (Pillaged Museum)]
+ED101445:ED100104:5:-1:0:::
+ED101445:0000:nw
+ED001400:0000:nw
+ED001040:0000:w
+ED000051:0000:n
+ED000005:0000:n

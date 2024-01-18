@@ -1,0 +1,12 @@
+[][]
+[SLMA:Darkwood Forest:Slave Master]
+[GOB2:Darkwood Forest:Goblin Caves (Slavemaster fork)]
+E7600049:01180050:8:-1:0:::
+E7600049:0000:w
+2750005A:0000:w
+5280401A:0000:sw
+2DA00140:0001:w
+2DA00410:0001:nw
+2DA01001:0001:n
+2DA00104:0001:ne
+1D024000:0001:u

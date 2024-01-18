@@ -1,0 +1,12 @@
+[][]
+[RCK2:Rocky Trail:Rocky Trail (Titan Fork)]
+[TCVE:Rocky Trail:Torchlit Caverns]
+92501140:E6300550:7:-1:0:::
+92501140:0000:ne
+92504100:0000:ne
+92504001:0000:n
+92500404:0000:nw
+92501140:0000:w
+92500050:0000:w
+92500050:0000:w
+

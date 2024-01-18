@@ -1,0 +1,12 @@
+[][Fizban the Fabulous]
+[VODP:Volcano:Outside Dark Phoenix]
+[VLEF:Volcano:Lesser Efreetis]
+12900021:12900004:8:-1:0:::
+12900021:0000:n
+12900004:0000:nw[sea nw]
+12904010:0000:sw
+12900104:0000:s
+12900005:0000:s
+12901001:0000:se
+12900410:0000:e
+12900051:0000:n

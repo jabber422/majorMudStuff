@@ -1,0 +1,15 @@
+[][Winterhawk]
+[CFSC:Darkwood Forest:Cleared Fields,Southeast corner]
+[MRDG:Darkwood Forest:Main Road (Silvermere Gates)]
+77700041:B7200055:11:-1:0:::
+77700041:0000:n
+77700045:0000:n
+77700045:0000:n
+77700045:0000:n
+77700045:0000:n
+77700005:0000:n
+02300055:0000:w
+02300055:0000:w
+02300055:0000:w
+02300055:0000:w
+02300055:0000:w

@@ -39,6 +39,10 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label_taken_damage_value = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
+            this.label2_tar_hp = new System.Windows.Forms.Label();
+            this.label_tar_hp_value = new System.Windows.Forms.Label();
+            this.label_tar_hp_max = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -141,10 +145,50 @@
             this.label9.TabIndex = 7;
             this.label9.Text = "Damage Taken:";
             // 
+            // label2_tar_hp
+            // 
+            this.label2_tar_hp.AutoSize = true;
+            this.label2_tar_hp.Location = new System.Drawing.Point(4, 24);
+            this.label2_tar_hp.Name = "label2_tar_hp";
+            this.label2_tar_hp.Size = new System.Drawing.Size(67, 20);
+            this.label2_tar_hp.TabIndex = 11;
+            this.label2_tar_hp.Text = "Est HP: ";
+            // 
+            // label_tar_hp_value
+            // 
+            this.label_tar_hp_value.AutoSize = true;
+            this.label_tar_hp_value.Location = new System.Drawing.Point(63, 24);
+            this.label_tar_hp_value.Name = "label_tar_hp_value";
+            this.label_tar_hp_value.Size = new System.Drawing.Size(54, 20);
+            this.label_tar_hp_value.TabIndex = 12;
+            this.label_tar_hp_value.Text = "99999";
+            // 
+            // label_tar_hp_max
+            // 
+            this.label_tar_hp_max.AutoSize = true;
+            this.label_tar_hp_max.Location = new System.Drawing.Point(123, 24);
+            this.label_tar_hp_max.Name = "label_tar_hp_max";
+            this.label_tar_hp_max.Size = new System.Drawing.Size(54, 20);
+            this.label_tar_hp_max.TabIndex = 13;
+            this.label_tar_hp_max.Text = "99999";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(113, 24);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(13, 20);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "/";
+            // 
             // CombatSessionControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label_tar_hp_max);
+            this.Controls.Add(this.label_tar_hp_value);
+            this.Controls.Add(this.label2_tar_hp);
             this.Controls.Add(this.label_taken_damage_from_player_value);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label_taken_damage_value);
@@ -176,5 +220,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label_taken_damage_value;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label2_tar_hp;
+        private System.Windows.Forms.Label label_tar_hp_value;
+        private System.Windows.Forms.Label label_tar_hp_max;
+        private System.Windows.Forms.Label label4;
     }
 }

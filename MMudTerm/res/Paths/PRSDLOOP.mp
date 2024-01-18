@@ -1,0 +1,9 @@
+[Dragon fang collecting loop][]
+[PRSD:Ancient Ruin:Prismatic Dragon]
+34720010:34720010:6:-1:0:::
+34720010:0000:e
+8E410040:0000:u
+DA640080:0000:w
+50D80024:0000:e
+DA640080:0000:d
+8E410040:0000:w

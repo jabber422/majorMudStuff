@@ -1,0 +1,15 @@
+[][]
+[GOB3:Darkwood Forest:Goblin Caves (Werewolf fork)]
+[GOB2:Darkwood Forest:Goblin Caves (Slavemaster fork)]
+01104410:01180050:11:-1:0:::
+01104410:0001:nw
+01101040:0001:w
+01104010:0001:sw
+01100140:0001:w
+01100050:0001:w
+01104010:0001:sw
+01100140:0001:w
+01100410:0001:nw
+01101040:0001:w
+0110041A:0001:nw
+01101040:0001:w

@@ -1,0 +1,10 @@
+[][]
+[DEEM:Black Caves:Dark-elf Emissary]
+[HTOP:Black Caves:Hilltop Fortress]
+8DB00002:36600094:5:-1:0:::
+8DB00002:0000:n
+4250001A:0000:e
+4254004A:0000:d
+10D10001:0000:n
+10D00044:0000:w
+

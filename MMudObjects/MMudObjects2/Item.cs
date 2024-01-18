@@ -6,6 +6,7 @@ namespace MMudObjects
 {
     public class Item : IComparable
     {
+        public EnumItemType Type { get; set; }
         public Item(Item item)
         {
             this.Name = item.Name;
@@ -26,6 +27,28 @@ namespace MMudObjects
         public int Limit { get; set; }
 
         public int Quantity { get; set; }
+        public int Encum { get; set; }
+        public int Price { get; set; }
+        public int Currency { get; set; }
+        public bool Gettable { get; set; }
+
+        public List<ItemAbility> Abilities { get; set; }
+
+        public int Level { get; set; }
+        public int AC { get; set; }
+        public double DR { get; set; }
+        public int Accuracy { get; set; }
+
+        public bool Equiped { get; set; }
+
+        public EnumWeaponType WeaponType { get; set; }
+        public int MinDamage { get; set; }
+        public int MaxDamage { get; set; }
+        public int Speed { get; set; }
+        public int Strength { get; set; }
+        public int BackStab { get; set; }
+        public EnumArmorType ArmorType { get; set; }
+        public EnumEquipmentSlot EquipmentSlot { get; set; }
 
         public int CompareTo(object obj)
         {
@@ -35,33 +58,7 @@ namespace MMudObjects
         public override string ToString()
         {
             return this.Name;
-        }
-
-        //public static List<Item> CreateListFromCsv(string csv)
-        //{
-        //    List<Item> result = new List<Item>();
-        //    string[] tokens = csv.Split(new char[] { ',' });
-        //    foreach(string s in tokens)
-        //    {
-        //        //s = s.Trim();
-        //        CarryableItem i = new CarryableItem();
-        //        Match m = Regex.Match(s.Trim(), @"^(\d+)? ?(\w+.*)$");
-        //        if (m.Success)
-        //        {
-        //            if (m.Groups[1].Value != "")
-        //            {
-        //                i.Quantity = int.Parse(m.Groups[1].Value);
-        //            }
-        //            i.Name = m.Groups[2].Value;
-        //            result.Add(i);
-        //        }
-        //        else
-        //        {
-        //            throw new Exception("what happened?");
-        //        }
-        //    }
-        //    return result;
-        //}
+        }       
     }
 
     public class Price
@@ -158,35 +155,35 @@ namespace MMudObjects
             return total;
         }
 
-        public List<CarryableItem> ToList()
+        public List<Item> ToList()
         {
-            List<CarryableItem> result = new List<CarryableItem>();
+            List<Item> result = new List<Item>();
             if(this.runic > 0)
             {
-                CarryableItem coins = new CarryableItem("runic coins");
+                Item coins = new Item("runic coins");
                 coins.Quantity = this.runic;
                 result.Add(coins);
             }else if (this.platinum > 0)
             {
-                CarryableItem coins = new CarryableItem("platinum pieces");
+                Item coins = new Item("platinum pieces");
                 coins.Quantity = this.platinum;
                 result.Add(coins);
             }
             else if (this.gold > 0)
             {
-                CarryableItem coins = new CarryableItem("gold crowns");
+                Item coins = new Item("gold crowns");
                 coins.Quantity = this.gold;
                 result.Add(coins);
             }
             else if (this.silver > 0)
             {
-                CarryableItem coins = new CarryableItem("silver nobles");
+                Item coins = new Item("silver nobles");
                 coins.Quantity = this.silver;
                 result.Add(coins);
             }
             else if (this.copper > 0)
             {
-                CarryableItem coins = new CarryableItem("copper farthings");
+                Item coins = new Item("copper farthings");
                 coins.Quantity = this.copper;
                 result.Add(coins);
             }
@@ -194,114 +191,65 @@ namespace MMudObjects
         }
     }
     //mainly used for items read from a for sale list
-    public class PurchasableItem : Item
-    {
-        public bool useable = false;
-        public bool too_powerful;
-        Price price = null;
+    //public class PurchasableItem : Item
+    //{
+    //    public bool useable = false;
+    //    public bool too_powerful;
+    //    Price price = null;
 
-        public PurchasableItem(string name, int quantity, Price price) : base(name)
-        {
-            this.Quantity = quantity;
-            this.price = price;
-        }
-    }
+    //    public PurchasableItem(string name, int quantity, Price price) : base(name)
+    //    {
+    //        this.Quantity = quantity;
+    //        this.price = price;
+    //    }
+    //}
 
-    //used for anything that we can't classify, items start here
-    public class UnknownItem : Item
-    {
-        public UnknownItem(string name) : base(name)
-        {
-        }
-    }
+    ////used for anything that we can't classify, items start here
+    //public class UnknownItem : Item
+    //{
+    //    public UnknownItem(string name) : base(name)
+    //    {
+    //    }
+    //}
+  
 
-    public class CarryableItem : Item
-    {
-        public CarryableItem(CarryableItem item) : base(item)
-        { 
-            this.Weight = item.Weight;
-        }
+    // //this we can see, and pickup but not equip
+    //public class Sundry : Item
+    //{
+    //    public Sundry(Sundry item) : base(item)
+    //    {
+    //        this.SundryType = item.SundryType;
+    //    }
 
-        public CarryableItem(string name) : base(name)
-        {
-            this.Weight = 0;
-        }
+    //    public Sundry(string name) : base(name)
+    //    {
+    //    }
 
-        public int Weight { get; set; }
-        //public int Limit { get; }
-        //public int Quantity { get; set; }
+    //    public EnumSundryType SundryType { get; set; }
+    //}
 
-    }
+   
+    //public class Weapon : Item
+    //{
+    //    public Weapon(Item item) :base(item)
+    //    {
+            
+    //    }
 
-     //this we can see, and pickup but not equip
-    public class Sundry : CarryableItem
-    {
-        public Sundry(Sundry item) : base(item)
-        {
-            this.SundryType = item.SundryType;
-        }
 
-        public Sundry(string name) : base(name)
-        {
-        }
+    //}
 
-        EnumSundryType SundryType { get; set; }
-    }
+    //public class Armor : Item
+    //{
+   
+    //    public Armor(Item item) : base(item.Name)
+    //    {
+            
+    //    }
 
-    public class EquipableItem : CarryableItem
-    {
-        public EquipableItem(EquipableItem item) : base(item)
-        {
-            this.Abilities = item.Abilities;
-            this.Level = item.Level;
-            this.AC = item.AC;
-            this.DR = item.DR;
-            this.Accuracy = item.Accuracy;
-            this.Equiped = item.Equiped;
-            this.Location = item.Location;
-        }
-
-        public EquipableItem(CarryableItem item) : base(item)
-        {
-        }
-
-        public EquipableItem(string name) : base(name)
-        { }
-
-        List<ItemAbility> Abilities {get; set;}
-        int Level { get; set; }
-        int AC { get; set; }
-        double DR { get; set; }
-        int Accuracy { get; set; }
-
-        public bool Equiped { get; set; }
-        public string Location { get; set; }
-    }
-
-    public class Weapon : EquipableItem
-    {
-        public Weapon(string name) : base(name)
-        {
-        }
-
-        EnumWeaponType WeaponType { get; set; }
-        int MinDamage { get; set; }
-        int MaxDamage { get; set; }
-        int Speed { get; set; }
-        int Strength { get; set; }
-        int BackStab { get; set; }
-    }
-
-    public class Armor : EquipableItem
-    {
-        public Armor(string name) : base(name)
-        {
-        }
-
-        EnumArmorType ArmorType { get; set; }
-        EnumEquipmentSlot EquipmentSlot { get; set; }
        
-    }
+       
+    //}
 
     public enum EnumArmorType
     {
@@ -310,7 +258,7 @@ namespace MMudObjects
 
     public enum EnumWeaponType
     {
-        ONE_HAND_SHARP, TWo_HAND_SHARP, ONE_HAND_BLUNT, TWO_HAND_BLUNT
+        ONE_HAND_SHARP, TWO_HAND_SHARP, ONE_HAND_BLUNT, TWO_HAND_BLUNT
     }
 
     public enum EnumEquipmentSlot
@@ -327,6 +275,21 @@ namespace MMudObjects
 
     public enum EnumSundryType
     {
-        SEIGN, SPECIAL, KEY, SCROLL, DRINK, FOOD, CONTAINER, LIGHT, PROJECTILE, 
+        SIGN, SPECIAL, KEY, SCROLL, DRINK, FOOD, CONTAINER, LIGHT, PROJECTILE, 
+    }
+
+    public enum EnumItemType
+    {
+        Armor=0,
+        Weapon = 1,
+        Thrown =2,
+        Sign=3,
+        Food=4,
+        Potion=5,
+        Light=6,
+        Key=7,
+        Chest=8,
+        Scroll=9,
+        Gem=10,
     }
 }

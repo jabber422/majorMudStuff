@@ -1,0 +1,11 @@
+[][Winterhawk]
+[BLC2:Black Caves:Black Caves Level 2]
+[BCMC:Black Caves:Black Caves, Mushroom Cave]
+16C10001:20700144:7:-1:0:::
+16C10001:0000:u
+14040001:0000:n
+14000104:0000:ne
+14004110:0000:e
+14000050:0000:e
+14000050:0000:e
+14000050:0000:e

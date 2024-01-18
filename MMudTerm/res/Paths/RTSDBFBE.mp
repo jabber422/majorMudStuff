@@ -1,0 +1,13 @@
+[][Winterhawk]
+[RTSD:Blackwood Forest:Road to the Southern Dock]
+[BFBE:Blackwood Forest:Bloody Executioner]
+6DF04001:5A601040:9:-1:0:::
+6DF04001:0000:sw
+1FF01500:0000:nw
+1FF01400:0000:nw
+1FF01040:0000:w
+1FF00410:0000:nw
+1FF01001:0000:n
+1FF00404:0000:nw
+1FF01440:0000:nw
+5A601400:0000:nw

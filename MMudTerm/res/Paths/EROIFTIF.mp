@@ -1,0 +1,14 @@
+[][Winterhawk]
+[EROI:Blackwood Forest:Eastern Road, Outside Inn]
+[FTIF:Blackwood Forest:Fork, Town/Inn/Fields]
+CEA01041:CEA01404:10:-1:0:::
+CEA01041:0000:n
+CEA00005:0000:n
+CEA00104:0000:ne
+CEA04100:0000:ne
+CEA04001:0000:n
+CEA00005:0000:n
+CEA00104:0000:ne
+CEA04001:0000:n
+CEA00005:0000:n
+CEA00404:0000:nw

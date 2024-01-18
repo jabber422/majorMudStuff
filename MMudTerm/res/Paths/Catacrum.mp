@@ -1,0 +1,10 @@
+[][]
+[CATA:Mossy Tunnels:Catacombs]
+[CRUM:Mossy Tunnels:Crumbling Ruins]
+08610040:E6400004:6:-1:0:::
+08610040:0000:u
+6CB40000:0000:e[search e]
+83500001:0000:n
+83500014:0000:e
+83500055:0000:s
+83500005:0000:s

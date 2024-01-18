@@ -128,6 +128,8 @@ namespace MMudTerm.Game
             common_patterns.Add(pattern_inv, EventType.Inventory);
             common_patterns.Add(@"\*Combat ", EventType.Combat);
             common_patterns.Add(@"You are now resting.", EventType.Rest);
+            common_patterns.Add(@"You are now wearing ([A-Za-z ]+)\.", EventType.EquippedArmor);
+            common_patterns.Add(@"You are now holding ([A-Za-z ]+)\.", EventType.EquippedWeapon);
             common_patterns.Add(@"Top Heroes of the Realm", EventType.Top);
             common_patterns.Add(@"   Current Adventurers", EventType.Who);
             common_patterns.Add(@"You just bought ([\S ]+) for ([\S ]+)\.", EventType.BoughtSomething);
@@ -136,8 +138,9 @@ namespace MMudTerm.Game
 
             common_patterns.Add(@"There is no exit in that direction!", EventType.BadRoomMove);
             common_patterns.Add(@"You are not permitted in that room!", EventType.BadRoomMove);
-            common_patterns.Add(@"There is a closed door in that direction!", EventType.BadRoomMove);
-            common_patterns.Add(@"The door is closed!", EventType.BadRoomMove);
+            //You may not drag anyone through this exit.
+            common_patterns.Add(@"There is a closed door in that direction!", EventType.BadRoomMoveClosedDoor);
+            common_patterns.Add(@"The door is closed!", EventType.BadRoomMoveClosedDoor);
 
             common_patterns.Add(@"You hid ", EventType.HidItem);
             common_patterns.Add(@"You notice (.*) here.", EventType.SearchNotice);

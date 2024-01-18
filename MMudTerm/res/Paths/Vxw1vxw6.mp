@@ -1,0 +1,14 @@
+[][]
+[VXW1:Black Wastelands:Wastelands Vortex (Pillaged Museum)]
+[VXW6:Black Wastelands:Wastelands Vortex (Mossy Tunnels)]
+ED101445:ED100504:10:-1:0:::
+ED101445:0000:s
+ED000005:0000:s
+ED001001:0000:se
+ED005400:0000:se
+ED000404:0000:s
+ED000005:0000:s
+ED000005:0000:s
+ED004011:0000:sw
+ED000140:0000:w
+ED004010:0000:sw

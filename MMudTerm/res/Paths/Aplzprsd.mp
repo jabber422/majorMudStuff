@@ -1,0 +1,12 @@
+[][Winterhawk]
+[APLZ:Ancient Ruin:Ancient Ruin Plaza]
+[PRSD:Ancient Ruin:Prismatic Dragon]
+36604450:34720010:8:-1:0:::
+36604450:0000:w
+DC200050:0000:w
+DC200056:0000:w
+DC200050:0000:w
+EF400051:0000:n
+50D80024:0000:e
+DA640080:0000:d
+8E410040:0000:w

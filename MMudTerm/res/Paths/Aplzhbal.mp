@@ -1,0 +1,19 @@
+[][]
+[APLZ:Ancient Ruin:Ancient Ruin Plaza]
+[HBAL:Ancient Ruin:Huge Basilisk]
+36604450:3A900000:15:-1:0:::
+36604450:0000:sw
+DC204100:0000:sw
+DC204140:0000:w
+54C00010:0000:n[turn knob,pull lever,push switch,push button]
+14C40000:0001:d
+09410040:0001:w
+19E00050:0001:w
+19E00050:0001:w
+19E00050:0001:e
+19E00050:0001:w
+19E00050:0001:e
+19E00050:0001:e
+19E00050:0001:w
+19E00050:0000:sea n
+19E00050:0001:n[search n]

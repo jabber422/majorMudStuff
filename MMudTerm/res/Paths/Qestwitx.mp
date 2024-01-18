@@ -1,0 +1,14 @@
+[][Winterhawk]
+[QEST:Trainers:Quest Hall]
+[WITX:Trainers:Witchunter Spirit]
+B8300059:42600010:10:-1:0:stone key::
+B8300059:0001:w
+7EC00040:0001:w
+7EC00050:0001:w
+8C300055:0001:n
+7EC00104:0001:ne
+2F104000:0001:push button
+23500008:0401:s[use stone key s]
+42600010:0001:s
+77500055:0000:w
+7EC00050:0001:w

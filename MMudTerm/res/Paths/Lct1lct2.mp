@@ -1,0 +1,11 @@
+[][Fizban the Fabulous]
+[LCT1:Lost City:Temple Stairs]
+[LCT2:Lost City:Market Street]
+3A700155:3B904046:7:-1:0:::
+3A700155:0000:e
+3A700455:0000:e
+3B901054:0000:e
+3B905054:0000:e
+3B905054:0000:e
+3B905054:0000:e
+3B905054:0000:e

@@ -1,0 +1,12 @@
+[][Winterhawk]
+[GNGS:Gang Houses:Entrance Silver House Room]
+[DFMR:Darkwood Forest:Darkwood Forest, Main Road (SIgn)]
+1B700046:02300055:8:-1:0:::
+1B700046:0000:s
+12A00051:0000:e
+4BE00054:0000:s
+12A00015:0000:s
+12A00025:0000:s
+12A00025:0000:s
+12A00015:0000:s
+12A00005:0000:s

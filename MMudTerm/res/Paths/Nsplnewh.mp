@@ -1,0 +1,5 @@
+[][]
+[NSPL:Newhaven:Spell Shop (Rayth)]
+BC300004:38B40051:2:-1:0:::
+BC300004:0000:s
+42D00055:0000:w

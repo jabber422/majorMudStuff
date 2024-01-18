@@ -1,0 +1,10 @@
+[][]
+[FRT1:Black Fort:Black Fortress]
+[FRT2:Black Fort:Outside Dark Wizard]
+A4F00055:78C01600:5:-1:0:::
+A4F00055:0000:n
+D4840004:0000:d
+D4810004:0000:s
+78C00051:0000:w
+78C00410:0000:nw
+

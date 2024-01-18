@@ -1,0 +1,9 @@
+[][]
+[KLEA:Khazarad:Gurdal's Leather Goods]
+[KHAZ:Khazarad:Khazarad Center]
+CE400001:19800051:5:-1:0:::
+CE400001:0000:n
+D1600055:0000:w
+D1600054:0000:w
+7DB00055:0000:n
+19800044:0000:w

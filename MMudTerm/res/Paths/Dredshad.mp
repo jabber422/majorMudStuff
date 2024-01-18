@@ -1,0 +1,10 @@
+[][]
+[DRED:Rhudaur:Dread Mystic]
+[SHAD:Rhudaur:Shadow Fist Temple]
+0AB00010:EC340004:5:-1:0:::
+0AB00010:0000:e
+BDC00060:0000:e
+6EC000A5:0000:n
+DAB00025:0000:e
+FF900081:0000:n
+

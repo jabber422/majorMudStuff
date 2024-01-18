@@ -1,0 +1,11 @@
+[][]
+[ALIB:Ancient Ruin:Ancient Ruin Library]
+[BEHO:Ancient Ruin:Beholder]
+25701500:F9900000:7:-1:0:::
+25701500:0202:ne
+16D04001:0000:n
+3A400004:0000:e
+95A00000:0000:push painting
+95A00000:0000:w
+3A400004:0000:s
+16D04001:0001:e

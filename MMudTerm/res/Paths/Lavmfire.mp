@@ -1,0 +1,12 @@
+[][]
+[LAVM:Lava Fields:Tunnel Mouth]
+[FIRE:Lava Fields:Lake of Fire]
+73900054:B1900008:8:-1:0:basalt key::
+73900054:0000:e
+9FD01044:0000:se
+9FD00410:0000:e
+9FD00140:0000:ne
+9FD04010:0000:e
+9FD00050:0000:e
+9FD01045:0000:n
+8E400006:0000:n[use basalt key n]

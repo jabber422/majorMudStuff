@@ -1,0 +1,16 @@
+[][Olorin]
+[SPCW:Scorching Desert:Golden Palace Courtyard, Well]
+[BOSP:Scorching Desert:Bountiful Oasis, Shimmering Pool]
+EEA00056:43300055:12:-1:0:::
+EEA00056:0000:dive well
+38050000:0004:d
+38050000:0004:d
+38010004:0004:s
+38000005:0004:s
+38000005:0004:s
+38000005:0004:s
+38000005:0004:s
+38000005:0004:s
+38010001:0004:u
+38050000:0004:u
+38050000:0004:u

@@ -1,0 +1,12 @@
+[][]
+[ATEM:Ancient Ruin:Ancient Ruin Unholy Temple]
+[AICY:Ancient Ruin:Ancient Ruin Icy Building]
+367000A1:E6D80002:8:-1:0:::
+367000A1:0001:w
+DC200024:0000:s
+DC200015:0000:s
+69010005:0000:s
+DC200005:0000:s
+DC200005:0000:s
+2E500019:0000:use chrome key s
+2E500019:0400:s

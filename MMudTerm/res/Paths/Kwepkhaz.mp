@@ -1,0 +1,9 @@
+[][]
+[KWEP:Khazarad:Drotha's Deadly Weaponry]
+[KHAZ:Khazarad:Khazarad Center]
+2F300044:19800051:5:-1:0:::
+2F300044:0000:s
+D1600055:0000:w
+D1600054:0000:w
+7DB00055:0000:n
+19800044:0000:w

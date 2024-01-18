@@ -1,0 +1,14 @@
+[][Winterhawk]
+[DMIN:Blackwood Forest:Death Minion]
+[GESG:Blackwood Forest:Graveyard Entrance, Southern Gate]
+40100008:D9900005:10:-1:0:::
+40100008:0000:s
+2B000012:0000:e
+2B000041:0000:n
+2B000005:0000:n
+2B000055:0000:e
+2B000055:0000:s
+2B000015:0000:s
+2B000011:0000:e
+2B000051:0000:e
+2B000055:0000:s

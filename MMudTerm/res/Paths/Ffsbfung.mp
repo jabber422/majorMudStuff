@@ -1,0 +1,12 @@
+[][Kitty & Wulfman]
+[FFSB:Black House:Fungus Forest (Stone Bridge)]
+[FUNG:Black House:Fungus Forest]
+86605041:23600015:8:-1:0:::
+86605041:0000:n
+41B00045:0000:n
+41B00504:0000:ne
+41B04101:0000:n
+41B00005:0000:n
+41B00005:0000:n
+41B00144:0000:ne
+41B04401:0000:n

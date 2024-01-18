@@ -141,7 +141,7 @@ namespace MMudObjects
             this.AlsoHere = new AlsoHere();
         }
 
-        public void Add(CarryableItem item)
+        public void Add(Item item)
         {
             if (this.VisibleItems.ContainsKey(item.Name))
             {
@@ -154,7 +154,7 @@ namespace MMudObjects
             }
         }
 
-        public void Remove(CarryableItem item)
+        public void Remove(Item item)
         {
             if (this.VisibleItems.ContainsKey(item.Name))
             {
@@ -184,17 +184,17 @@ namespace MMudObjects
             }
         }
 
-        public void Add_Hidden(List<CarryableItem> items)
+        public void Add_Hidden(List<Item> items)
         {
             foreach(var item in items) { Add_Hidden(item); }
         }
 
-        public void Add(List<CarryableItem> items)
+        public void Add(List<Item> items)
         {
             foreach (var item in items) { Add(item); }
         }
 
-        public void Remove(List<CarryableItem> items)
+        public void Remove(List<Item> items)
         {
             foreach (var item in items) { Remove(item); }
         }

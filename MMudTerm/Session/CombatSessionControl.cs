@@ -1,4 +1,5 @@
-﻿using MMudTerm.Game;
+﻿using MMudObjects;
+using MMudTerm.Game;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -31,6 +32,14 @@ namespace MMudTerm.Session
             this.label_taken_damage_from_player_value.Text = session.damage_done.ToString();
             this.label_taken_damage_value.Text = session.damage_done.ToString();
             this.label_target_name.Text = session.target.Name;
+            var target = session.target;
+            if (target is NPC)
+            {
+                var maxhp = (target as NPC).Health;
+                this.label_tar_hp_max.Text = maxhp.ToString();
+                this.label_tar_hp_value.Text = (maxhp - (target as NPC).damage_taken).ToString();
+                
+            }
             this.ResumeLayout(false);
             this.PerformLayout();
         }

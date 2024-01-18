@@ -1,0 +1,10 @@
+[][]
+[GJEW:Gnome Village:Jeweler's Shop]
+[GVIL:Gnome Village:Gnome Village]
+65C00001:2A300145:6:-1:0:::
+65C00001:0000:n
+2A300144:0000:w
+2A300050:0000:w
+2A300055:0000:w
+2A300051:0000:w
+2A304014:0000:sw

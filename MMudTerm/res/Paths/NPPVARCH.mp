@@ -1,0 +1,15 @@
+[][Winterhawk]
+[NPPV:NPP Shortcuts:Negative Power Plane Vortex]
+[ARCH:Dark-Elf City:Dark-elf Archmage]
+DD055500:7CF00002:11:-1:0:::
+DD055500:0000:se
+DCF01400:0000:se
+DCF55500:0000:sw
+DCF04100:0000:sw
+DCF55500:0000:sw
+DCF04100:0000:sw
+DCF55500:0000:sw
+DCF04100:0000:sw
+DCF55500:0000:sw
+DCF04100:0000:sw
+DCF55500:0000:@party go portal

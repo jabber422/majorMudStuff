@@ -1,0 +1,12 @@
+[][]
+[FRUT:Northern Forests:Green Fruit Tree]
+[RAVF:Northern Forests:Ravaged Path Fork]
+5E710000:BBC01410:7:-1:0:::
+5E710000:0001:u
+F7800140:0000:w
+F7800014:0000:s
+F7800041:0000:w
+4D704410:0000:sw
+F7800140:0000:w
+F7800050:0000:w
+

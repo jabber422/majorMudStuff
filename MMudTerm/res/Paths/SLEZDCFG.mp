@@ -1,0 +1,12 @@
+[][Winterhawk]
+[SLEZ:Dark-Elf City:Sleazy Shopkeeper]
+[DCFG:Dark-Elf City:Fighter's Guild, Entrance]
+A1400020:57D00021:8:-1:0:::
+A1400020:0000:e
+86400085:0000:s
+78000055:0000:s
+86400085:0000:s
+78000055:0000:e
+86400050:0000:e
+86400050:0000:e
+86400045:0000:s

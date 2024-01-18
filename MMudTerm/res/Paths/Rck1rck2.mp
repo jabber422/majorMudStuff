@@ -1,0 +1,11 @@
+[][]
+[RCK1:Rocky Trail:Rocky Trail (Base of Mountain)]
+[RCK2:Rocky Trail:Rocky Trail (Titan Fork)]
+92510140:92501140:7:-1:0:::
+92510140:0000:ne
+92504100:0000:ne
+92504010:0000:e
+92510040:0000:u
+92540010:0000:e
+92500140:0000:ne
+92504010:0000:e

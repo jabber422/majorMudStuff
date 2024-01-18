@@ -1,0 +1,10 @@
+[][]
+[SOVN:Silvermere:Sovereign St Nth]
+[BART:Trainers:Bard Trainer]
+89C00055:7BB00084:6:-1:7:::
+89C00055:0000:e
+70400055:0000:buy room ticket
+70400055:0000:s
+88510001:0000:u
+DB550009:0000:n
+2B600024:0000:e

@@ -1,0 +1,13 @@
+[][Winterhawk]
+[DCOE:Dark-Elf City:City, Main Street Outside Ebon Guild]
+[DCTE:Dark-Elf City:Dark Elf Temple, Entrance]
+86400005:2EE00009:9:-1:0:::
+86400005:0000:s
+86400005:0000:s
+86400005:0000:s
+86401001:0000:se
+86401400:0000:se
+86400410:0000:e
+86400050:0000:e
+86400050:0000:e
+86400054:0000:s

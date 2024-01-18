@@ -1,0 +1,16 @@
+[][Winterhawk]
+[ACCD:Arlysia:Arlysia, City Docks]
+[ARFL:Arlysia:White Forest, Landing]
+42D00140:44E00004:12:-1:0:::
+42D00140:0000:@party buy skiff
+42D00140:0000:w
+7AC04450:0000:w
+CA704455:0000:w
+CA705555:0000:nw
+CA705454:0000:nw
+CA705545:0000:nw
+CA705555:0000:nw
+CA705455:0000:n
+CA705044:0000:w
+CA705455:0000:n
+44E00004:0000:@party drop skiff

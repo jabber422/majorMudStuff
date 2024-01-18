@@ -1,0 +1,14 @@
+[][Winterhawk]
+[TGHD:Lost City:Training Grounds, Halls of the Dead]
+[LCBA:Lost City:Bank of the Lost City]
+83B40000:3FA00001:10:-1:0:::
+83B40000:0000:d
+5D640010:0000:d
+5D610051:0000:w
+5D600050:0000:w
+5D600015:0000:w[sea w]
+EDE00005:0000:s
+EDE00005:0000:s
+EDE00009:0000:s
+3B901016:0000:se
+3B900555:0000:s

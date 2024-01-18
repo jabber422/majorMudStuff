@@ -1,0 +1,10 @@
+[][Winterhawk]
+[ARGS:Arlysia:The Goode Seamstress]
+[BKOA:Arlysia:Bank of Arlysia]
+32400001:D4F00041:6:-1:0:::
+32400001:0000:n
+9C000055:0000:e
+9C000058:0000:e
+9C000054:0000:e
+E0500054:0000:e
+9C000055:0000:s

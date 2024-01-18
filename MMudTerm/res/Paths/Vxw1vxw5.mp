@@ -1,0 +1,14 @@
+[][]
+[VXW1:Black Wastelands:Wastelands Vortex (Pillaged Museum)]
+[VXW5:Black Wastelands:Wastelands Vortex (Copperwood)]
+ED101445:ED100410:10:-1:0:::
+ED101445:0000:n
+ED000015:0000:e
+ED000050:0000:e
+ED000140:0000:ne
+ED004001:0000:n
+ED000005:0000:n
+ED000014:0000:e
+ED000051:0000:n
+ED000005:0000:n
+ED000044:0000:w

@@ -1,0 +1,17 @@
+[][Winterhawk]
+[WFDP:Arlysia:White Forest, Diamond]
+[ARJD:Arlysia:Ghost of Justice Darkbane]
+EA204100:E9100010:13:-1:0:::
+EA204100:0000:@party say time
+EA200400:0000:nw
+EA201400:0000:nw
+EA201100:0000:ne
+EA204100:0000:ne
+EA205000:0000:se
+EA201400:0000:se
+EA204400:0000:sw
+EA200140:0000:w
+EA200010:0000:@party say love
+EA200100:0000:ne
+EA204000:0000:@party say courage
+12800040:0000:w

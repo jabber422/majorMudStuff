@@ -1,0 +1,10 @@
+[][]
+[LLGM:Jungle:Large Mound]
+[SJLM:Jungle:Shallow Jungle, Large Mound]
+71E00014:71E00041:6:-1:0:::
+71E00014:0000:s
+31800141:0000:w
+31800411:0000:n
+71E00044:0000:w
+31805011:0000:n
+31800114:0000:e

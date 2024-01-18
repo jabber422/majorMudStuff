@@ -1,0 +1,14 @@
+[][Winterhawk]
+[MBNP:Misty Valley:Misty Bog NPP Portal]
+[NPPV:NPP Shortcuts:Negative Power Plane Vortex]
+04A00010:DD055500:10:-1:0:::
+04A00010:0000:@party go portal
+DCF55500:0000:nw
+DCF01400:0000:nw
+DCF55500:0000:nw
+DCF01400:0000:nw
+DCF55500:0000:nw
+DCF01400:0000:nw
+DCF55500:0000:nw
+DCF01400:0000:nw
+DCF55500:0000:d

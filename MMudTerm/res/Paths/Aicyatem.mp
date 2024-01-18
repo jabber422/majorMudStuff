@@ -1,0 +1,11 @@
+[][]
+[AICY:Ancient Ruin:Ancient Ruin Icy Building]
+[ATEM:Ancient Ruin:Ancient Ruin Unholy Temple]
+E6D80002:367000A1:7:-1:0:::
+E6D80002:0401:n
+2E500019:0000:n
+DC200005:0000:n
+DC200005:0000:n
+69010005:0000:n
+DC200015:0000:n
+DC200024:0000:e

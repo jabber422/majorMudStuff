@@ -1,0 +1,11 @@
+[][enc]
+[FLTH:Northern Forests:Filthy Encampment]
+[RAVF:Northern Forests:Ravaged Path Fork]
+D3A01041:BBC01410:7:-1:0:::
+D3A01041:0000:se
+BBC00504:0000:ne
+BBC04100:0000:ne
+BBC05004:0000:se
+BBC00404:0000:s
+BBC00005:0000:s
+BBC01001:0000:se

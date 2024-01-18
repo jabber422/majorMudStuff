@@ -1,0 +1,10 @@
+[][Fizban the Fabulous]
+[LCT1:Lost City:Temple Stairs]
+[LCF2:Lost City:Forest Street]
+3A700155:3FC01056:6:-1:0:::
+3A700155:0000:n
+92901115:0000:n
+92901115:0000:n
+92901115:0000:n
+92901115:0000:n
+92901115:0000:n

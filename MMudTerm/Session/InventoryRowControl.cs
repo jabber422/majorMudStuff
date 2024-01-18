@@ -15,19 +15,16 @@ namespace MMudTerm.Session
     {
         SessionController _controller = null;
         Item _item = null;
-        public InventoryRowControl(SessionController controller, CarryableItem item)
+        public InventoryRowControl(SessionController controller, Item item)
         {
             InitializeComponent();
             this._controller = controller;
             this._item = item;
             this.label_count_value.Text = item.Quantity.ToString();
             this.label_item_name.Text = item.Name;
-            if(item is EquipableItem)
+            if(item.Equiped)
             {
-                if((item as EquipableItem).Equiped)
-                {
-                    this.label_item_name.Text += "*";
-                }
+                this.label_item_name.Text += "*";
             }
         }
 

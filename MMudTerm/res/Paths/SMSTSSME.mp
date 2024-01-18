@@ -1,0 +1,11 @@
+[][Winterhawk]
+[SMST:Slums:Spectral Mage]
+[SSME:Slums:Slums, Strange Mansion, Entrance]
+51B00040:88900049:7:-1:0:::
+51B00040:0000:w
+74700018:0000:s
+F9600092:0000:w
+F4800020:0000:push wall
+9FB00020:0000:e
+F9600086:0000:s
+F9600045:0000:s

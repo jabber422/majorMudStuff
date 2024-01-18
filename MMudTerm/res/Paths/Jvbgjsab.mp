@@ -1,0 +1,11 @@
+[][Fizban the Fabulous]
+[JVBG:Jungle:Vine Bridge, Wooden Gateway]
+[JSAB:Jungle:Sandy Beach]
+B0D00050:7C110004:7:-1:0:::
+B0D00050:0000:w
+0D600050:0000:w
+DCA40051:0000:d
+DCA14004:0000:sw
+DCA40540:0000:d
+DCA10010:0000:e
+DCA40040:0000:d

@@ -1,0 +1,14 @@
+[][]
+[APUZ:Black Caves:Ancient Stronghold (Puzzle Door)]
+[GHKN:Black Caves:Ghost Knight]
+86D00098:EA300020:10:-1:0:::
+86D00098:0001:e
+AE500068:0001:n[search n]
+AE500040:0001:w
+AE500050:0001:w
+29210090:0001:u
+29240001:0001:n
+02810004:0001:e[search e]
+4A400005:0000:n
+4A4000A5:0000:w
+096000A0:0000:w

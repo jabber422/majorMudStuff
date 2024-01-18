@@ -1,0 +1,14 @@
+[][]
+[ASTR:Black Caves:Ancient Stronghold]
+[BLCA:Black Caves:Black Caves (Greasy Bracelet)]
+8C300061:2D600400:10:-1:0:::
+8C300061:0000:e[n,pull lever,s]
+DB500081:0000:n
+DB500005:0000:n
+DB500005:0000:n
+DB500014:0000:e
+DB500041:0000:n
+DB500005:0000:n
+DB500005:0000:n
+DB500005:0000:n
+DB580004:0000:d

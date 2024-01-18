@@ -1,0 +1,10 @@
+[][]
+[GRVB:Graveyard:Graveyard Bridge]
+[CRY1:Graveyard:Crypt Level 1]
+85204100:E7A10001:6:-1:0:::
+85204100:0000:ne
+33004091:0000:n
+39600015:0000:e
+2B000055:0000:e
+EAA00056:0000:n
+69640008:0000:d

@@ -1,0 +1,13 @@
+[][Fizban the Fabulous]
+[LCF3:Lost City:Forest Street, Intersection]
+[LCQ2:Lost City:Queen's Room (East)]
+3B400151:AD300004:9:-1:0:::
+3B400151:0000:n
+0AB01015:0000:n
+0AB00005:0000:n
+0AB00085:0000:w
+D1C00060:0000:w
+DE500014:0000:s
+DE500005:0000:s
+DE500011:0000:e
+DE500041:0000:n

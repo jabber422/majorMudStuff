@@ -1,0 +1,13 @@
+[][Winterhawk]
+[ETRE:Northern Forests:Ancient Tree]
+[SFAT:Northern Forests:Silverwood Forest, Ancient Tree]
+1CB15500:3D010045:9:-1:0:::
+1CB15500:0000:sw
+88700104:0000:s
+88700005:0000:s
+1CB40001:0000:d
+1CB10001:0000:n
+88700404:0000:nw
+88701001:0000:n
+88700005:0000:n
+1CB40004:0000:d

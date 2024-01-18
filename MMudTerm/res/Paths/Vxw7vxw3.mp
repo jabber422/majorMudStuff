@@ -1,0 +1,14 @@
+[][]
+[VXW7:Black Wastelands:Wastelands Vortex (Dreary Village)]
+[VXW3:Black Wastelands:Wastelands Vortex (DTH)]
+ED104400:ED100015:10:-1:0:::
+ED104400:0000:nw
+ED001400:0000:nw
+ED001001:0000:n
+ED000044:0000:w
+ED000410:0000:nw
+ED001100:0000:ne
+ED004001:0000:n
+ED000404:0000:nw
+ED001040:0000:w
+ED000050:0000:w

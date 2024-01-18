@@ -1,0 +1,11 @@
+[][Fizban the Fabulous]
+[LCT1:Lost City:Temple Stairs]
+[LCBA:Lost City:Bank of the Lost City]
+3A700155:3FA00001:7:-1:0:::
+3A700155:0000:w
+3B904054:0000:w
+3B905054:0000:w
+3B905054:0000:w
+3B905054:0000:w
+3B905054:0000:s
+3B900555:0000:s

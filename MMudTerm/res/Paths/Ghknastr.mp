@@ -1,0 +1,10 @@
+[][]
+[GHKN:Black Caves:Ghost Knight]
+[ASTR:Black Caves:Ancient Stronghold]
+EA300020:8C300061:6:-1:0:::
+EA300020:0000:e
+096000A0:0000:e
+4A4000A5:0000:n
+98500025:0000:e
+4A400090:0000:e
+84900055:0000:e

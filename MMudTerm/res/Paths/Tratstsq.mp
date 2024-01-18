@@ -1,0 +1,10 @@
+[][]
+[TRAT:Silvermere:Trader Tull's (Bloodied Booth)]
+[STSQ:Silvermere:Town Square]
+7B100010:9D400055:6:-1:0:::
+7B100010:0000:e
+E7000055:0000:s
+E7000045:0000:s
+E7000055:0000:s
+E7000045:0000:s
+ECE00055:0000:s

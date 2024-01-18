@@ -1,0 +1,8 @@
+[Animal Pen (wardogs)][]
+[NGAP:Barren Hills:Giant Fortress, Animal Pen]
+C3D00194:C3D00194:5:-1:0:::
+C3D00194:0000:e
+C3D04041:0000:n
+C3D04004:0000:s
+C3D04041:0000:sw
+C3D00101:0000:n

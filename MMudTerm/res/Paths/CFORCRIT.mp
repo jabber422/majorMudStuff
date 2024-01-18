@@ -1,0 +1,11 @@
+[][Winterhawk]
+[CFOR:Lava Fields:Crimson Fortress, Entrance]
+[CRIT:Lava Fields:Crimson Tunnel]
+47700009:96200040:7:-1:0:::
+47700009:0000:n
+96200005:0000:n
+96200005:0000:n
+96200014:0000:e
+96201040:0000:se
+96201400:0000:se
+96200410:0000:e

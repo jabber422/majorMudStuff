@@ -1,0 +1,11 @@
+[][Don]
+[CRIT:Lava Fields:Crimson Tunnel]
+[CFOR:Lava Fields:Crimson Fortress, Entrance]
+96200040:47700009:7:-1:0:::
+96200040:0000:w
+96200410:0000:nw
+96201400:0000:nw
+96201040:0000:w
+96200014:0000:s
+96200005:0000:s
+96200005:0000:s

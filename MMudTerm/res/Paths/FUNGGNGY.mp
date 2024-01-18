@@ -1,0 +1,10 @@
+[][Merlin]
+[FUNG:Black House:Fungus Forest]
+[GNGY:Gang Houses:Entrance Yellow House Room]
+23600015:21C00204:6:-1:0:::
+23600015:0000:e
+41B00054:0000:e
+41B00140:0000:ne
+41B05001:0000:se
+41B00410:0000:e
+41B00055:0000:n

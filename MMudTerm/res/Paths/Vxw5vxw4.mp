@@ -1,0 +1,14 @@
+[][]
+[VXW5:Black Wastelands:Wastelands Vortex (Copperwood)]
+[VXW4:Black Wastelands:Wastelands Vortex (Hazy Swamp)]
+ED100410:ED104001:10:-1:0:::
+ED100410:0000:e
+ED000044:0000:s
+ED000005:0000:s
+ED000051:0000:e
+ED000050:0000:e
+ED000140:0000:ne
+ED004014:0000:s
+ED000005:0000:s
+ED000005:0000:s
+ED000005:0000:s

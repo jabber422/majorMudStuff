@@ -1,0 +1,9 @@
+[][]
+[SNOB:Silvermere:Noble St (Slum Gates)]
+[SLMC:Slums:Slum Crossroads]
+B1700054:ABC00055:5:-1:0:::
+B1700054:0000:s
+36900005:0000:s
+A0700005:0000:s
+A0700005:0000:s
+A0700045:0000:s

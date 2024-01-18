@@ -1,0 +1,15 @@
+[][Winterhawk]
+[DTHG:Dragon's Teeth Hills:Dragon's Teeth Hills, Gnoll Fork]
+[DRP2:Dragon's Teeth Hills:Dragon's Teeth Hills, Rocky Passage]
+C4F05100:1F601140:11:-1:0:::
+C4F05100:0000:ne
+C4F04001:0000:n
+C4F00005:0000:n
+C4F00005:0000:n
+C4F00005:0000:n
+C4F00414:0000:e
+C4F00045:0000:n
+C4F00104:0000:ne
+C4F04010:0000:e
+C4F00050:0000:e
+C4F00050:0000:e

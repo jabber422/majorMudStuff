@@ -1,0 +1,9 @@
+[][]
+[SNOB:Silvermere:Noble St (Slum Gates)]
+[SLMS:Slums:Unholy Spell Shop]
+B1700054:4BA00010:5:-1:0:::
+B1700054:0000:s
+36900005:0000:s
+A0700005:0000:s
+A0700005:0000:s
+A0700045:0000:w

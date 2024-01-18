@@ -44,7 +44,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -6086,6 +6086,8 @@
     <Compile Include="Session\CombatSessionsControl.Designer.cs">
       <DependentUpon>CombatSessionsControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Session\EquipAllScript.cs" />
+    <Compile Include="Session\GetAllScript.cs" />
     <Compile Include="Session\GotoLoopSelectForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -6143,6 +6145,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MmeDatabase\MmeDatabaseReader\MmeDatabaseReader.csproj">
+      <Project>{65610bc7-b607-4df2-a066-711649043966}</Project>
+      <Name>MmeDatabaseReader</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MMudObjects\MMudObjects2\MMudObjects.csproj">
       <Project>{B8BD7513-D3F5-48FE-A2AB-3F509709F3A9}</Project>
       <Name>MMudObjects</Name>

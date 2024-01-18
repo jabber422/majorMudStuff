@@ -1,0 +1,9 @@
+[][Spork ZSpoon]
+[ARTA:Arlysia:Tavern]
+[ARJM:Arlysia:Jandar's Missile Weapons]
+8DA00005:21700001:5:-1:0:::
+8DA00005:0000:s
+9C000055:0000:e
+9C000055:0000:e
+9C000058:0000:e
+9C000054:0000:s

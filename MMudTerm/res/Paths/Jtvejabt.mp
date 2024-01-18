@@ -1,0 +1,12 @@
+[][Fizban the Fabulous]
+[JTVE:Jungle:Tasloi Village, Entrance]
+[JABT:Jungle:Abandoned Temple]
+E5900011:F0240054:8:-1:0:::
+E5900011:0000:n
+CC100005:0000:n
+CC100504:0000:ne
+CC104055:0000:n
+CC100045:0000:n
+CC100045:0000:n
+CC100544:0000:nw
+CC105001:0000:n

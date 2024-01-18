@@ -1,0 +1,17 @@
+[][Spork ZSpoon]
+[AFJC:Scorching Desert:Ancient Fortress, Jail Entrance]
+[AFJ1:Scorching Desert:Ancient Fortress, Jail Cell]
+48610002:48600080:13:-1:0:::
+48610002:0401:n
+E8E0001A:0001:e
+E8E0005A:0001:e
+70200065:0001:n[search n]
+70200025:0001:n
+E8E000A6:0401:n
+42C00058:0001:w
+42C04010:0001:sw
+42C04100:0001:sw
+42C00104:0001:s
+42C00005:0001:s
+42C01001:0001:se
+42C00420:0401:e

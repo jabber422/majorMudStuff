@@ -1,0 +1,10 @@
+[][]
+[KGEM:Khazarad:Gorthun's Gemstones]
+[KHAZ:Khazarad:Khazarad Center]
+ADF00001:19800051:6:-1:0:::
+ADF00001:0000:n
+D1600055:0000:w
+D1600055:0000:w
+D1600054:0000:w
+7DB00055:0000:n
+19800044:0000:w

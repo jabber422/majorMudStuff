@@ -1,0 +1,9 @@
+[][]
+[FBIS:Black Fort:Dark Bishop]
+[FRT1:Black Fort:Black Fortress]
+9F700100:A4F00055:4:-1:0:::
+9F700100:0000:ne
+67E04800:0000:nw
+A4F06900:0000:sw
+A4F00140:0000:w
+

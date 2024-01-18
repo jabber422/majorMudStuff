@@ -1,0 +1,10 @@
+[][Winterhawk]
+[SLEZ:Dark-Elf City:Sleazy Shopkeeper]
+[DCMS:Dark-Elf City:Dark-Elf City, Moatside]
+A1400020:3AA00009:6:-1:0:::
+A1400020:0000:e
+86400085:0000:s
+78000055:0000:s
+86400085:0000:s
+78000055:0000:s
+3C200005:0000:s

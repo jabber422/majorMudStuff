@@ -1,0 +1,10 @@
+[][Fizban the Fabulous]
+[LCM1:Lost City:Magic Shop, Front Room]
+[LCJS:Lost City:Jewelry Shop]
+A2100041:E2400001:6:-1:0:::
+A2100041:0000:w
+3A700051:0000:n
+3A700045:0000:n
+3B900555:0000:e
+3B900551:0000:e
+3B900555:0000:s

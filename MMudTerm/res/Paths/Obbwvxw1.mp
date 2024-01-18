@@ -1,0 +1,13 @@
+[][]
+[OBBW:Black Wastelands:Wastelands Obelisk]
+[VXW1:Black Wastelands:Wastelands Vortex (Pillaged Museum)]
+ED201001:ED101445:9:-1:0:::
+ED201001:0000:se
+ED004410:0000:e
+ED000144:0000:ne
+ED004001:0000:n
+ED000014:0000:e
+ED000050:0000:e
+ED000051:0000:e
+ED001040:0000:se
+ED001400:0000:se

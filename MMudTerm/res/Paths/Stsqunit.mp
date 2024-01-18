@@ -1,0 +1,10 @@
+[][]
+[STSQ:Silvermere:Town Square]
+[UNIT:Trainers:Universal Trainer]
+9D400055:74400040:6:-1:0:::
+9D400055:0000:n
+ECE00055:0000:n
+E7000045:0000:n
+E7000055:0000:e
+45800050:0000:e
+7A300055:0000:e

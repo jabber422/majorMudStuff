@@ -1,0 +1,10 @@
+[][]
+[CAS2:Dark-Elf City:Dark-elf Castle Level 2]
+[CAS3:Dark-Elf City:Dark-elf Castle Level 3]
+D2400059:2C940040:6:-1:0:::
+D2400059:0001:e
+D2400060:0001:e
+2C900480:0001:nw
+2C901100:0001:ne
+2C904004:0001:s
+2C910001:0001:u

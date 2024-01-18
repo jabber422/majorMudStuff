@@ -1,0 +1,15 @@
+[][Winterhawk]
+[BFGF:Blackwood Forest:Blackwood Forest, Garden Fork]
+[BFBE:Blackwood Forest:Bloody Executioner]
+5A600504:5A601040:11:-1:0:::
+5A600504:0000:s
+5A600005:0000:s
+5A604011:0000:sw
+5A600104:0000:s
+5A601005:0000:s
+5A601001:0000:se
+5A601400:0000:se
+5A600404:0000:s
+5A601001:0000:se
+5A601400:0000:se
+5A600410:0000:e

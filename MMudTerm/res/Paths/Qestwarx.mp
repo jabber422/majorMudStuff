@@ -1,0 +1,14 @@
+[][Winterhawk]
+[QEST:Trainers:Quest Hall]
+[WARX:Trainers:Warrior Spirit]
+B8300059:7EC00090:10:-1:0:obsidian key::
+B8300059:0001:w
+7EC00040:0001:w
+7EC00050:0001:w
+8C300055:0001:n
+7EC00104:0001:ne
+2F104000:0001:push button
+23500008:0401:s[use stone key s]
+7EC00006:0001:s
+77500055:0000:n
+7EC00005:0001:n

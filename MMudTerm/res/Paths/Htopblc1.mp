@@ -1,0 +1,13 @@
+[][]
+[HTOP:Black Caves:Hilltop Fortress]
+[BLC1:Black Caves:Black Caves Level 1]
+36600094:BD400010:9:-1:0:::
+36600094:0000:s
+3BE00005:0000:s
+B6D00021:0000:e
+34B00080:0000:e[turn tap]
+33F80080:0000:d
+F1F20069:0000:w
+F1F0005A:0000:w
+F1F0001A:0000:n
+CAA00008:0001:d[pull bone]

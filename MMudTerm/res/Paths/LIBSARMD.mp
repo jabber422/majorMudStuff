@@ -1,0 +1,16 @@
+[][Winterhawk]
+[LIBS:Arlysia:Library Steps]
+[ARMD:Arlysia:Rotting Beholder]
+3CD00006:26B00000:12:-1:0:jagged bone key::
+3CD00006:0000:n[use jagged bone key n]
+BEC00008:0000:w
+BEC00000:0000:s
+BEC00000:0000:e
+BEC00000:0000:d
+F2200002:0000:n
+4070AAA8:0000:n
+40700001:0000:n
+40700054:0000:e
+40700041:0000:n
+40700005:0000:n
+40700044:0000:sw

@@ -1,0 +1,43 @@
+[][Winterhawk]
+[HSBD:Mossy Tunnels:Hauntng Spirit, barrier down]
+[CATA:Mossy Tunnels:Catacombs]
+4CD00101:08610040:39:-1:0:::
+4CD00101:0000:ne
+28404100:0000:ne
+28404000:0000:ne[aim fork northeast]
+28401000:0000:se
+28400400:0000:se[aim fork southeast]
+28400000:0000:s[aim fork south]
+28401040:0000:w
+28404010:0000:sw
+28400104:0000:s
+28401001:0000:w[aim fork west]
+28400041:0000:s[aim fork south]
+28404000:0000:sw
+28404100:0000:se[aim fork southeast]
+28400014:0000:e
+6FD10040:0000:u
+6FD40044:0000:w
+28400014:0000:n[aim fork north]
+28400041:0000:e[aim fork east]
+28400010:0000:e
+28400044:0000:n[aim fork north]
+28400050:0000:e
+28400055:0000:e
+28400040:0000:e[aim fork east]
+28400005:0000:s
+28400011:0000:e
+28400040:0000:e[aim fork east]
+28400014:0000:e
+6FD10040:0000:u
+6FD40004:0000:s
+28400045:0000:w
+28400014:0000:s
+28400011:0000:w[aim fork west]
+28400040:0000:w
+28400011:0000:n
+28400044:0000:w
+28400010:0000:nw[aim fork northwest]
+28400040:0000:ne[aim fork northeast]
+28400011:0000:n
+28400004:0000:w[aim fork west]

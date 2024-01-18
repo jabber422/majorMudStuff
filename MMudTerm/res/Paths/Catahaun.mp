@@ -1,0 +1,38 @@
+[][]
+[CATA:Mossy Tunnels:Catacombs]
+[HAUN:Mossy Tunnels:Haunting Spirit]
+08610040:4CD00100:34:-1:0:titanium fork::
+08610040:0000:e[aim fork east]
+28400004:0001:e[aim fork east]
+28400010:0001:e
+28400044:0001:s
+28400011:0001:e
+28400040:0001:se[aim fork southeast]
+6FD40004:0001:d
+6FD10040:0001:w
+28400014:0001:w[aim fork west]
+28400040:0001:w
+28400011:0001:n
+28400005:0001:w[aim fork west]
+28400040:0001:w
+28400055:0001:w
+28400050:0001:s[aim fork south]
+28400044:0001:w
+28400010:0001:w[aim fork west]
+28400041:0001:s[aim fork south]
+28400014:0001:e
+6FD40044:0001:d
+6FD10040:0001:w
+28400014:0001:nw[aim fork northwest]
+28404100:0001:ne
+28404000:0001:n[aim fork north]
+28400041:0001:e[aim fork east]
+28401001:0001:n
+28400104:0001:ne
+28404010:0001:e
+28401040:0001:n[aim fork north]
+28400000:0001:nw[aim fork northwest]
+28400400:0001:nw
+28401000:0001:sw[aim fork southwest]
+28404000:0001:sw
+28404100:0001:sw

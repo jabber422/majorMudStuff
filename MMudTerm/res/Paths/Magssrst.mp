@@ -1,0 +1,10 @@
+[][]
+[MAGS:Silvermere:Magic Shoppe (Aiken)]
+[SRST:Silvermere:River St & Guild St]
+DEF00011:01B00054:6:-1:0:::
+DEF00011:0000:n
+DB600014:0000:e
+DB600041:0000:n
+DB600005:0000:n
+94200054:0000:e
+EB400050:0000:e

@@ -1,0 +1,10 @@
+[][]
+[FRZN:Rocky Trail:Frozen Cavern]
+[RCK2:Rocky Trail:Rocky Trail (Titan Fork)]
+32E01154:92501140:6:-1:0:::
+32E01154:0000:w
+92500050:0000:w
+92500050:0000:w
+92504010:0000:sw
+92504100:0000:sw
+92504100:0000:sw

@@ -1,0 +1,12 @@
+[][Fizban the Fabulous]
+[LCF4:Lost City:Forest Street]
+[LCPD:Lost City:Practice Dummy]
+3FC00449:5D640000:8:-1:0:::
+3FC00449:0000:s
+EDE00006:0000:s
+EDE00005:0000:s
+EDE00005:0000:w[sea w]
+5D600045:0000:w
+5D600050:0000:w
+5D610054:0000:u
+5D650040:0000:u

@@ -1,0 +1,12 @@
+[][Winterhawk]
+[SSME:Slums:Slums, Strange Mansion, Entrance]
+[SLMC:Slums:Slum Crossroads]
+88900049:ABC00055:8:-1:0:::
+88900049:0000:s
+A0700052:0000:e
+F3900045:0000:n
+A0700005:0000:n
+F3900015:0000:n
+A0700005:0000:n
+F3900015:0000:n
+A0700005:0000:n

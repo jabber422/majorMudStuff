@@ -1,0 +1,12 @@
+[][Winterhawk]
+[GRVB:Graveyard:Graveyard Bridge]
+[STRS:Sewers:Sewer Tunnel, River Street]
+85204100:E9510050:8:-1:0:::
+85204100:0000:sw
+85204100:0000:sw
+85204100:0000:sw
+85200108:0000:s
+C2E00056:0000:w
+EB400050:0000:w
+EB400050:0000:w
+0BF00054:0000:go manhole

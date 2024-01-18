@@ -1,0 +1,9 @@
+[][Winterhawk]
+[LCWF:Lost City:Weapons Shop, Front Room]
+[LCHS:Lost City:Hides Shop]
+BCA00041:4A500004:5:-1:0:::
+BCA00041:0000:w
+61900015:0000:s
+A1100011:0000:e
+61900050:0000:e
+61900051:0000:n

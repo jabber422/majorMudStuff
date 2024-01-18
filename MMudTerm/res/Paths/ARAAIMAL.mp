@@ -1,0 +1,13 @@
+[][Spork ZSpoon]
+[ARAA:Arlysia:Aeriana's Apothecary]
+[IMAL:Arlysia:Intersection of Main Street and Long Str]
+16500010:66400055:9:-1:0:::
+16500010:0000:e
+9CB00045:0000:s
+9CB00015:0000:s
+9D400055:0000:s
+9CB00005:0000:s
+9CB00005:0000:s
+9CB00085:0000:s
+9CB00005:0000:s
+9CB00005:0000:s
