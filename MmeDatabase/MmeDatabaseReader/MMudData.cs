@@ -76,7 +76,7 @@ namespace MmeDatabaseReader
                             item.ArmorType = (EnumArmorType)Enum.Parse(typeof(EnumArmorType), row["ArmourType"].ToString());
                             item.EquipmentSlot = (EnumEquipmentSlot)Enum.Parse(typeof(EnumEquipmentSlot), row["Worn"].ToString());
                             item.Accuracy = int.Parse(row["Accy"].ToString());
-                            item.Gettable = bool.Parse(row["Gettable"].ToString());
+                            item.Gettable = int.Parse(row["Gettable"].ToString()) == 1 ? true : false;
                             item.Strength = int.Parse(row["StrReq"].ToString());
                             item.Speed = int.Parse(row["Speed"].ToString());
 

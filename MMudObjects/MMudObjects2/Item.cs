@@ -20,6 +20,7 @@ namespace MMudObjects
         public Item(string name) { 
             this.Name = name;
             this.Quantity = 1;
+            this.Abilities = new List<ItemAbility>();
         }
 
         public string Name { get; set; } 

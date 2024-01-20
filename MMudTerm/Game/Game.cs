@@ -377,6 +377,14 @@ namespace MMudTerm.Game
                 if (!this._player.IsCombatEngaged)
                 {
                     Entity e = this._current_room.AlsoHere.GetFirst("npc");
+                    if(e is NPC)
+                    {
+                        if((e as NPC).Alignment == EnumNpcAlignment.L_GOOD)
+                        {
+                            Console.WriteLine($"Won't Attack - {e.Name} is {(e as NPC).Alignment}");
+                            return;
+                        }
+                    }
                     if (e != null)
                     {
                         this._controller.Send($"{this._current_combat.AttackString} {e.FullName}\r\n");
@@ -1166,9 +1174,9 @@ namespace MMudTerm.Game
         private void ProcessStat(Match match, string s)
         {
             string[] char_creation_work_around = s.Split(new string[] { "SAVESAVE" }, StringSplitOptions.None);
-            if(char_creation_work_around.Length == 2) {
+            if (char_creation_work_around.Length == 2) {
                 s = char_creation_work_around[1];
-                    }
+            }
             //This regex matches everything... except level... wtf
             string pattern_stat = @"(\S+)(?: Class)?:(?:[ \t]+|\*?)(\S+)(?: \S+)?";
             Regex r = new Regex(pattern_stat);
@@ -1182,7 +1190,7 @@ namespace MMudTerm.Game
                     try
                     {
                         stats.Add(m.Groups[1].Value, m.Groups[2].Value);
-                    }catch(Exception ex)
+                    } catch (Exception ex)
                     {
 
                     }
@@ -1190,9 +1198,11 @@ namespace MMudTerm.Game
             }
 
             //the : in Level:
+            if (!stats.ContainsKey("Level")) { 
             var start_idx = s.IndexOf("Level:") + "Level:".Length;
-            var level_string = s.Substring(s.IndexOf("Level")+"Level".Length+1, s.IndexOf("Stealth")- start_idx).Trim();
+            var level_string = s.Substring(s.IndexOf("Level") + "Level".Length + 1, s.IndexOf("Stealth") - start_idx).Trim();
             stats.Add("Level", level_string);
+            }
 
             this._player.Stats = new PlayerStats(stats);
             this.result = EventType.Stats;

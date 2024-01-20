@@ -128,6 +128,8 @@ namespace MMudTerm.Game
             common_patterns.Add(pattern_inv, EventType.Inventory);
             common_patterns.Add(@"\*Combat ", EventType.Combat);
             common_patterns.Add(@"You are now resting.", EventType.Rest);
+            //You now have no weapon readied.
+            //You have removed padded helm.
             common_patterns.Add(@"You are now wearing ([A-Za-z ]+)\.", EventType.EquippedArmor);
             common_patterns.Add(@"You are now holding ([A-Za-z ]+)\.", EventType.EquippedWeapon);
             common_patterns.Add(@"Top Heroes of the Realm", EventType.Top);
