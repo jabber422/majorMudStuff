@@ -91,6 +91,8 @@
       <DependentUpon>Colors.settings</DependentUpon>
     </Compile>
     <Compile Include="Data\DataObjects\CharacterData.cs" />
+    <Compile Include="Game\CombatSession.cs" />
+    <Compile Include="Game\CurrentCombat.cs" />
     <Compile Include="Game\EventTypes.cs" />
     <Compile Include="Game\Game.cs" />
     <Compile Include="Game\RegexHell.cs" />
@@ -6049,6 +6051,9 @@
     <None Include="res\Paths\YETIRTTB.mp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Session\README.md" />
+    <None Include="Session\SessionState\README.md" />
+    <None Include="Terminal\README.md" />
     <Resource Include="Terminal\TerminalWindow.resx">
       <DependentUpon>TerminalWindow.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -6101,6 +6106,7 @@
       <DependentUpon>InventoryRowControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Session\Macros.cs" />
+    <Compile Include="Session\PathWalker.cs" />
     <Compile Include="Session\SessionConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>

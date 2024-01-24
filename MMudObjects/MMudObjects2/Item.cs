@@ -18,9 +18,10 @@ namespace MMudObjects
         }
 
         public Item(string name) { 
-            this.Name = name;
+            this.Name = name;         
             this.Quantity = 1;
             this.Abilities = new List<ItemAbility>();
+
         }
 
         public string Name { get; set; } 
@@ -50,6 +51,7 @@ namespace MMudObjects
         public int BackStab { get; set; }
         public EnumArmorType ArmorType { get; set; }
         public EnumEquipmentSlot EquipmentSlot { get; set; }
+        public string ObtainedFrom { get; set; }
 
         public int CompareTo(object obj)
         {
@@ -60,6 +62,19 @@ namespace MMudObjects
         {
             return this.Name;
         }       
+    }
+
+    public class Coin:Item
+    {
+        private string value;
+
+        public Coin(string name):base(name)
+        {
+            if (this.Name.EndsWith("s"))
+            {
+                this.Name = this.Name.Remove(this.Name.Length - 1);
+            }
+        }
     }
 
     public class Price
@@ -161,97 +176,37 @@ namespace MMudObjects
             List<Item> result = new List<Item>();
             if(this.runic > 0)
             {
-                Item coins = new Item("runic coins");
+                Item coins = new Coin("runic coins");
                 coins.Quantity = this.runic;
                 result.Add(coins);
             }else if (this.platinum > 0)
             {
-                Item coins = new Item("platinum pieces");
+                Item coins = new Coin("platinum pieces");
                 coins.Quantity = this.platinum;
                 result.Add(coins);
             }
             else if (this.gold > 0)
             {
-                Item coins = new Item("gold crowns");
+                Item coins = new Coin("gold crowns");
                 coins.Quantity = this.gold;
                 result.Add(coins);
             }
             else if (this.silver > 0)
             {
-                Item coins = new Item("silver nobles");
+                Item coins = new Coin("silver nobles");
                 coins.Quantity = this.silver;
                 result.Add(coins);
             }
             else if (this.copper > 0)
             {
-                Item coins = new Item("copper farthings");
+                Item coins = new Coin("copper farthings");
                 coins.Quantity = this.copper;
                 result.Add(coins);
             }
             return result;
         }
     }
-    //mainly used for items read from a for sale list
-    //public class PurchasableItem : Item
-    //{
-    //    public bool useable = false;
-    //    public bool too_powerful;
-    //    Price price = null;
-
-    //    public PurchasableItem(string name, int quantity, Price price) : base(name)
-    //    {
-    //        this.Quantity = quantity;
-    //        this.price = price;
-    //    }
-    //}
-
-    ////used for anything that we can't classify, items start here
-    //public class UnknownItem : Item
-    //{
-    //    public UnknownItem(string name) : base(name)
-    //    {
-    //    }
-    //}
-  
-
-    // //this we can see, and pickup but not equip
-    //public class Sundry : Item
-    //{
-    //    public Sundry(Sundry item) : base(item)
-    //    {
-    //        this.SundryType = item.SundryType;
-    //    }
-
-    //    public Sundry(string name) : base(name)
-    //    {
-    //    }
-
-    //    public EnumSundryType SundryType { get; set; }
-    //}
-
-   
-    //public class Weapon : Item
-    //{
-    //    public Weapon(Item item) :base(item)
-    //    {
-            
-    //    }
-
-
-    //}
-
-    //public class Armor : Item
-    //{
-   
-    //    public Armor(Item item) : base(item.Name)
-    //    {
-            
-    //    }
-
-       
-       
-    //}
-
+    
     public enum EnumArmorType
     {
         NATURAL, SILK, NINJA, LEATHER, CHAINMAIL, SCALEMAIL, PLATEMAIL

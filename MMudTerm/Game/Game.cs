@@ -5,153 +5,12 @@ using System;
 using System.Collections.Generic;
 
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace MMudTerm.Game
 {
-    //this is a Player's combat against a single target
-    public class CombatSession
-    {
-        public Entity target = null;
-        public int damage_done = 0;
-        public int damage_taken = 0;
-        public bool IsBeingAttackByThisEntity = false;
-        List<int[]> rounds = new List<int[]>();
-
-        public CombatSession(Entity target)
-        {
-            this.target = target;
-        }
-
-        internal void BeingAttackByThisEntity()
-        {
-            this.IsBeingAttackByThisEntity = true;
-        }
-
-        internal void PlayerHit(int dmg_done)
-        {
-            this.damage_taken += dmg_done;
-            this.target.damage_taken += dmg_done;
-        }
-
-        internal void PlayerHitBy(int dmg_done)
-        {
-            this.damage_done += dmg_done;
-            
-            BeingAttackByThisEntity();
-        }
-
-        internal void PlayerMissed()
-        {
-            //throw new NotImplementedException();
-        }
-
-        internal void PlayerMissedBy()
-        {
-            BeingAttackByThisEntity();
-        }
-    }
-
-    //manages what is happening while we are in combat
-    public class CurrentCombat
-    {
-        public bool in_combat = false;
-        public Dictionary<string, CombatSession> _combats = new Dictionary<string, CombatSession>();
-        public Dictionary<string, CombatSession> _victories = new Dictionary<string, CombatSession>();
-        public List<Entity> _entities = new List<Entity>();
-        SessionController _controller = null;
-        Entity _current_target = null;
-
-        public int player_misses = 0;
-        public int player_hits = 0;
-        public int player_crits = 0;
-        public int player_dodge = 0;
-        
-        public int target_miss_player = 0;
-        public int target_hit_player = 0;
-        public int target_crit_player = 0;
-        public int target_dodge_player = 0;
-
-        public object AttackString { get; internal set; }
-
-        public CurrentCombat(SessionController controller)
-        {
-            this._controller = controller;
-            this.AttackString = "a";
-        }
-
-        public void UpdateRoom()
-        {
-            this._entities = this._controller._gameenv._current_room.AlsoHere;
-        }
-
-        private CombatSession GetSession(Entity e)
-        {
-            //if (!this._controller._gameenv._player.InCombat)
-            //{
-            //    this._controller._gameenv._player.InCombat = true;
-            //}
-
-            if (!_combats.ContainsKey(e.Name))
-            {
-                _combats.Add(e.Name, new CombatSession(e));
-            }
-            return _combats[e.Name];
-        }
-
-        //player hit something for some damage
-        internal void PlayerHit(Entity e, int dmg_done, string crit)
-        {
-            CombatSession session = GetSession(e);
-            if (crit == "critically")
-            {
-                this.player_crits++;
-            }
-            else //surprise too
-            {
-                this.player_hits++;
-            }
-            session.PlayerHit(dmg_done);
-            this._current_target = session.target;
-        }
-
-        internal void PlayerHitBy(Entity e, int dmg_done, string crit)
-        {
-            GetSession(e).PlayerHitBy(dmg_done);
-            if (crit == "critically")
-            {
-                this.target_crit_player++;
-                
-            }
-            else
-            {
-                this.target_hit_player++;
-            }
-        }
-
-        internal void PlayerMissedBy(Entity e, bool is_dodge=false)
-        {
-            GetSession(e).PlayerMissedBy();
-            if (is_dodge) this.player_dodge++;else
-            this.target_miss_player++;
-        }
-
-        internal void PlayerMissed(Entity e)
-        {
-            CombatSession session = GetSession(e);
-            session.PlayerMissed();
-            this.player_misses++;
-        }
-
-        internal void Remove(List<CombatSession> to_remove)
-        {
-            foreach(CombatSession session in to_remove)
-            {
-                this._combats.Remove(session.target.Name);
-                //this._victories.Add(session.target.Name, session);
-            }
-        }
-    }
 
     //this represents a player and their current game sessions
     public class MajorMudBbsGame
@@ -170,7 +29,6 @@ namespace MMudTerm.Game
 
         SessionController _controller = null;
 
-        #region monitors
         bool monitor_on = false;
         bool monitor_combat = false;
         bool monitor_rest = false;
@@ -178,6 +36,25 @@ namespace MMudTerm.Game
         bool monitor_get = false;
         bool monitor_getcoins = false;
 
+        object idle_timer_state = null;
+        internal System.Timers.Timer idle_input_timer = null;
+
+        public delegate void NewGameEventHandler(EventType message);
+        public event NewGameEventHandler NewGameEvent;
+
+        public MajorMudBbsGame(SessionController controller)
+        {
+            this._matcher = new RegexHell();
+            this._controller = controller;
+            this._player = new Player("You");
+            this._current_room = new Room();
+            this._players = new List<Player>();
+            this._current_combat = new CurrentCombat(this._controller);
+            this.idle_input_timer = new System.Timers.Timer(10 * 1000);
+            this.idle_input_timer.Elapsed += Idle_input_timer_Elapsed;
+        }
+
+        #region monitors and handlers
         public bool Monitor_On
         {
             get { return this.monitor_on; }
@@ -252,7 +129,7 @@ namespace MMudTerm.Game
                 if (value)
                 {
                     this.NewGameEvent += NewGameEvent_GetCoins;
-                    AttackFirstNpcInRoom();
+                    NewGameEvent_GetCoins(EventType.Room);
                 }
                 else
                 {
@@ -321,7 +198,7 @@ namespace MMudTerm.Game
                 {
                     this.NewGameEvent -= NewGameEvent_Health;
                 }
-                this.monitor_combat = value;
+                this.monitor_rest = value;
             }
         }
 
@@ -365,9 +242,6 @@ namespace MMudTerm.Game
                     break;
             }
         }
-
-        public delegate void NewGameEventHandler(EventType message);
-        public event NewGameEventHandler NewGameEvent;
 
 
         private void AttackFirstNpcInRoom()
@@ -424,22 +298,7 @@ namespace MMudTerm.Game
         }
 
         #endregion
-
-        object idle_timer_state = null;
-        internal System.Timers.Timer idle_input_timer = null;
-
-        public MajorMudBbsGame(SessionController controller)
-        {
-            this._matcher = new RegexHell();
-            this._controller = controller;
-            this._player = new Player("You");
-            this._current_room = new Room();
-            this._players = new List<Player>();
-            this._current_combat = new CurrentCombat(this._controller);
-            this.idle_input_timer = new System.Timers.Timer(10 * 1000);
-            this.idle_input_timer.Elapsed += Idle_input_timer_Elapsed;
-        }
-
+        
         private void Idle_input_timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             this._controller.SendLine();
@@ -487,9 +346,144 @@ namespace MMudTerm.Game
             Debug.WriteLine("------------------------------------\r\n");
         }
 
+        private void callback(EventType e, Match match, string data)
+        {
+            switch (e)
+            {
+                case EventType.Room:
+                    ProcessRoom(match, data);
+                    break;
+                case EventType.Stats:
+                    ProcessStat(match, data);
+                    break;
+                case EventType.Inventory:
+                    ProcessInventory(match, data);
+                    break;
+                case EventType.Combat:
+                    ProcessCombat(match, data);
+                    break;
+                case EventType.Rest:
+                    ProcessResting(match, data);
+                    break;
+                case EventType.EquippedArmor:
+                case EventType.EquippedWeapon:
+                    ProcessEquippedSomething(match, data);
+                    break;
+                case EventType.Top:
+                    ProcessTopList(match, data);
+                    break;
+                case EventType.Who:
+                    ProcessWhoList(match, data);
+                    break;
+                case EventType.BoughtSomething:
+                    ProcessBoughtSomething(match, data);
+                    break;
+                case EventType.SoldSomething:
+                    ProcessSoldSomething(match, data);
+                    break;
+                case EventType.BadRoomMove:
+                    ProcessBadRoomMove(match, data);
+                    break;
+                case EventType.HidItem:
+                    ProcessHidSomething(match, data);
+                    break;
+                case EventType.SearchNotice:
+                    ProcessSearch(match, data);
+                    break;
+                case EventType.SneakAttempt:
+                    ProcessSneak(match, data);
+                    break;
+                case EventType.ForSaleList:
+                    ProcessForSale(match, data);
+                    break;
+                case EventType.PickUpItem:
+                    ProcessPickup(match, data);
+                    break;
+                case EventType.DropItem:
+                    ProcessDropItem(match, data);
+                    break;
+                case EventType.ExperienceGain:
+                    ProcessXpGain(match, data);
+                    break;
+                case EventType.ExperienceUpdate:
+                    ProcessXpUpdate(match, data);
+                    break;
+                case EventType.CombatEngaged_3rdP:
+                    ProcessCombat3rdP(match, data);
+                    break;
+                case EventType.CombatHit:
+                    ProcessCombatDoHit(match, data);
+                    break;
+                case EventType.CombatMiss:
+                    ProcessCombatDoMiss(match, data);
+                    break;
+                case EventType.CombatHitPlayer:
+                case EventType.CombatMissPlayer:
+                    break;
+                case EventType.SomeoneLeftTheGame:
+                    ProcessHungUp(match, data);
+                    break;
+                case EventType.SomeoneEnteredTheGame:
+                    ProcessEnteredRealm(match, data);
+                    break;
+                case EventType.RoomSomethingMovedInto:
+                    ProcessMovedIntoRoom(match, data);
+                    break;
+                case EventType.RoomSomethingMovedOut:
+                    ProcessMovedOutOfRoom(match, data);
+                    break;
+                case EventType.EntityDeath:
+                    ProcessEntityDeath(match, data);
+                    break;
+                case EventType.BuffSpellCastSuccess_3rdP:
+                    ProcessBuffSpellCastSuccess(match, data);
+                    break;
+                case EventType.BuffSpellCastFail_3rdP:
+                    ProcessBuffSpellCastFailure(match, data);
+                    break;
+                case EventType.BuffExpired:
+                    ProcessBuffSpellWearOff(match, data);
+                    break;
+                case EventType.HearMovement:
+                    ProcessHearMovement(match, data);
+                    break;
+                case EventType.BashDoorFailure:
+                case EventType.BashDoorSuccess:
+                    ProcessBashDoor(match, data);
+                    break;
+                case EventType.DoorStateChange:
+                case EventType.DoorLocked:
+                    ProcessDoorCloseLocked(match, data);
+                    break;
+                case EventType.Gossip:
+                    ProcessGossip(match, data);
+                    break;
+                case EventType.MessagesThatMakeUsPauseWhileWalking:
+                    result = e;
+                    break;
+                default:
+                    Console.WriteLine("fix" + e)
+                        ; break;
 
+            }
+        }
 
+        private Entity CreateConcreteEntity(Entity entity)
+        {
+            foreach (Player p in this._players)
+            {
+                if (p.FirstName == entity.Name)
+                    return p;
+            }
+            //not a player, look in mme db
+            entity = MMudData.GetNpc(entity);
+            return entity;
+        }
 
+        private Entity CreateConcreteEntity(string entity)
+        {
+            return this.CreateConcreteEntity(new Entity(entity));
+        }
         private void ProcessDoorCloseLocked(Match match, string arg2)
         {
             if (match.Success)
@@ -614,8 +608,7 @@ namespace MMudTerm.Game
         {
             if (match.Success)
             {
-                Entity e = new Entity(match.Groups[1].Value);
-                e = MmeDatabaseReader.MMudData.GetNpc(e);
+                Entity e = this.CreateConcreteEntity(match.Groups[1].Value);
                 this._current_room.AlsoHere.Remove(e);
                 this.result = EventType.RoomSomethingMovedOut;
             }
@@ -644,8 +637,7 @@ namespace MMudTerm.Game
         {
             if (match.Success)
             {
-                Entity e = new Entity(match.Groups[1].Value);
-                e = MmeDatabaseReader.MMudData.GetNpc(e);
+                Entity e = this.CreateConcreteEntity(match.Groups[1].Value);
                 var x = this._controller._gameenv._current_room.AlsoHere.Remove(e);
                 if (!x)
                 {
@@ -669,8 +661,7 @@ namespace MMudTerm.Game
 
             if (match.Success)
             {
-                Entity e = new Entity(match.Groups[1].Value);
-                e = MmeDatabaseReader.MMudData.GetNpc(e);
+                Entity e = this.CreateConcreteEntity(match.Groups[1].Value);
                 this._current_room.AlsoHere.Add(e);
                 this.result = EventType.RoomSomethingMovedInto;
             }
@@ -719,23 +710,21 @@ namespace MMudTerm.Game
         private void ProcessCombatDoHit(Match match, string arg2)
         {
             //TODO: if 1 is set we had a crit
-            
+
             //You clobber giant rat for 12 damage!
-            Entity attacker = new Entity(match.Groups[1].Value.Trim());
+            var attacker = match.Groups[1].Value.Trim();
             var crit = match.Groups[2].Value;
-            Entity target = new Entity(match.Groups[3].Value);
+            var target = match.Groups[3].Value.Trim();
             int dmg_done = int.Parse(match.Groups[4].Value);
 
-            if (attacker.Name == "You")
+            if (attacker == "You")
             {
-                target = MmeDatabaseReader.MMudData.GetNpc(target);
-                AddAttackerToRoom(target);
-                this._current_combat.PlayerHit(target, dmg_done, crit);
-            }else if(target.Name == "you")
+                Entity e = AddAttackerToRoom(target);
+                this._current_combat.PlayerHit(e, dmg_done, crit);
+            }else if(target == "you")
             {
-                attacker = MmeDatabaseReader.MMudData.GetNpc(attacker);
-                AddAttackerToRoom(attacker);
-                this._current_combat.PlayerHitBy(attacker, dmg_done, crit);
+                Entity e =AddAttackerToRoom(attacker);
+                this._current_combat.PlayerHitBy(e, dmg_done, crit);
             }
             else
             {
@@ -744,39 +733,34 @@ namespace MMudTerm.Game
             this.result = EventType.Combat;
         }
 
-        private void AddAttackerToRoom(Entity target)
+        private Entity AddAttackerToRoom(string target)
         {
-            if(target.Name == "beast")
-            {
-
-            }
+            Entity target_entity = this.CreateConcreteEntity(target);
             foreach(Entity e in this._current_room.AlsoHere)
             {
-                if (e.FullName == target.FullName) return;
+                if (e.FullName == target_entity.FullName) return target_entity;
             }
-
             
-            this._current_room.AlsoHere.Add(target);
+            this._current_room.AlsoHere.Add(target_entity);
+            return target_entity;
         }
 
         private void ProcessCombatDoMiss(Match match, string arg2)
         {
-            Entity attacker = new Entity(match.Groups[1].Value.Trim());
-            Entity target = new Entity(match.Groups[2].Value.Trim());
+            var attacker = match.Groups[1].Value.Trim();
+            var target = match.Groups[2].Value.Trim();
             //You swipe at kobold thief!
 
-            if (attacker.Name == "You")
+            if (attacker == "You")
             {
-                target = MmeDatabaseReader.MMudData.GetNpc(target);
-                AddAttackerToRoom(target);
-                this._current_combat.PlayerMissed(target);
+                Entity e = AddAttackerToRoom(target);
+                this._current_combat.PlayerMissed(e);
             }
-            else if(target.Name == "you")
+            else if(target == "you")
             {
-                attacker = MmeDatabaseReader.MMudData.GetNpc(attacker);
-                AddAttackerToRoom(attacker);
+                Entity e = AddAttackerToRoom(attacker);
                 var is_dodge = arg2.Contains(", but you dodge");
-                this._current_combat.PlayerMissedBy(attacker, is_dodge);
+                this._current_combat.PlayerMissedBy(e, is_dodge);
             }
             else
             {
@@ -886,125 +870,7 @@ namespace MMudTerm.Game
 
         //main entry point, this takes known whole blocks of text and matches the text block to a parser
         
-        private void callback(EventType e, Match match, string data)
-        {
-            switch (e)
-            {
-                case EventType.Room:
-                    ProcessRoom(match, data);
-                    break;
-                case EventType.Stats:
-                    ProcessStat(match, data);
-                    break;
-                case EventType.Inventory:
-                    ProcessInventory(match, data);
-                    break;
-                case EventType.Combat:
-                    ProcessCombat(match, data);
-                    break;
-                case EventType.Rest:
-                    ProcessResting(match, data);
-                    break;
-                case EventType.EquippedArmor:
-                case EventType.EquippedWeapon:
-                    ProcessEquippedSomething(match, data);
-                    break;
-                case EventType.Top:
-                    ProcessTopList(match, data);
-                    break;
-                case EventType.Who:
-                    ProcessWhoList(match, data);
-                    break;
-                case EventType.BoughtSomething:
-                    ProcessBoughtSomething(match, data);
-                    break;
-                case EventType.SoldSomething:
-                    ProcessSoldSomething(match, data);
-                    break;
-                case EventType.BadRoomMove:
-                    ProcessBadRoomMove(match, data);
-                    break;
-                case EventType.HidItem:
-                    ProcessHidSomething(match, data);
-                    break;
-                case EventType.SearchNotice:
-                    ProcessSearch(match, data);
-                    break;
-                case EventType.SneakAttempt:
-                    ProcessSneak(match, data);
-                    break;
-                case EventType.ForSaleList:
-                    ProcessForSale(match, data);
-                    break;
-                case EventType.PickUpItem:
-                    ProcessPickup(match, data);
-                    break;
-                case EventType.DropItem:
-                    ProcessDropItem(match, data);
-                    break;
-                case EventType.ExperienceGain:
-                    ProcessXpGain(match, data);
-                    break;
-                case EventType.ExperienceUpdate:
-                    ProcessXpUpdate(match, data);
-                    break;
-                case EventType.CombatEngaged_3rdP:
-                    ProcessCombat3rdP(match, data);
-                    break;
-                case EventType.CombatHit:
-                    ProcessCombatDoHit(match, data);
-                    break;
-                case EventType.CombatMiss:
-                    ProcessCombatDoMiss(match, data);
-                    break;
-                case EventType.CombatHitPlayer:
-                case EventType.CombatMissPlayer:
-                    break;
-                case EventType.SomeoneLeftTheGame:
-                    ProcessHungUp(match, data);
-                    break;
-                case EventType.SomeoneEnteredTheGame:
-                    ProcessEnteredRealm(match, data);
-                    break;
-                case EventType.RoomSomethingMovedInto:
-                    ProcessMovedIntoRoom(match, data);
-                    break;
-                case EventType.RoomSomethingMovedOut:
-                    ProcessMovedOutOfRoom(match, data);
-                    break;
-                case EventType.EntityDeath:
-                    ProcessEntityDeath(match, data);
-                    break;
-                case EventType.BuffSpellCastSuccess_3rdP:
-                    ProcessBuffSpellCastSuccess(match, data);
-                    break;
-                case EventType.BuffSpellCastFail_3rdP:
-                    ProcessBuffSpellCastFailure(match, data);
-                    break;
-                case EventType.BuffExpired:
-                    ProcessBuffSpellWearOff(match, data);
-                    break;
-                case EventType.HearMovement:
-                    ProcessHearMovement(match, data);
-                    break;
-                case EventType.BashDoorFailure:
-                case EventType.BashDoorSuccess:
-                    ProcessBashDoor(match, data);
-                        break;
-                case EventType.DoorStateChange:
-                case EventType.DoorLocked:
-                    ProcessDoorCloseLocked(match, data);
-                    break;
-                case EventType.Gossip:
-                    ProcessGossip(match, data);
-                    break;
-                default:
-                    Console.WriteLine("fix" + e)
-                        ; break;
-                    
-            }
-        }
-
+        
         private void ProcessEquippedSomething(Match match, string data)
         {
             if (match.Success)
@@ -1039,8 +905,6 @@ namespace MMudTerm.Game
             }
         }
 
-
-        //processes the hp/mp block
         public void ProcessTick(Match match, string s)
         {
             Dictionary<string, string> stats = new Dictionary<string, string>();
@@ -1170,7 +1034,6 @@ namespace MMudTerm.Game
             this.result = EventType.BoughtSomething;
         }
 
-        //processes the player stat block as a whole frame
         private void ProcessStat(Match match, string s)
         {
             string[] char_creation_work_around = s.Split(new string[] { "SAVESAVE" }, StringSplitOptions.None);
@@ -1243,7 +1106,7 @@ namespace MMudTerm.Game
             }
 
             
-            tokens = tokens[0].Split(new string[] { "You notice " }, StringSplitOptions.RemoveEmptyEntries);
+            tokens = tokens[0].Split(new string[] { "\nYou notice " }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length > 1)
             {
                 room_info["items"] = tokens[1].Trim();
@@ -1280,17 +1143,8 @@ namespace MMudTerm.Game
             {
                 foreach (string also_here in room_info["here"].Split(','))
                 {
-                    Entity entity = new Entity(also_here.Trim());
-                    Player p = this.IsPlayer(entity);
-                    if(p!= null)
-                    {
-                        entity = p;
-                    }
-                    else
-                    {
-                        entity = MmeDatabaseReader.MMudData.GetNpc(entity);
-                    }
-                    entities.Add(entity);
+                    Entity e = this.CreateConcreteEntity(also_here);
+                    entities.Add(e);
                 }
                 room.AlsoHere = entities;
             }
@@ -1307,14 +1161,25 @@ namespace MMudTerm.Game
                         item_here2 = item_here2.Remove(x-1).Trim();
                     }
 
+                    item_here2 = item_here2.Replace("\r\n", " ");
+                    
                     Item i = null;
                     string pattern = @"^(\d+) ([\S ]+)";
                     Match m4 = Regex.Match(item_here2, pattern);
                     if (m4.Success)
                     {
-                        i = new Item(m4.Groups[2].Value.Trim());
-                        i = MMudData.GetItem(i);
+                        Match coin_match = Regex.Match(m4.Groups[2].Value.Trim(), @"(runic coins?|platinum pieces?|gold crowns?|silver nobles?|copper farthings?)");
+                        if (coin_match.Success)
+                        {
+                            i = new Coin(coin_match.Groups[1].Value);
+                        }
+                        else
+                        {
+                            i = new Item(m4.Groups[2].Value.Trim());
+                            i = MMudData.GetItem(i);
+                        }
                         i.Quantity = int.Parse(m4.Groups[1].Value);
+                        
                     }
                     else
                     {
@@ -1375,22 +1240,14 @@ namespace MMudTerm.Game
             return "";
         }
 
-        private Player IsPlayer(Entity entity)
-        {
-            foreach (Player p in this._players)
-            {
-                if (p.FirstName == entity.Name)
-                    return p;
-            }
-            return null;
-        }
+        
 
         private void ProcessCombat3rdP(Match match, string s)
         {
             if (match.Success)
             {
                 Player p = new Player(match.Groups[1].Value);
-                Entity e = new Entity(match.Groups[2].Value);
+                this.CreateConcreteEntity(match.Groups[2].Value);
                 //this._current_combat.CombatEngaged()
                 this.result = EventType.CombatEngagedStart_3rd;
             }
@@ -1449,8 +1306,11 @@ namespace MMudTerm.Game
                 case "bash":
                     attack_cmd = "bash";
                     break;
+                case "sma":
                 case "smash":
                     attack_cmd = "smash";
+                    break;
+                case "c":
                     break;
                 default:
                     attack_cmd = "Unknown";
@@ -1458,8 +1318,14 @@ namespace MMudTerm.Game
 
             }
 
-            target = tokens[1];
-            return attack_cmd + "," + target;
+            //1 token means the player sent: a
+            //2+ tokens is: a monster
+            if (tokens.Length >= 2)
+            {
+                target = tokens[1];
+                return attack_cmd + "," + target;
+            }
+            return attack_cmd;
         }
 
         private void ProcessInventory(Match m, string s)
@@ -1498,6 +1364,11 @@ namespace MMudTerm.Game
             carry = carry.Replace("\r\n", " ");
 
             int keys_idx = carry.IndexOf("You have no keys.");
+            if(keys_idx == -1)
+            {
+                keys_idx = carry.IndexOf("You have the following keys:");
+            }
+
             if (keys_idx > -1)
             {
                 carry = carry.Remove(keys_idx);
@@ -1507,6 +1378,7 @@ namespace MMudTerm.Game
             inv.Add("enc", lines[enc_index]);
 
             string pattern = @"(\d+\s+)?([a-zA-Z\s]+?)(?:\s*\(([^)]+)\))?(?=\s*,|\s*$)";
+            carry = carry.Substring("You are carrying".Length);
             MatchCollection mc = Regex.Matches(carry, pattern);
 
             Dictionary<string, Item> items = new Dictionary<string, Item>();
@@ -1525,6 +1397,11 @@ namespace MMudTerm.Game
                     if (item_name == "") { continue; }
 
                     Item item = new Item(item_name);
+                    Match coin_match = Regex.Match(item_name, @"(runic coins?|platinum pieces?|gold crowns?|silver nobles?|copper farthings?)");
+                    if (coin_match.Success)
+                    {
+                        item = new Coin(coin_match.Groups[1].Value);
+                    }
                     if (count == 0) { count = 1; }
                     item.Quantity = count;
 

@@ -73,5 +73,8 @@ namespace MMudTerm.Game
         BadRoomMoveClosedDoor,
         EquippedArmor,
         EquippedWeapon,
+        MessagesThatMakeUsPauseWhileWalking,
+        PlayerBlind,
+        SpellBook,
     }
 }

@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Emit;
 using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Windows.Forms.LinkLabel;
 
 namespace MMudTerm.Game
 {
@@ -54,7 +57,7 @@ namespace MMudTerm.Game
             if (this._verbs != null) { return this._verbs; }
             string verb_pattern_club_3rd = "smashes|clobbers|slams|whaps|smacks|beats";
             string verb_pattern_pierce_3rd = "lunges|stabs|impales|skewers";
-            string verb_pattern_cut_3rd = "slices|slashes|cuts";
+            string verb_pattern_cut_3rd = "slices|slashes|cuts|hacks";
             string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills|punches|kicks|jumpkicks";
             string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";
             string verb_pattern_bow_3rd = "shoots a bolt";
@@ -62,7 +65,7 @@ namespace MMudTerm.Game
 
             string verb_pattern_club = "smash|clobber|slam|whap|smack";
             string verb_pattern_pierce = "lunge|stab|impale|skewer";
-            string verb_pattern_cut = "slice|slash|cut";
+            string verb_pattern_cut = "slice|slash|cut|hack";
             string verb_pattern_natural = "chomp|bite|claw|rip|whip|punch|kick|jumpkick";
             string verb_pattern_miss = "swipe|flail|snap|lash|swing|shoot a bolt";
             string verb_pattern_bow = "shoot a bolt at";
@@ -137,6 +140,10 @@ namespace MMudTerm.Game
             common_patterns.Add(@"You just bought ([\S ]+) for ([\S ]+)\.", EventType.BoughtSomething);
             common_patterns.Add(@"You sold ([\S ]+) for ([\S ]+)\.", EventType.SoldSomething);
 
+            
+
+            common_patterns.Add(@"You pull the lever\. Off in the distance you hear a small click\.", EventType.MessagesThatMakeUsPauseWhileWalking);
+
 
             common_patterns.Add(@"There is no exit in that direction!", EventType.BadRoomMove);
             common_patterns.Add(@"You are not permitted in that room!", EventType.BadRoomMove);
@@ -160,8 +167,19 @@ namespace MMudTerm.Game
             //may when we parse the cash drop, we somehome stick the entity death message back on the todo like
 
             //common_patterns.Add(@"(\d+) (runic|platinum|gold|silver|copper) drop to the ground\.", ProcessCashDropFromEntity);
+            common_patterns.Add(@"You have the following spells:", EventType.SpellBook);
+            //          You have the following spells:
+            //          Level Mana Short Spell Name
+            //1   4    blur blur
+            //2   4    illu illuminate
+            //3   4    smit smite
+            //4   3    fjet frost jet
+            //4   6    rcol resist cold
+            //5   6    shld ethereal shield
+            //6   8    rfir resist fire
 
 
+            common_patterns.Add(@"You are blind\.", EventType.PlayerBlind);
 
 
             //
@@ -192,6 +210,7 @@ namespace MMudTerm.Game
             //The nasty kobold thief lunges at you with their shortsword, but you dodge!
             //The orc rogue slashes you for 10 damage!
             string pattern_do_hit2 = @"The MOB (critically |surprise )?VERBS PLAYER for (\d+) damage!";
+            //The small cave worm chomps you for 2 damage!
             common_patterns.Add(pattern_do_hit2, EventType.CombatHit);
 
             //Darmius whaps big lashworm for 12 damage!

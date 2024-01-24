@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using MMudObjects;
 using System.Data.OleDb;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace MmeDatabaseReader
 {
@@ -42,26 +43,7 @@ namespace MmeDatabaseReader
 
                             DataRow row = myDataTable.Rows[0];
                             var type = (EnumItemType)Enum.Parse(typeof(EnumItemType), row["ItemType"].ToString());
-                            //switch (type)
-                            //{
-                            //    case EnumItemType.Armor:
-                            //        item = new Armor(item);
-
-                            //        break;
-                            //    case EnumItemType.Weapon:
-                            //        item = new Weapon(item);
-
-                            //        (item as Weapon)
-                            //        break;
-                            //    case EnumItemType.Food:
-                            //    case EnumItemType.Potion:
-                            //    case EnumItemType.Light:
-                            //    case EnumItemType.Key:
-                            //    case EnumItemType.Chest:
-                            //    case EnumItemType.Scroll:
-                            //    case EnumItemType.Gem:
-                            //        break;
-                            //}
+          
                             item.Id = int.Parse(row["Number"].ToString());
                             item.Limit = int.Parse(row["Limit"].ToString());
                             item.Encum = int.Parse(row["Encum"].ToString());
@@ -88,6 +70,8 @@ namespace MmeDatabaseReader
                                 abil.Value = int.Parse(row[$"AbilVal-{i}"].ToString());
                                 item.Abilities.Add(abil);
                             }
+
+                            item.ObtainedFrom = row[$"Obtained From"].ToString();
 
                             return item;
                         }
@@ -138,6 +122,12 @@ namespace MmeDatabaseReader
                             npc.MR = int.Parse(row["MagicRes"].ToString());
                             npc.FollowPercentage = int.Parse(row["Follow%"].ToString());
                             npc.CharmLevel = int.Parse(row["CharmLVL"].ToString());
+
+                            npc.BaddieFlag = true;
+                            if(npc.Alignment == EnumNpcAlignment.GOOD || npc.Alignment == EnumNpcAlignment.L_GOOD )
+                            {
+                                npc.BaddieFlag = false;
+                            }
 
                             return npc;
                         }

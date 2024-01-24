@@ -11,9 +11,9 @@ using MMudTerm.Session.SessionStateData;
 
 using System.Runtime.CompilerServices;
 using MMudTerm.Game;
-using System.Diagnostics;
-using MMudObjects;
 using System.Threading.Tasks;
+using System.IO;
+using System.Linq.Expressions;
 
 namespace MMudTerm.Session
 {
@@ -172,8 +172,6 @@ namespace MMudTerm.Session
             this.cur_key = null;
         }
 
-        //List<char> _buffer = new List<char>();
-        //if focus is on the session window any key pressed is buffered, enter will send the buffer
         private void term_KeyPress(object sender, KeyPressEventArgs e)
         {
             byte[] msg = null;
@@ -226,21 +224,7 @@ namespace MMudTerm.Session
             
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            this.m_sessionData.MummyScriptEnabled = !this.toolStripButtonMummy.Checked;
-            this.toolStripButtonMummy.Checked = this.m_sessionData.MummyScriptEnabled;
 
-            if (this.m_sessionData.MummyScriptEnabled)
-            {
-                //this.m_controller.AddListener(MummyScriptHandler);
-            }
-            else
-            {
-                //this.m_controller.RemoveListender(MummyScriptHandler);
-            }
-                
-        }
 
         internal void UpdateState(string state_name)
         {
@@ -437,21 +421,26 @@ namespace MMudTerm.Session
 
         private void toolStripButton_go_Click(object sender, EventArgs e)
         {
-            
-
             toolStripButton_stop.Checked = false;
             toolStripButton_go.Checked = true;
             toolStripButton_loop.Checked = false;
+            if (this._current_path != null) this._current_path.Dispose();
+            this._current_path = this.GoTo();
 
-            _current_path = GoTo();
-
-            if(_current_path == null)
+            if (_current_path == null)
             {
+                MessageBox.Show("No Valid Path Found");
                 toolStripButton_stop.Checked = true;
                 toolStripButton_go.Checked = false;
                 toolStripButton_loop.Checked = false;
             }
+            else
+            {
+                _current_path.MoveToNextRoom();
+            }
         }
+
+        
 
         internal void PathWalkerFinished()
         {
@@ -461,20 +450,38 @@ namespace MMudTerm.Session
             }
             else
             {
-                toolStripButton_stop.Checked = true;
-                toolStripButton_go.Checked = false;
-                toolStripButton_loop.Checked = false;
+                if (this.room_to_loop != null && this.room_to_loop != string.Empty)
+                {
+                    this.Loop(this.room_to_loop);
+                }
+                else
+                {
+                    toolStripButton_stop.Checked = true;
+                    toolStripButton_go.Checked = false;
+                    toolStripButton_loop.Checked = false;
+                }
             }
         }
 
         PathWalker _current_path = null;
+        private string room_to_loop;
 
         private void toolStripButton_stop_Click(object sender, EventArgs e)
         {
-            toolStripButton_stop.Checked = true;
-            toolStripButton_go.Checked = false;
-            toolStripButton_loop.Checked = false;
-            this._current_path.Active = false;
+            if (this._current_path?.Active == false)
+            {
+                toolStripButton_stop.Checked = false;
+                toolStripButton_go.Checked = true;
+                toolStripButton_loop.Checked = true;
+                this._current_path.Active = true;
+            }
+            else
+            {
+                toolStripButton_stop.Checked = true;
+                toolStripButton_go.Checked = false;
+                toolStripButton_loop.Checked = false;
+                this._current_path.Active = false;
+            }
         }
 
         private void toolStripButton_loop_Click(object sender, EventArgs e)
@@ -483,8 +490,20 @@ namespace MMudTerm.Session
             toolStripButton_stop.Checked = false;
             toolStripButton_go.Checked = false;
             toolStripButton_loop.Checked = true;
+            if (this._current_path != null) this._current_path.Dispose();
+            this._current_path = this.Loop();
 
-            _current_path = Loop();
+            if (_current_path == null)
+            {
+                MessageBox.Show("No Valid Path Found");
+                toolStripButton_stop.Checked = true;
+                toolStripButton_go.Checked = false;
+                toolStripButton_loop.Checked = false;
+            }
+            else
+            {
+                _current_path.MoveToNextRoom();
+            }
         }
 
         private string AskWhere(bool is_loop = false)
@@ -502,9 +521,40 @@ namespace MMudTerm.Session
             return room_to_walk_to;
         }
 
-        private PathWalker Loop()
+        private PathWalker Loop(string rtl = "")
         {
-            throw new NotImplementedException();
+            long curren_room_hash = this.m_controller._gameenv._current_room.MegaMudRoomHash;
+            string room_to_loop_from = "";
+            if (rtl != "")
+            {
+                room_to_loop_from = rtl;
+                rtl = "";
+            }
+            else
+            {
+                room_to_loop_from = AskWhere(true); 
+                if (room_to_loop_from == null) return null;
+            }
+            
+            long to_room_hash = PathingCache.Rooms[room_to_loop_from];
+
+            List<MudPath> path = null;
+            if (curren_room_hash == to_room_hash)
+            {
+                //we are here, start looping
+                path = PathingCache.GetLoop(to_room_hash);
+            }
+            else
+            {
+                this.room_to_loop = room_to_loop_from;
+                //we need to walk there
+                path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+                if (path.Count == 0) return null;
+            }
+            
+            
+
+            return new PathWalker(path, this.m_controller, true); 
         }
 
         private PathWalker GoTo()
@@ -516,6 +566,7 @@ namespace MMudTerm.Session
             long to_room_hash = PathingCache.Rooms[room_to_walk_to];
             List<MudPath> path = null;
             path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+            if(path.Count == 0) return null;
 
             return new PathWalker(path, this.m_controller);
         }
@@ -562,118 +613,5 @@ namespace MMudTerm.Session
             }
         }
 
-    }
-
-    public class PathWalker : IDisposable
-    {
-        SessionController m_controller;
-        private List<MudPath> path;
-        int path_index = 0;
-        int step_index = 0;
-        private MudPath endroom;
-
-        public bool Active { get; set; }
-
-        public PathWalker(List<MudPath> path, SessionController m_controller)
-        {
-            this.path = path;
-            this.m_controller = m_controller;
-            this.m_controller._gameenv.NewGameEvent += _gameenv_NewGameEvent;
-            this.endroom = this.path[this.path.Count - 1];
-        }
-
-        private void _gameenv_NewGameEvent(EventType message)
-        {
-            switch (message)
-            {
-                case EventType.Room:
-                    MoveToNextRoom();
-                    break;
-                case EventType.BadRoomMove:
-                    if (step_index == 0)
-                    {
-                        path_index--;
-                    }
-                    else
-                    {
-                        step_index--;
-                    }
-                    break;
-                case EventType.BadRoomMoveClosedDoor:
-                    if (step_index == 0)
-                    {
-                        path_index--;
-                    }
-                    else
-                    {
-                        step_index--;
-                    }
-                    break;
-                case EventType.BashDoorSuccess:
-                    this.m_controller.SendLine();
-                    break;
-            }
-        }
-
-        private void MoveToNextRoom()
-        {
-            if (this.m_controller._gameenv._player.IsCombatEngaged && this.m_controller._gameenv.Monitor_Combat)
-            {
-                //in combat and comat is on, don't move
-                Debug.WriteLine("Won't move, in combat and combat is on");
-                return;
-            }
-            var player_health = this.m_controller._gameenv._player.Stats.CurHits / this.m_controller._gameenv._player.Stats.MaxHits;
-            if (this.m_controller._gameenv._player.IsResting && this.m_controller._gameenv.Monitor_Rest)
-            {
-                Debug.WriteLine("Won't move, need to rest and resting is on");
-                return;
-            }
-
-            var current_room = this.m_controller._gameenv._current_room;
-            if(current_room.MegaMudRoomHash == this.endroom.EndRoomHashCode)
-            {
-                //done
-                this.m_controller._gameenv.NewGameEvent -= _gameenv_NewGameEvent;
-                this.m_controller.PathWalkerFinished();
-                return;
-            }
-            var next_step = path[path_index].Steps[step_index];
-            
-            if(current_room.MegaMudRoomHash == next_step.RoomHashCode)
-            {
-                foreach(RoomExit exit in current_room.RoomExits)
-                {
-                    if(exit.ShortName.ToUpper() != next_step.Direction.ToUpper()) continue;
-                    if(exit.IsDoor && !exit.IsOpen)
-                    {
-                        this.m_controller.SendLine("bash " + next_step.Direction);
-                        return;
-                    }
-                    
-                }
-                this.m_controller.SendLine(next_step.Direction);
-                step_index++;
-                if(step_index >= path[path_index].Steps.Count)
-                {
-                    step_index = 0;
-                    path_index++;
-                }
-            }
-
-
-            
-        }
-
-        public void Dispose()
-        {
-            this.m_controller._gameenv.NewGameEvent -= _gameenv_NewGameEvent;
-        }
-
-        public class DialogEventArgs : EventArgs
-        {
-            public string AdditionalInfo { get; set; }
-            // Add other properties as needed
-        }
     }
 }

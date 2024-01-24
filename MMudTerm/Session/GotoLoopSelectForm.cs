@@ -37,6 +37,10 @@ namespace MMudTerm.Session
             Dictionary<string, TreeNode> zone_hash = new Dictionary<string, TreeNode>();
             foreach (var item in lst)
             {
+                if(item.StartRoomHashCode != item.EndRoomHashCode && is_loop)
+                {
+                    continue;
+                }
                 TreeNode node = null;
                 if (item.Start != null)
                 {
@@ -155,6 +159,18 @@ namespace MMudTerm.Session
             }
 
             return MudPaths;
+        }
+
+        internal static List<MudPath> GetLoop(long to_room_hash)
+        {
+            foreach(var path in Load())
+            {
+                if(path.StartRoomHashCode == path.EndRoomHashCode && path.StartRoomHashCode == to_room_hash)
+                {
+                    return new List<MudPath>() { path };
+                }
+            }
+            return null;
         }
     }
 
