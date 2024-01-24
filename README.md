@@ -1,7 +1,28 @@
 # majorMudStuff
 Different Majormud related projects in C# .net 4.0
 
-## Goals to be a succesful POC
+## Next Steps... aka The Path to Alpha
+- Setup/Teardown flows
+-- BBS Clean up causes a crash, this flow needs to be ironed out.  Setup/Teardown flows need to be checked and hardened.
+-- Telnet handshake is very basic - BBS's that send Device Status Report (DSR) will no render Ansi until we do a =a.
+-- Reverse Colors needs to be implemented, test it via 'train stats'
+-- Menu navigation is not working with arrow keys.  (Ie push Up while in train stats view)  This doesn't work today.  I think part of this is due to above
+-- Figure out why Bear's BBS main menu reders incorreclty
+- Pathing
+-- The transition from Walk to somewhere, then loop that place needs to be implements
+-- Pathing GUI button states need to be fixed.  Hitting stop while stopped should continue the loop etc...
+-- Stop moving/looping on player input needs to be implemented
+-- Need to detect when we bash things that are not a door, causes a pause until the next room draw when moving and opening doors.
+- Monitoring
+-- Magic/Buffs tracking need to be implemented
+-- Health options need to be implement.  User can set % to heal, attack etc... copy MegaMud for this.
+-- Same thing for magic, reseting
+-- Combat tracking stats need to be finished.  Need to figure out how to detect a 'round'
+- Implement a Backlog
+- Need to break out Macro's into a form.
+- +More
+
+## Goals to be a succesful POC - DONE
 - Be able to process the game stream into organized data - Done
 -- Stats, Who, Room, TopLists, Combat, Resting, HP/MP ticks - Done
 - Render ANSI in a terminal window - Done
@@ -12,6 +33,7 @@ Different Majormud related projects in C# .net 4.0
 -- Somehow show the stats for an item?  ToolTip?
 -- Calculate Swings based on the current Player data
 - Logon/Disconnect flows work 100%
+
 
 ## MMudTerm is the main Project
 This is the starting point for the project.  There is a form capable of creating 'session' forms.  

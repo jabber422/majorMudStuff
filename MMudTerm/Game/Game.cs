@@ -77,7 +77,7 @@ namespace MMudTerm.Game
             switch (message)
             {
                 case EventType.RoomSomethingMovedInto:
-                case EventType.RoomSomethingMovedOut:
+                //case EventType.RoomSomethingMovedOut:
                 case EventType.ExperienceGain: 
                     this._controller.SendLine();
                     break;
