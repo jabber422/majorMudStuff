@@ -30,6 +30,37 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage_stats = new System.Windows.Forms.TabPage();
+            this.groupBox_buffs = new System.Windows.Forms.GroupBox();
+            this.label_buff_10_time = new System.Windows.Forms.Label();
+            this.label_buff_10 = new System.Windows.Forms.Label();
+            this.label99 = new System.Windows.Forms.Label();
+            this.label_buff_9_time = new System.Windows.Forms.Label();
+            this.label_buff_9 = new System.Windows.Forms.Label();
+            this.label102 = new System.Windows.Forms.Label();
+            this.label_buff_8_time = new System.Windows.Forms.Label();
+            this.label_buff_8 = new System.Windows.Forms.Label();
+            this.label87 = new System.Windows.Forms.Label();
+            this.label_buff_7_time = new System.Windows.Forms.Label();
+            this.label_buff_7 = new System.Windows.Forms.Label();
+            this.label90 = new System.Windows.Forms.Label();
+            this.label_buff_6_time = new System.Windows.Forms.Label();
+            this.label_buff_6 = new System.Windows.Forms.Label();
+            this.label93 = new System.Windows.Forms.Label();
+            this.label_buff_5_time = new System.Windows.Forms.Label();
+            this.label_buff_5 = new System.Windows.Forms.Label();
+            this.label96 = new System.Windows.Forms.Label();
+            this.label_buff_4_time = new System.Windows.Forms.Label();
+            this.label_buff_4 = new System.Windows.Forms.Label();
+            this.label81 = new System.Windows.Forms.Label();
+            this.label_buff_3_time = new System.Windows.Forms.Label();
+            this.label_buff_3 = new System.Windows.Forms.Label();
+            this.label84 = new System.Windows.Forms.Label();
+            this.label_buff_2_time = new System.Windows.Forms.Label();
+            this.label_buff_2 = new System.Windows.Forms.Label();
+            this.label78 = new System.Windows.Forms.Label();
+            this.label_buff_1_time = new System.Windows.Forms.Label();
+            this.label_buff_1 = new System.Windows.Forms.Label();
+            this.label56 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
             this.label_exphr_value = new System.Windows.Forms.Label();
             this.button_exp_reset = new System.Windows.Forms.Button();
@@ -143,6 +174,7 @@
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabPage_stats.SuspendLayout();
+            this.groupBox_buffs.SuspendLayout();
             this.tabPage_who.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage_room.SuspendLayout();
@@ -175,6 +207,7 @@
             // 
             // tabPage_stats
             // 
+            this.tabPage_stats.Controls.Add(this.groupBox_buffs);
             this.tabPage_stats.Controls.Add(this.label54);
             this.tabPage_stats.Controls.Add(this.label_exphr_value);
             this.tabPage_stats.Controls.Add(this.button_exp_reset);
@@ -241,6 +274,315 @@
             this.tabPage_stats.TabIndex = 0;
             this.tabPage_stats.Text = "Stats";
             this.tabPage_stats.UseVisualStyleBackColor = true;
+            // 
+            // groupBox_buffs
+            // 
+            this.groupBox_buffs.Controls.Add(this.label_buff_10_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_10);
+            this.groupBox_buffs.Controls.Add(this.label99);
+            this.groupBox_buffs.Controls.Add(this.label_buff_9_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_9);
+            this.groupBox_buffs.Controls.Add(this.label102);
+            this.groupBox_buffs.Controls.Add(this.label_buff_8_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_8);
+            this.groupBox_buffs.Controls.Add(this.label87);
+            this.groupBox_buffs.Controls.Add(this.label_buff_7_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_7);
+            this.groupBox_buffs.Controls.Add(this.label90);
+            this.groupBox_buffs.Controls.Add(this.label_buff_6_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_6);
+            this.groupBox_buffs.Controls.Add(this.label93);
+            this.groupBox_buffs.Controls.Add(this.label_buff_5_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_5);
+            this.groupBox_buffs.Controls.Add(this.label96);
+            this.groupBox_buffs.Controls.Add(this.label_buff_4_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_4);
+            this.groupBox_buffs.Controls.Add(this.label81);
+            this.groupBox_buffs.Controls.Add(this.label_buff_3_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_3);
+            this.groupBox_buffs.Controls.Add(this.label84);
+            this.groupBox_buffs.Controls.Add(this.label_buff_2_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_2);
+            this.groupBox_buffs.Controls.Add(this.label78);
+            this.groupBox_buffs.Controls.Add(this.label_buff_1_time);
+            this.groupBox_buffs.Controls.Add(this.label_buff_1);
+            this.groupBox_buffs.Controls.Add(this.label56);
+            this.groupBox_buffs.Location = new System.Drawing.Point(11, 354);
+            this.groupBox_buffs.Name = "groupBox_buffs";
+            this.groupBox_buffs.Size = new System.Drawing.Size(457, 357);
+            this.groupBox_buffs.TabIndex = 66;
+            this.groupBox_buffs.TabStop = false;
+            this.groupBox_buffs.Text = "Buffs";
+            // 
+            // label_buff_10_time
+            // 
+            this.label_buff_10_time.AutoSize = true;
+            this.label_buff_10_time.Location = new System.Drawing.Point(39, 202);
+            this.label_buff_10_time.Name = "label_buff_10_time";
+            this.label_buff_10_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_10_time.TabIndex = 29;
+            this.label_buff_10_time.Text = "aaaa";
+            // 
+            // label_buff_10
+            // 
+            this.label_buff_10.AutoSize = true;
+            this.label_buff_10.Location = new System.Drawing.Point(121, 202);
+            this.label_buff_10.Name = "label_buff_10";
+            this.label_buff_10.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_10.TabIndex = 28;
+            this.label_buff_10.Text = "aaaa";
+            // 
+            // label99
+            // 
+            this.label99.AutoSize = true;
+            this.label99.Location = new System.Drawing.Point(6, 202);
+            this.label99.Name = "label99";
+            this.label99.Size = new System.Drawing.Size(27, 20);
+            this.label99.TabIndex = 27;
+            this.label99.Text = "10";
+            // 
+            // label_buff_9_time
+            // 
+            this.label_buff_9_time.AutoSize = true;
+            this.label_buff_9_time.Location = new System.Drawing.Point(39, 182);
+            this.label_buff_9_time.Name = "label_buff_9_time";
+            this.label_buff_9_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_9_time.TabIndex = 26;
+            this.label_buff_9_time.Text = "aaaa";
+            // 
+            // label_buff_9
+            // 
+            this.label_buff_9.AutoSize = true;
+            this.label_buff_9.Location = new System.Drawing.Point(121, 182);
+            this.label_buff_9.Name = "label_buff_9";
+            this.label_buff_9.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_9.TabIndex = 25;
+            this.label_buff_9.Text = "aaaa";
+            // 
+            // label102
+            // 
+            this.label102.AutoSize = true;
+            this.label102.Location = new System.Drawing.Point(6, 182);
+            this.label102.Name = "label102";
+            this.label102.Size = new System.Drawing.Size(18, 20);
+            this.label102.TabIndex = 24;
+            this.label102.Text = "9";
+            // 
+            // label_buff_8_time
+            // 
+            this.label_buff_8_time.AutoSize = true;
+            this.label_buff_8_time.Location = new System.Drawing.Point(39, 162);
+            this.label_buff_8_time.Name = "label_buff_8_time";
+            this.label_buff_8_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_8_time.TabIndex = 23;
+            this.label_buff_8_time.Text = "aaaa";
+            // 
+            // label_buff_8
+            // 
+            this.label_buff_8.AutoSize = true;
+            this.label_buff_8.Location = new System.Drawing.Point(121, 162);
+            this.label_buff_8.Name = "label_buff_8";
+            this.label_buff_8.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_8.TabIndex = 22;
+            this.label_buff_8.Text = "aaaa";
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(6, 162);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(18, 20);
+            this.label87.TabIndex = 21;
+            this.label87.Text = "8";
+            // 
+            // label_buff_7_time
+            // 
+            this.label_buff_7_time.AutoSize = true;
+            this.label_buff_7_time.Location = new System.Drawing.Point(39, 142);
+            this.label_buff_7_time.Name = "label_buff_7_time";
+            this.label_buff_7_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_7_time.TabIndex = 20;
+            this.label_buff_7_time.Text = "aaaa";
+            // 
+            // label_buff_7
+            // 
+            this.label_buff_7.AutoSize = true;
+            this.label_buff_7.Location = new System.Drawing.Point(121, 142);
+            this.label_buff_7.Name = "label_buff_7";
+            this.label_buff_7.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_7.TabIndex = 19;
+            this.label_buff_7.Text = "aaaa";
+            // 
+            // label90
+            // 
+            this.label90.AutoSize = true;
+            this.label90.Location = new System.Drawing.Point(6, 142);
+            this.label90.Name = "label90";
+            this.label90.Size = new System.Drawing.Size(18, 20);
+            this.label90.TabIndex = 18;
+            this.label90.Text = "7";
+            // 
+            // label_buff_6_time
+            // 
+            this.label_buff_6_time.AutoSize = true;
+            this.label_buff_6_time.Location = new System.Drawing.Point(39, 122);
+            this.label_buff_6_time.Name = "label_buff_6_time";
+            this.label_buff_6_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_6_time.TabIndex = 17;
+            this.label_buff_6_time.Text = "aaaa";
+            // 
+            // label_buff_6
+            // 
+            this.label_buff_6.AutoSize = true;
+            this.label_buff_6.Location = new System.Drawing.Point(121, 122);
+            this.label_buff_6.Name = "label_buff_6";
+            this.label_buff_6.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_6.TabIndex = 16;
+            this.label_buff_6.Text = "aaaa";
+            // 
+            // label93
+            // 
+            this.label93.AutoSize = true;
+            this.label93.Location = new System.Drawing.Point(6, 122);
+            this.label93.Name = "label93";
+            this.label93.Size = new System.Drawing.Size(18, 20);
+            this.label93.TabIndex = 15;
+            this.label93.Text = "6";
+            // 
+            // label_buff_5_time
+            // 
+            this.label_buff_5_time.AutoSize = true;
+            this.label_buff_5_time.Location = new System.Drawing.Point(39, 102);
+            this.label_buff_5_time.Name = "label_buff_5_time";
+            this.label_buff_5_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_5_time.TabIndex = 14;
+            this.label_buff_5_time.Text = "aaaa";
+            // 
+            // label_buff_5
+            // 
+            this.label_buff_5.AutoSize = true;
+            this.label_buff_5.Location = new System.Drawing.Point(121, 102);
+            this.label_buff_5.Name = "label_buff_5";
+            this.label_buff_5.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_5.TabIndex = 13;
+            this.label_buff_5.Text = "aaaa";
+            // 
+            // label96
+            // 
+            this.label96.AutoSize = true;
+            this.label96.Location = new System.Drawing.Point(6, 102);
+            this.label96.Name = "label96";
+            this.label96.Size = new System.Drawing.Size(18, 20);
+            this.label96.TabIndex = 12;
+            this.label96.Text = "5";
+            // 
+            // label_buff_4_time
+            // 
+            this.label_buff_4_time.AutoSize = true;
+            this.label_buff_4_time.Location = new System.Drawing.Point(39, 82);
+            this.label_buff_4_time.Name = "label_buff_4_time";
+            this.label_buff_4_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_4_time.TabIndex = 11;
+            this.label_buff_4_time.Text = "aaaa";
+            // 
+            // label_buff_4
+            // 
+            this.label_buff_4.AutoSize = true;
+            this.label_buff_4.Location = new System.Drawing.Point(121, 82);
+            this.label_buff_4.Name = "label_buff_4";
+            this.label_buff_4.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_4.TabIndex = 10;
+            this.label_buff_4.Text = "aaaa";
+            // 
+            // label81
+            // 
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(6, 82);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(18, 20);
+            this.label81.TabIndex = 9;
+            this.label81.Text = "4";
+            // 
+            // label_buff_3_time
+            // 
+            this.label_buff_3_time.AutoSize = true;
+            this.label_buff_3_time.Location = new System.Drawing.Point(39, 62);
+            this.label_buff_3_time.Name = "label_buff_3_time";
+            this.label_buff_3_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_3_time.TabIndex = 8;
+            this.label_buff_3_time.Text = "aaaa";
+            // 
+            // label_buff_3
+            // 
+            this.label_buff_3.AutoSize = true;
+            this.label_buff_3.Location = new System.Drawing.Point(121, 62);
+            this.label_buff_3.Name = "label_buff_3";
+            this.label_buff_3.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_3.TabIndex = 7;
+            this.label_buff_3.Text = "aaaa";
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(6, 62);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(18, 20);
+            this.label84.TabIndex = 6;
+            this.label84.Text = "3";
+            // 
+            // label_buff_2_time
+            // 
+            this.label_buff_2_time.AutoSize = true;
+            this.label_buff_2_time.Location = new System.Drawing.Point(39, 42);
+            this.label_buff_2_time.Name = "label_buff_2_time";
+            this.label_buff_2_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_2_time.TabIndex = 5;
+            this.label_buff_2_time.Text = "aaaa";
+            // 
+            // label_buff_2
+            // 
+            this.label_buff_2.AutoSize = true;
+            this.label_buff_2.Location = new System.Drawing.Point(121, 42);
+            this.label_buff_2.Name = "label_buff_2";
+            this.label_buff_2.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_2.TabIndex = 4;
+            this.label_buff_2.Text = "aaaa";
+            // 
+            // label78
+            // 
+            this.label78.AutoSize = true;
+            this.label78.Location = new System.Drawing.Point(6, 42);
+            this.label78.Name = "label78";
+            this.label78.Size = new System.Drawing.Size(18, 20);
+            this.label78.TabIndex = 3;
+            this.label78.Text = "2";
+            // 
+            // label_buff_1_time
+            // 
+            this.label_buff_1_time.AutoSize = true;
+            this.label_buff_1_time.Location = new System.Drawing.Point(39, 22);
+            this.label_buff_1_time.Name = "label_buff_1_time";
+            this.label_buff_1_time.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_1_time.TabIndex = 2;
+            this.label_buff_1_time.Text = "aaaa";
+            // 
+            // label_buff_1
+            // 
+            this.label_buff_1.AutoSize = true;
+            this.label_buff_1.Location = new System.Drawing.Point(121, 22);
+            this.label_buff_1.Name = "label_buff_1";
+            this.label_buff_1.Size = new System.Drawing.Size(45, 20);
+            this.label_buff_1.TabIndex = 1;
+            this.label_buff_1.Text = "aaaa";
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(6, 22);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(18, 20);
+            this.label56.TabIndex = 0;
+            this.label56.Text = "1";
             // 
             // label54
             // 
@@ -1415,6 +1757,8 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage_stats.ResumeLayout(false);
             this.tabPage_stats.PerformLayout();
+            this.groupBox_buffs.ResumeLayout(false);
+            this.groupBox_buffs.PerformLayout();
             this.tabPage_who.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage_room.ResumeLayout(false);
@@ -1543,5 +1887,36 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.GroupBox groupBox_buffs;
+        private System.Windows.Forms.Label label_buff_1_time;
+        private System.Windows.Forms.Label label_buff_1;
+        private System.Windows.Forms.Label label56;
+        private System.Windows.Forms.Label label_buff_10_time;
+        private System.Windows.Forms.Label label_buff_10;
+        private System.Windows.Forms.Label label99;
+        private System.Windows.Forms.Label label_buff_9_time;
+        private System.Windows.Forms.Label label_buff_9;
+        private System.Windows.Forms.Label label102;
+        private System.Windows.Forms.Label label_buff_8_time;
+        private System.Windows.Forms.Label label_buff_8;
+        private System.Windows.Forms.Label label87;
+        private System.Windows.Forms.Label label_buff_7_time;
+        private System.Windows.Forms.Label label_buff_7;
+        private System.Windows.Forms.Label label90;
+        private System.Windows.Forms.Label label_buff_6_time;
+        private System.Windows.Forms.Label label_buff_6;
+        private System.Windows.Forms.Label label93;
+        private System.Windows.Forms.Label label_buff_5_time;
+        private System.Windows.Forms.Label label_buff_5;
+        private System.Windows.Forms.Label label96;
+        private System.Windows.Forms.Label label_buff_4_time;
+        private System.Windows.Forms.Label label_buff_4;
+        private System.Windows.Forms.Label label81;
+        private System.Windows.Forms.Label label_buff_3_time;
+        private System.Windows.Forms.Label label_buff_3;
+        private System.Windows.Forms.Label label84;
+        private System.Windows.Forms.Label label_buff_2_time;
+        private System.Windows.Forms.Label label_buff_2;
+        private System.Windows.Forms.Label label78;
     }
 }

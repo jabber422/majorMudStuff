@@ -76,5 +76,6 @@ namespace MMudTerm.Game
         MessagesThatMakeUsPauseWhileWalking,
         PlayerBlind,
         SpellBook,
+        SeeHiddenItem,
     }
 }

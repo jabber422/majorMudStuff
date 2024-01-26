@@ -1,22 +1,39 @@
-﻿namespace MMudObjects
-{
-    public abstract class Spell
-    {
-        int Id { get; set; }
-        string Name { get; set; }
-        string ShortName { get; set; }
-        EnumMagicType MagicType {get;set;}
-        int Level { get; set; }
-        int Mana { get; set; }
-        int Difficulty { get; set; }
+﻿using System;
+using System.Collections.Generic;
 
-        EnumTargetType TargetType { get; set; }
-        EnumAttackType AttackType { get; set; }
-        
-    }
-    public class Buff : Spell
+namespace MMudObjects
+{
+    public class Spell
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string ShortName { get; set; }
+        public EnumMagicType MagicType {get;set;}
+        public int Level { get; set; }
+        public int Mana { get; set; }
+        public int Difficulty { get; set; }
+        
+        public EnumTargetType TargetType { get; set; }
+        public EnumAttackType AttackType { get; set; }
+        public int Duration { get; set; }
+
+        public List<ItemAbility> Abilities { get; set; }
+
+        public Spell(string name)
+        {
+            this.Name = name;
+            this.Abilities = new List<ItemAbility>();
+            this.CastTime = DateTime.Now;
+        }
+
+        public DateTime CastTime { get; set; }
+        public int DurIncLVLs { get; set; }
+        public int DurInc { get; set; }
+        public int MaxIncLVLs { get; set; }
     }
+    //public class Buff : Spell
+    //{
+    //}
 
     public enum EnumTargetType
     {

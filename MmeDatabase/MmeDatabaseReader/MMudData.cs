@@ -80,14 +80,75 @@ namespace MmeDatabaseReader
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("Item error occurred: " + ex.Message);
                 return item;
             }
         }
-    
+
+        public static Spell GetSpell(Spell spell)
+        {
+            try
+            {
+                var d = Directory.GetCurrentDirectory();
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
+                {
+                    myConnection.Open();
+
+                    string getDbName = @"" +
+                        "SELECT *" +
+                        "FROM   Spells " +
+                        $"WHERE(Name = '{spell.Name}')";
+
+
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
+                    {
+                        using (OleDbDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
+
+                            DataRow row = myDataTable.Rows[0];
+                            //var type = (EnumItemType)Enum.Parse(typeof(EnumItemType), row["ItemType"].ToString());
+
+                            spell.Id = int.Parse(row["Number"].ToString());
+                            spell.Name = row["Name"].ToString();
+                            spell.ShortName = row["Short"].ToString();
+                            spell.MagicType = (EnumMagicType)Enum.Parse(typeof(EnumMagicType), row["Magery"].ToString());
+                            spell.Level = int.Parse(row["ReqLevel"].ToString());
+                            spell.Mana = int.Parse(row["ManaCost"].ToString());
+                            spell.Difficulty = int.Parse(row["Diff"].ToString());
+                            spell.TargetType = (EnumTargetType)Enum.Parse(typeof(EnumTargetType), row["Targets"].ToString());
+                            spell.AttackType = (EnumAttackType)Enum.Parse(typeof(EnumTargetType), row["AttType"].ToString());
+                            spell.Duration = int.Parse(row["Dur"].ToString());
+                            spell.MaxIncLVLs = int.Parse(row["MaxIncLVLs"].ToString());
+                            spell.DurIncLVLs = int.Parse(row["DurIncLVLs"].ToString());
+                            spell.DurInc = int.Parse(row["DurInc"].ToString());
+
+
+                            for (int i = 0; i < 10; i++)
+                            {
+                                var abil = new ItemAbility();
+                                abil.Abililty = int.Parse(row[$"Abil-{i}"].ToString());
+                                abil.Value = int.Parse(row[$"AbilVal-{i}"].ToString());
+                                spell.Abilities.Add(abil);
+                            }
+
+                            return spell;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Spell error occurred: " + ex.Message);
+                return spell;
+            }
+        }
+
 
         public static Entity GetNpc(Entity e)
         {
+            if (e.Name == "You" || e.Name == "you") return e;
             try
             {
                 var d = Directory.GetCurrentDirectory();
@@ -136,7 +197,7 @@ namespace MmeDatabaseReader
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: " + ex.Message);
+                Console.WriteLine("NPC error occurred: " + ex.Message);
                 return e;
             }
         }

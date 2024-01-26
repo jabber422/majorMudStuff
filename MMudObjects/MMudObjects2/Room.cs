@@ -78,7 +78,7 @@ namespace MMudObjects
         private string MegaMudNameHash { get
             {
                 long nValue = 0;
-                for (var x = 0; x < this.Name.Length; x++)
+                for (var x = 0; x < this.Name?.Length; x++)
                 {
                     nValue += (x + 1) * this.Name[x];
                 }

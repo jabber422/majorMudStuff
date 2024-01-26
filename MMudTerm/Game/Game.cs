@@ -139,28 +139,49 @@ namespace MMudTerm.Game
             }
         }
 
+        private void GetCoins(Dictionary<string, Item> items)
+        {
+            foreach (Item t in items.Values)
+            {
+                if (t.Name.StartsWith("silver noble"))
+                {
+                    var count = t.Quantity;
+                    this._controller.SendLine($"get {count} silver noble");
+                }
+                else if (t.Name.StartsWith("copper farthing"))
+                {
+                    var count = t.Quantity;
+                    this._controller.SendLine($"get {count} copper farthing");
+                }
+                else if (t.Name.StartsWith("gold crown"))
+                {
+                    var count = t.Quantity;
+                    this._controller.SendLine($"get {count} gold crown");
+                }
+                else if (t.Name.StartsWith("platinum piece"))
+                {
+                    var count = t.Quantity;
+                    this._controller.SendLine($"get {count} platinum piece");
+                }
+                else if (t.Name.StartsWith("runic coin"))
+                {
+                    var count = t.Quantity;
+                    this._controller.SendLine($"get {count} runic coin");
+                }
+            }
+        }
+
         private void NewGameEvent_GetCoins(EventType message)
         {
             switch (message)
             {
                 case EventType.Room:
-                    foreach(Item t in this._current_room.VisibleItems.Values)
-                    {
-                        if(t.Name.StartsWith("silver noble"))
-                        {
-                            var count = t.Quantity;
-                            this._controller.SendLine($"get {count} silver noble");
-                        }
-                        else if (t.Name.StartsWith("copper farthing"))
-                        {
-                            var count = t.Quantity;
-                            this._controller.SendLine($"get {count} copper farthing");
-                        }
-                    }
+                    this.GetCoins(this._current_room.VisibleItems);
+                    break;
+                case EventType.SeeHiddenItem:
+                    this.GetCoins(this._current_room.HiddenItems);
                     break;
                 case EventType.EntityDeath:
-                    //this._controller.SendLine("get sil");
-                    //this._controller.SendLine("get cop");
                     break;
             }
         }
@@ -341,7 +362,11 @@ namespace MMudTerm.Game
             else
             {
                 result = EventType.None;
-                Debug.WriteLine("Not Matched");               
+                var b4 = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Debug.WriteLine("Not Matched");
+                Console.ForegroundColor = b4;
+                
             }
             Debug.WriteLine("------------------------------------\r\n");
         }
@@ -384,9 +409,6 @@ namespace MMudTerm.Game
                 case EventType.BadRoomMove:
                     ProcessBadRoomMove(match, data);
                     break;
-                case EventType.HidItem:
-                    ProcessHidSomething(match, data);
-                    break;
                 case EventType.SearchNotice:
                     ProcessSearch(match, data);
                     break;
@@ -396,12 +418,17 @@ namespace MMudTerm.Game
                 case EventType.ForSaleList:
                     ProcessForSale(match, data);
                     break;
+                
                 case EventType.PickUpItem:
                     ProcessPickup(match, data);
                     break;
                 case EventType.DropItem:
                     ProcessDropItem(match, data);
                     break;
+                case EventType.HidItem:
+                    ProcessHidSomething(match, data);
+                    break;
+                
                 case EventType.ExperienceGain:
                     ProcessXpGain(match, data);
                     break;
@@ -461,6 +488,9 @@ namespace MMudTerm.Game
                 case EventType.MessagesThatMakeUsPauseWhileWalking:
                     result = e;
                     break;
+                case EventType.SeeHiddenItem:
+                    ProcessHiddenItems(match, data);
+                    break;
                 default:
                     Console.WriteLine("fix" + e)
                         ; break;
@@ -472,7 +502,7 @@ namespace MMudTerm.Game
         {
             foreach (Player p in this._players)
             {
-                if (p.FirstName == entity.Name)
+                if (p.Name == entity.Name)
                     return p;
             }
             //not a player, look in mme db
@@ -484,6 +514,36 @@ namespace MMudTerm.Game
         {
             return this.CreateConcreteEntity(new Entity(entity));
         }
+
+        private Item CreateConcreteItem(string itemname)
+        {
+            Item i = null;
+            string pattern = @"^(\d+) ([\S ]+)";
+            Match m4 = Regex.Match(itemname, pattern);
+            if (m4.Success)
+            {
+                Match coin_match = Regex.Match(m4.Groups[2].Value.Trim(), @"(runic coins?|platinum pieces?|gold crowns?|silver nobles?|copper farthings?)");
+                if (coin_match.Success)
+                {
+                    i = new Coin(coin_match.Groups[1].Value);
+                }
+                else
+                {
+                    i = new Item(m4.Groups[2].Value.Trim());
+                    i = MMudData.GetItem(i);
+                }
+                i.Quantity = int.Parse(m4.Groups[1].Value);
+
+            }
+            else
+            {
+                i = new Item(itemname);
+                i = MMudData.GetItem(i);
+            }
+
+            return i;
+        }
+
         private void ProcessDoorCloseLocked(Match match, string arg2)
         {
             if (match.Success)
@@ -582,7 +642,8 @@ namespace MMudTerm.Game
         {
             if (match.Success)
             {
-                string spell = match.Groups[1].Value;
+                Spell spell = MMudData.GetSpell(new Spell(match.Groups[1].Value));
+                this._controller._gameenv._player.Buffs.Remove(spell.Name);
                 this.result = EventType.BuffExpired;
             }
         }
@@ -591,11 +652,30 @@ namespace MMudTerm.Game
         {
             if (match.Success)
             {
-                string caster = match.Groups[1].Value;
-                string spell = match.Groups[2].Value;
-                string target = match.Groups[3].Value;
-                if (caster == "You")
+                Entity caster = this.CreateConcreteEntity(match.Groups[1].Value);
+                Spell spell = MMudData.GetSpell(new Spell(match.Groups[2].Value));
+
+                Entity target = null;
+                if (match.Groups[3].Value != "")
                 {
+                    target = this.CreateConcreteEntity(match.Groups[3].Value);
+                }
+                else if(spell.TargetType == EnumTargetType.SELF) {
+                    target = caster;
+                }
+
+                if (caster.Name == this._player.Name &&(
+                    target.Name == this._player.Stats.Name || target.Name.ToLower() == this._player.Name.ToLower()))
+                {
+                    if (this._player.Buffs.ContainsKey(spell.Name))
+                    {
+                        this._player.Buffs[spell.Name] = spell;
+                    }
+                    else
+                    {
+                        this._player.Buffs.Add(spell.Name, spell);
+                    }
+
                     this.result = EventType.BuffSpellCastSuccess;
                 }
                 else {
@@ -674,7 +754,7 @@ namespace MMudTerm.Game
 
             foreach (Player p in this._players)
             {
-                if (p.FirstName == player_first_name)
+                if (p.Name == player_first_name)
                 {
                     p.Online = true;
                     this.result = EventType.SomeoneEnteredTheGame;
@@ -694,7 +774,7 @@ namespace MMudTerm.Game
 
             foreach (Player p in this._players)
             {
-                if (p.FirstName == player_first_name)
+                if (p.Name == player_first_name)
                 {
                     p.Online = false;
                     this.result = EventType.SomeoneLeftTheGame;
@@ -775,14 +855,6 @@ namespace MMudTerm.Game
             this.result = EventType.Rest;
         }
 
-        private void ProcessCashDropFromEntity(Match match, string arg2)
-        {
-            //cash drop on death
-            //multiple hits, need to regex collection against the string and process
-            //5 silver drop to the ground.
-            //14 copper drop to the ground.
-            //do we care?  it should be in the room desc on the next room process
-        }
 
         private void ProcessXpUpdate(Match match, string arg2)
         {
@@ -813,29 +885,34 @@ namespace MMudTerm.Game
             }
         }
 
-        private void ProcessDropCash(Match match, string arg2)
-        {
-            if (match.Success)
-            {
-                string coin_name = match.Groups[2].Value;
-                Price price = new Price(coin_name);
-                price.ParseMatch(match);
-                List<Item> coins = price.ToList();
-                this._player.Inventory.Remove(coins);
-                this._current_room.Add(coins);
-                this.result = EventType.DropCoins;
-            }
-        }
-
         private void ProcessDropItem(Match match, string s)
         {
             if (match.Success)
             {
                 //picked up item
-                Item item = new Item(match.Groups[1].Value);
+                Item item = this.CreateConcreteItem(match.Groups[1].Value + " " + match.Groups[2].Value);
+
                 this._player.Inventory.Remove(item);
                 this._current_room.Add(item);
                 this.result = EventType.DropItem;
+            }
+        }
+
+        private void ProcessHidSomething(Match match, string arg2)
+        {
+            if (match.Success)
+            {
+                //picked up item
+                Item item = this.CreateConcreteItem(match.Groups[1].Value + " " + match.Groups[2].Value);
+                
+                this._player.Inventory.Remove(item);
+                this._current_room.Add_Hidden(item);
+                
+                this.result = EventType.DropItem;
+                if (item is Coin)
+                {
+                    this.result = EventType.HidCoins;
+                }
             }
         }
 
@@ -843,6 +920,7 @@ namespace MMudTerm.Game
         {
             string pattern1 = @"You picked up (\d+) ([\S ]+)\r\n";
             Match m1 = Regex.Match(arg2, pattern1, RegexOptions.Compiled);
+            //this can only be coins, i dont think anything else can be picked up in multiples
             if (m1.Success)
             {
                 string coin_name = m1.Groups[2].Value;
@@ -859,17 +937,12 @@ namespace MMudTerm.Game
             Match m2 = Regex.Match(arg2, pattern2, RegexOptions.Compiled);
             if (m2.Success)
             {
-                //picked up item
-                Item item = new Item(m2.Groups[1].Value);
-                item = MMudData.GetItem(item);
+                Item item = this.CreateConcreteItem(m2.Groups[1].Value);
                 this._player.Inventory.Add(item);
                 this._current_room.Remove(item);
                 this.result = EventType.PickUpItem;
             }
         }
-
-        //main entry point, this takes known whole blocks of text and matches the text block to a parser
-        
         
         private void ProcessEquippedSomething(Match match, string data)
         {
@@ -971,34 +1044,7 @@ namespace MMudTerm.Game
             this.result = EventType.SearchFound;
         }
 
-        private void ProcessHidSomething(Match match, string arg2)
-        {
-            string pattern1 = @"You hid (\d+) ([\S ]+)\.";
-            Match m1 = Regex.Match(arg2, pattern1, RegexOptions.Compiled);
-            if (m1.Success)
-            {
-                string coin_name = m1.Groups[2].Value;
-                Price price = new Price();
-                price.ParseMatch(m1);
-
-                List<Item> item = price.ToList();
-                this._player.Inventory.Remove(item);
-                this._current_room.Add_Hidden(item);
-                this.result = EventType.HidCoins;
-                return;
-            }
-
-            string pattern2 = @"You hid ([ \S]+)\.\r\n";
-            Match m2 = Regex.Match(arg2, pattern2, RegexOptions.Compiled);
-            if (m2.Success)
-            {
-                //picked up item
-                Item item = new Item(m2.Groups[1].Value);
-                this._player.Inventory.Remove(item);
-                this._current_room.Add_Hidden(item);
-                this.result = EventType.HidItem;
-            }
-        }
+        
 
         private void ProcessBadRoomMove(Match match, string arg2)
         {
@@ -1069,6 +1115,17 @@ namespace MMudTerm.Game
 
             this._player.Stats = new PlayerStats(stats);
             this.result = EventType.Stats;
+        }
+
+        private void ProcessHiddenItems(Match match, string s)
+        {
+            if (match.Success)
+            {
+                foreach (var item in ProcessItemsSeen(match.Groups[1].Value).Values){
+                    this._current_room.Add_Hidden(item);
+                }
+                this.result = EventType.SeeHiddenItem;
+            }
         }
 
         //handles the block of data that makes up a typical room frame
@@ -1143,7 +1200,7 @@ namespace MMudTerm.Game
             {
                 foreach (string also_here in room_info["here"].Split(','))
                 {
-                    Entity e = this.CreateConcreteEntity(also_here);
+                    Entity e = this.CreateConcreteEntity(also_here.Trim());
                     entities.Add(e);
                 }
                 room.AlsoHere = entities;
@@ -1151,45 +1208,7 @@ namespace MMudTerm.Game
 
             if (room_info.ContainsKey("items") && room_info["items"] != "")
             {
-                Dictionary<string, Item> items = new Dictionary<string, Item>();
-                foreach (string item_here in room_info["items"].Split(','))
-                {
-                    string item_here2 = item_here.Trim();
-                    if (item_here2.EndsWith("here."))
-                    {
-                        var x = item_here2.IndexOf("here.");
-                        item_here2 = item_here2.Remove(x-1).Trim();
-                    }
-
-                    item_here2 = item_here2.Replace("\r\n", " ");
-                    
-                    Item i = null;
-                    string pattern = @"^(\d+) ([\S ]+)";
-                    Match m4 = Regex.Match(item_here2, pattern);
-                    if (m4.Success)
-                    {
-                        Match coin_match = Regex.Match(m4.Groups[2].Value.Trim(), @"(runic coins?|platinum pieces?|gold crowns?|silver nobles?|copper farthings?)");
-                        if (coin_match.Success)
-                        {
-                            i = new Coin(coin_match.Groups[1].Value);
-                        }
-                        else
-                        {
-                            i = new Item(m4.Groups[2].Value.Trim());
-                            i = MMudData.GetItem(i);
-                        }
-                        i.Quantity = int.Parse(m4.Groups[1].Value);
-                        
-                    }
-                    else
-                    {
-                        i = new Item(item_here2);
-                        i = MMudData.GetItem(i);
-                    }
-
-                    items.Add(i.Name, i);
-                }
-                room.VisibleItems = items;
+                room.VisibleItems = ProcessItemsSeen(room_info["items"]);
             }
 
             List<RoomExit> room_exits = new List<RoomExit>();
@@ -1213,6 +1232,27 @@ namespace MMudTerm.Game
                 this._current_room = room;
                 this.result = EventType.Room;
             }
+
+            
+        }
+        Dictionary<string, Item> ProcessItemsSeen(string csv_list)
+        {
+            Dictionary<string, Item> items = new Dictionary<string, Item>();
+            foreach (string item_here in csv_list.Trim().Split(','))
+            {
+                string item_here2 = item_here.Trim();
+                if (item_here2.EndsWith("here."))
+                {
+                    var x = item_here2.IndexOf("here.");
+                    item_here2 = item_here2.Remove(x - 1).Trim();
+                }
+
+                item_here2 = item_here2.Replace("\r\n", " ");
+                Item i = CreateConcreteItem(item_here2);
+
+                items.Add(i.Name, i);
+            }
+            return items;
         }
 
         private string FigureOutCause_Room(string v)
@@ -1495,7 +1535,8 @@ namespace MMudTerm.Game
                 {
 
                 }
-                Player new_player = new Player($"{first_name} {last_name}".Trim());
+                Player new_player = new Player(first_name.Trim());
+                new_player.Stats.LastName = last_name.Trim();
                 new_player.Title = title;
                 new_player.Online = true;
                 new_player.GangName = gang_name;
@@ -1555,7 +1596,7 @@ namespace MMudTerm.Game
                 bool player_found = false;
                 foreach (Player current_player in this._players)
                 {
-                    if (player.FirstName == current_player.FirstName)
+                    if (player.Name == current_player.Name)
                     {
                         player_found = true;
                         if (result == EventType.Top)

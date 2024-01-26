@@ -21,7 +21,7 @@ namespace MMudObjects
             {
 
             }
-            string verb_pattern_entity = "nasty|big|angry|nasty|fierce|small|large|fat|thin|short|tall";
+            string verb_pattern_entity = "nasty|big|angry|happy|nasty|fierce|small|large|fat|thin|short|tall";
             string noun = $"(?:({verb_pattern_entity}))?" + @"(.*)";
             Match match = Regex.Match(name, noun);
             if (match.Success)
@@ -256,13 +256,13 @@ namespace MMudObjects
         public Player(string name) : base(name)
         {
             this.Stats = new PlayerStats();
-            this.Stats.Name = this.Name;
             this.Room = new Room();
             this.Inventory = new Inventory();
             //this.Equipped = new EquippedItemsInfo();
             this.Abilities = new List<ItemAbility>();
             this.QuestAbilities = new List<QuestAbility>();
             this.BaddieFlag = false;
+            this.Buffs = new Dictionary<string, Spell>();
             
 
             
@@ -277,7 +277,7 @@ namespace MMudObjects
 
         public List<QuestAbility> QuestAbilities { get; set; }
 
-        public List<Buff> Buffs { get; set; }
+        public Dictionary<string,Spell> Buffs { get; set; }
 
         public int HealthRegenNormal { get; set; }
         public int HealthRegenResting { get; set; }
@@ -289,10 +289,6 @@ namespace MMudObjects
         public virtual string Title { get; set; }
         public virtual string Alignment { get; set; }
         public virtual string LevelRange { get; set; }
-
-        public string FirstName {
-            get { return this.Stats.FirstName; }
-        }
 
         public virtual string LastName
         {
@@ -411,11 +407,7 @@ public class PlayerStats
     public string FirstName { get { return this.Name.Split(new char[] { ' ' })[0]; } }
     public string LastName
     {
-        get
-        {
-            string[] tokens = this.Name.Split(new char[] { ' ' });
-            return (tokens.Length == 2) ? tokens[1] : "";
-        }
+        get;set;
     }
 
     public int CurHits { get; set; }

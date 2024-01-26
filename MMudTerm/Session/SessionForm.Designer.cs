@@ -37,6 +37,7 @@
             this.toolStripStatusLabel_currentroom = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripConnectBtn = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton_go = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_stop = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_loop = new System.Windows.Forms.ToolStripButton();
@@ -52,7 +53,6 @@
             this.toolStripButton_get_all = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_equip_all = new System.Windows.Forms.ToolStripButton();
             this.sessionTermContainer = new System.Windows.Forms.Panel();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -145,6 +145,11 @@
             this.toolStripConnectBtn.Name = "toolStripConnectBtn";
             this.toolStripConnectBtn.Size = new System.Drawing.Size(28, 28);
             this.toolStripConnectBtn.Click += new System.EventHandler(this.toolStripConnectBtn_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
             // 
             // toolStripButton_go
             // 
@@ -297,11 +302,6 @@
             this.sessionTermContainer.Size = new System.Drawing.Size(1006, 663);
             this.sessionTermContainer.TabIndex = 2;
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
-            // 
             // SessionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -311,7 +311,7 @@
             this.Controls.Add(this.sessionTermContainer);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "SessionForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SessionView_FormClosing);

@@ -72,6 +72,7 @@ namespace MMudTerm.Session
                         break;
                     case EventType.Tick:
                         this.UpdateTick();
+                        if(this._controller._gameenv._player.Buffs?.Count > 0) UpdateBuffs();
                         break;
                     case EventType.PickUpCoins:
                     case EventType.DropCoins:
@@ -79,6 +80,7 @@ namespace MMudTerm.Session
                     case EventType.PickUpItem:
                     case EventType.DropItem:
                     case EventType.HidItem:
+                    case EventType.SeeHiddenItem:
                         this.UpdateRoom();
                         this.UpdateInventory();
                         break;
@@ -99,12 +101,34 @@ namespace MMudTerm.Session
                         //this won't line wrap... why??
                         //this.richTextBox1.Text = string.Join("\r\n",this._controller._gameenv._gossips);
                         break;
+                    //case EventType.BuffSpellCastSuccess_3rdP:
+                    case EventType.BuffSpellCastSuccess:
+                    case EventType.BuffExpired:
+                        UpdateBuffs();
+                        break;
                     default:
                         //Console.WriteLine($"Not used: {token}");
                         break;
                 }
             }
         }
+
+        private void UpdateBuffs()
+        {
+            for(int i=0;i< this._controller._gameenv._player.Buffs?.Count;i++)
+            {
+                Spell spell = this._controller._gameenv._player.Buffs.Values.ElementAt(i);
+                var label = this.groupBox_buffs.Controls.Find($"label_buff_{i+1}", true).FirstOrDefault();
+                var label_time = this.groupBox_buffs.Controls.Find($"label_buff_{i+1}_time", true).FirstOrDefault();
+                label.Text = spell.Name;
+                TimeSpan ts = DateTime.Now - spell.CastTime;
+                float coef = (float)spell.DurInc;
+
+                float dur = ((spell.Duration * 4) + (coef * (float)this._controller._gameenv._player.Stats.Level));
+                label_time.Text = ts.TotalSeconds.ToString("F0") + "  " + dur.ToString("F0");
+            }
+        }
+
 
         private void UpdateTick()
         {
@@ -206,7 +230,7 @@ namespace MMudTerm.Session
             textBox_lr_alsohere.Text = also_here;
             label_lr_exits.Text = GetExits(cur_room);
 
-            this.label_lr_hash.Text = cur_room.MegaMudRoomHash.ToString();
+            this.label_lr_hash.Text = cur_room.MegaMudRoomHash.ToString("X");
 
             
         }

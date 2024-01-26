@@ -78,6 +78,8 @@ namespace MMudTerm.Session
             Rectangle iconSection = new Rectangle(16*3, 0, 16, 16); // Set x, y, width, and height accordingly
             Bitmap iconBitmap = ExtractIconFromBitmap(allicons, iconSection);
 
+            this.Name = sciData.Ip.ToString();
+
             this.toolStripConnectBtn.Image = GetIcon(3);
 
             this.toolStripButton_go.Image = GetIcon(11);
@@ -185,7 +187,18 @@ namespace MMudTerm.Session
                 msg = new byte[] { (byte)e.KeyChar };
             }
 
-            this.m_controller.user_has_send_blocked = this.cur_key.KeyCode == Keys.Enter ? false : true;
+            if (this.cur_key.KeyCode == Keys.Enter)
+            {
+                this.m_controller.user_has_send_blocked = 0;
+            }else if(this.cur_key.KeyCode == Keys.Back)
+            {
+                if (this.m_controller.user_has_send_blocked > 0) this.m_controller.user_has_send_blocked--;
+            }
+            else
+            {
+                this.m_controller.user_has_send_blocked++;
+            }
+
             this.m_controller.Send(msg);
         }
 

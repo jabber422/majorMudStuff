@@ -20,7 +20,8 @@ namespace MMudTerm.Game
         private List<string> _death_msgs;
 
         private string mob_name_pattern = @"([A-Za-z ]+)";
-        private string player_name_pattern = @"(\S+|[Yy]ou)";
+        private string player_name_pattern = @"(\S+|[Yy]ou|[Hh]e|[Ss]he)";
+        private string cast_pattern = @"(?:casts?|invokes? the)";
 
 
         public RegexHell()
@@ -59,7 +60,7 @@ namespace MMudTerm.Game
             string verb_pattern_pierce_3rd = "lunges|stabs|impales|skewers";
             string verb_pattern_cut_3rd = "slices|slashes|cuts|hacks";
             string verb_pattern_natural_3rd = "chomps|bites|claws|rips|whips|chills|punches|kicks|jumpkicks";
-            string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";
+            string verb_pattern_miss_3rd = "swipes|flails|snaps|lashes|swings|reaches out";    
             string verb_pattern_bow_3rd = "shoots a bolt";
             string present_tense_3rd_person_verb = $"{verb_pattern_bow_3rd}|{verb_pattern_club_3rd}|{verb_pattern_pierce_3rd}|{verb_pattern_cut_3rd}|{verb_pattern_natural_3rd}|{verb_pattern_miss_3rd}";
 
@@ -110,6 +111,10 @@ namespace MMudTerm.Game
                 {
                     key = key.Replace("MOB", mob_name_pattern);
                 }
+                if (key.Contains("CAST"))
+                {
+                    key = key.Replace("CAST", cast_pattern);
+                }
 
                 expanded[key] = kvp.Value;
             }
@@ -126,6 +131,7 @@ namespace MMudTerm.Game
 
             Dictionary<string, EventType> common_patterns = new Dictionary<string, EventType>();
 
+            
             common_patterns.Add(pattern_room, EventType.Room);
             common_patterns.Add(pattern_stat, EventType.Stats);
             common_patterns.Add(pattern_inv, EventType.Inventory);
@@ -151,14 +157,15 @@ namespace MMudTerm.Game
             common_patterns.Add(@"There is a closed door in that direction!", EventType.BadRoomMoveClosedDoor);
             common_patterns.Add(@"The door is closed!", EventType.BadRoomMoveClosedDoor);
 
-            common_patterns.Add(@"You hid ", EventType.HidItem);
-            common_patterns.Add(@"You notice (.*) here.", EventType.SearchNotice);
+            common_patterns.Add(@"You notice (.*) here\.", EventType.SeeHiddenItem);
             common_patterns.Add(@"Attempting to sneak...", EventType.SneakAttempt);
             common_patterns.Add(@"The following items are for sale here:", EventType.ForSaleList);
             common_patterns.Add(@"You picked up ", EventType.PickUpItem);
             common_patterns.Add(@"You took ", EventType.PickUpItem);
             common_patterns.Add(@"You dropped (\d+) ([\S ]+)\.", EventType.DropItem);
-            common_patterns.Add(@"You dropped ([ \S]+).\r\n", EventType.DropItem);
+            common_patterns.Add(@"You dropped ([ \S]+).", EventType.DropItem);
+            common_patterns.Add(@"You hid (\d+) ([\S ]+)\.", EventType.HidItem);
+            common_patterns.Add(@"You hid ([ \S]+).", EventType.HidItem);
 
             common_patterns.Add(@"You gain (\d+) experience\.", EventType.ExperienceGain);
             common_patterns.Add(@"Exp: (\d+) Level: (\d+) Exp needed for next level: (\d+) \((\d+)\) \[(\d+)%\]", EventType.ExperienceUpdate);
@@ -218,9 +225,11 @@ namespace MMudTerm.Game
 
             string pattern_do_miss = @"The MOB VERBS at PLAYER with ";
             common_patterns.Add(pattern_do_miss, EventType.CombatMiss);
-            string pattern_do_miss3 = @"The MOB VERBS at PLAYER!";
+            string pattern_do_miss3 = @"The MOB VERBS (?:at|for) PLAYER!";
             common_patterns.Add(pattern_do_miss3, EventType.CombatMiss);
-            string pattern_do_miss5 = @"The MOB VERBS at PLAYER, but PLAYER dodge out of the way!";
+
+            //The large cave worm lunges at TheGorn, but he dodges out of the way!
+            string pattern_do_miss5 = @"The MOB VERBS at PLAYER, but PLAYER dodges? out of the way!";
             common_patterns.Add(pattern_do_miss5, EventType.CombatMiss);
             string pattern_do_miss2 = @"PLAYER VERBS at MOB with ";
 
@@ -249,14 +258,14 @@ namespace MMudTerm.Game
             //string moved_into_room =  @"([A-Za-z ]+) walks into the room from the (\S+)\.";
             //string moved_into_room2 = @"A ([A-Za-z ]+) crawls into the room from the (\S+)\.";
             //string moved_into_room = @"A(?:n)? ([A-Za-z ]+) " + pattern_moves + @" in|into the room from (?:the )?(\S+)\.";
-            string moved_into_room = @"(?:A |An )?([A-Za-z ]+) (?:MOVES) (?:in|into) the room from (?:the )?(\S+)\.";
+            string moved_into_room = @"(?:A |An )?MOB (?:MOVES) (?:in|into) the room from (?:the )?(\S+)\.";
 
             common_patterns.Add(moved_into_room, EventType.RoomSomethingMovedInto);
 
-            string moved_into_room2 = @"A ([A-Za-z ]+) materializes in the room\.";
+            string moved_into_room2 = @"A MOB materializes in the room\.";
             common_patterns.Add(moved_into_room2, EventType.RoomSomethingMovedInto);
 
-            string moved_out_of_room = @"(\S+) just left to the (\S+)\.";
+            string moved_out_of_room = @"MOB just left to the (\S+)\.";
             common_patterns.Add(moved_out_of_room, EventType.RoomSomethingMovedOut);
 
 
@@ -264,22 +273,32 @@ namespace MMudTerm.Game
 
             
 
-            string entity_death = @"The ([A-Za-z ]+)(?:DEATHMSGS)";
+            string entity_death = @"The MOB(?:DEATHMSGS)";
             common_patterns.Add(entity_death, EventType.EntityDeath);
             //Your swing at filthbug hits, but glances off its armour.
 
-
+            //You cast smite on Darmius!
             //Cthulhu casts ethereal shield on Cthulhu!
-            string buff_spell_cast = @"(\S+) casts ([a-z ]+) on (\S+)!";
+            //TheGorn invokes the way of the tiger on TheGorn!
+            //
+            string buff_spell_cast = @"PLAYER (?:casts?|invokes? the) ([a-z ]+) on PLAYER!";
             common_patterns.Add(buff_spell_cast, EventType.BuffSpellCastSuccess_3rdP);
+            common_patterns.Add(@"PLAYER (?:casts?|invokes? the) ([a-z ]+) on PLAYER\.", EventType.BuffSpellCastSuccess_3rdP);
+            common_patterns.Add(@"\nPLAYER (?:casts?|invokes? the) ([a-z ]+), .*\.", EventType.BuffSpellCastSuccess_3rdP);
+            common_patterns.Add(@"\nPLAYER (?:casts?|invokes? the) ([a-z ]+) on PLAYER, .*\.", EventType.BuffSpellCastSuccess_3rdP);
+            common_patterns.Add(@"\nPLAYER (?:casts?|invokes? the) ([a-z ]+), .*\!", EventType.BuffSpellCastSuccess_3rdP);
 
             //Cthulhu attempted to cast ethereal shield, but failed.
-            string buff_spell_cast_fail = @"(\S+) attempted to cast ([a-z ]+), but failed.";
+            //You attempt to cast ethereal shield, but fail.
+            string buff_spell_cast_fail = @"PLAYER attempted to cast ([a-z ]+), but failed\.";
             common_patterns.Add(buff_spell_cast_fail, EventType.BuffSpellCastFail_3rdP);
+            string buff_spell_cast_fail2 = @"PLAYER attempts to cast ([a-z ]+), but failed\.";
+            common_patterns.Add(buff_spell_cast_fail2, EventType.BuffSpellCastFail_3rdP);
 
             //The effects of the mummy's curse wears off!
-            string buff_spell_wore_off = @"The effects of the ([A-Za-z ']+) wears off!";
+            string buff_spell_wore_off = @"The effects of the ([A-Za-z ']+) wears? off!";
             common_patterns.Add(buff_spell_wore_off, EventType.BuffExpired);
+            common_patterns.Add(@"The effects of ([A-Za-z ']+) wears? off!", EventType.BuffExpired);
 
             string you_hear_movement = @"You hear movement to the (\S+)";
             

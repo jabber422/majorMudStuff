@@ -14,6 +14,7 @@ using MMudTerm.Game;
 using System.Net.Sockets;
 using static MMudTerm.Session.SessionStateData.SessionStateInGame;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 
 namespace MMudTerm.Session
 {
@@ -34,22 +35,18 @@ namespace MMudTerm.Session
         //Our Socket to the server
         internal TcpClient m_connObj;
 
-        //2 threads, 2 queues and 2 semaphores
+        //2 threads, 2 queues
         //after the decoder decodes something into IAC object
         //  it will add the object into two queue's
         //  one thread/queue drives the Terminal view
         //  the other thread/queue drives the game processing engine
-        private object _term_q_in_use = new object();
         private Task terminal_term_cmds_task = null;
         internal ConcurrentQueue<TermCmd> terminal_term_cmds = new ConcurrentQueue<TermCmd>();
         internal ManualResetEventSlim terminal_term_cmds_event = new ManualResetEventSlim(false);
 
-        private object _state_q_in_use = new object();
         private Task state_term_cmds_task = null;
         ConcurrentQueue<TermCmd> state_term_cmds = new ConcurrentQueue<TermCmd>();
         ManualResetEventSlim state_term_cmds_event = new ManualResetEventSlim(false);
-
-        string DBG_CAT = "SessionController";
 
         //read access to our session data object
         internal SessionDataObject SessionData { get { return this.m_SessionData; } }
@@ -73,8 +70,6 @@ namespace MMudTerm.Session
             _exphr_start = DateTime.Now;
             this._gameenv = new MajorMudBbsGame(this);
         }
-
-        
 
         private Task StartStateQueueWorkerThread(ManualResetEventSlim term_cmds_event, ConcurrentQueue<TermCmd> term_cmds)
         {
@@ -221,7 +216,8 @@ namespace MMudTerm.Session
         #region Internals
         #region Internals - commands called from SF
 
-        public bool user_has_send_blocked = false;
+        public int user_has_send_blocked = 0;
+        private Queue<string> user_block_buffer = new Queue<string>();
         internal void Send(string s)
         {
             if(this.send_buffer_timer == null)
@@ -231,9 +227,21 @@ namespace MMudTerm.Session
             }
             
             this.send_buffer_timer.Stop();
-            this.send_buffer.Add(s);
-            this.send_buffer_timer.Start();
-            
+            if (this.user_has_send_blocked > 0)
+            {
+                //the user is typing something but we got a message to respond at the same time
+                this.user_block_buffer.Enqueue(s);
+            }
+            else
+            {
+                while(user_block_buffer.Count > 0)
+                {
+                    var s1 = user_block_buffer.Dequeue();
+                    this.send_buffer.Add(s1);
+                }
+                this.send_buffer.Add(s);
+            }
+            this.send_buffer_timer.Start();            
         }
 
         //this buffers duplicate sequential commands that come from the automation
@@ -272,6 +280,9 @@ namespace MMudTerm.Session
             }
         }
 
+        //any auto matic game commands need to come in via the string method, but this byte[] method
+        //the user input comes through here directly
+        //the telnet handshake is here also
         internal void Send(byte[] p)
         {
             this._gameenv?.idle_input_timer.Stop();

@@ -136,7 +136,7 @@ namespace MMudTerm.Session
             }
             catch(Exception e)
             {
-
+                Debug.WriteLine(e);
             }
             
             
