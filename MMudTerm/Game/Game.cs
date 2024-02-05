@@ -6,7 +6,11 @@ using System.Collections.Generic;
 
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
+using System.Diagnostics.Tracing;
+using System.Linq;
 using System.Text.RegularExpressions;
+using System.Timers;
+using System.Windows.Forms;
 using System.Xml.Linq;
 
 namespace MMudTerm.Game
@@ -15,6 +19,8 @@ namespace MMudTerm.Game
     //this represents a player and their current game sessions
     public class MajorMudBbsGame
     {
+        public const int ROUND_TIME_IN_MS = 4000;
+        public const float ROUND_TIME_IN_SEC = 4.0f;
         public Player _player = null;
         public Room _current_room = null;
         public Room _look_room = null;
@@ -22,11 +28,11 @@ namespace MMudTerm.Game
         public CurrentCombat _current_combat = null;
         public List<string> _gossips = new List<string>();
         public List<string> _auctions = new List<string>();
-        
-        public RegexHell _matcher = null;      
-        
-        public EventType result = EventType.None;
 
+        public RegexHell _matcher = null;
+
+        public EventType result = EventType.None;
+        public object result_data;
         SessionController _controller = null;
 
         bool monitor_on = false;
@@ -38,9 +44,14 @@ namespace MMudTerm.Game
 
         object idle_timer_state = null;
         internal System.Timers.Timer idle_input_timer = null;
+        internal System.Timers.Timer round_timer = null;
+        private DateTime start_buff_timer;
+        private Spell lastSpell;
+        private Entity lastSpellCaster;
 
         public delegate void NewGameEventHandler(EventType message);
         public event NewGameEventHandler NewGameEvent;
+
 
         public MajorMudBbsGame(SessionController controller)
         {
@@ -52,6 +63,14 @@ namespace MMudTerm.Game
             this._current_combat = new CurrentCombat(this._controller);
             this.idle_input_timer = new System.Timers.Timer(10 * 1000);
             this.idle_input_timer.Elapsed += Idle_input_timer_Elapsed;
+
+            this.round_timer = new System.Timers.Timer(ROUND_TIME_IN_MS);
+            this.round_timer.Elapsed += Round_timer_Elapsed;
+        }
+
+        private void Round_timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #region monitors and handlers
@@ -78,7 +97,7 @@ namespace MMudTerm.Game
             {
                 case EventType.RoomSomethingMovedInto:
                 //case EventType.RoomSomethingMovedOut:
-                case EventType.ExperienceGain: 
+                case EventType.ExperienceGain:
                     this._controller.SendLine();
                     break;
             }
@@ -204,7 +223,61 @@ namespace MMudTerm.Game
 
         private void NewGameEvent_Buff(EventType message)
         {
-            throw new NotImplementedException();
+            switch (message)
+            {
+                case EventType.BuffSpellAlreadyCastRound:
+                    CastBuff();
+                    break;
+                case EventType.BuffExpired:
+                    CastBuff();
+                    break;
+                case EventType.BuffSpellCastSuccess:
+                case EventType.BuffSpellCastFail:
+                    CastBuff();
+                    if (this.start_buff_timer == null)
+                    {
+                        this.start_buff_timer = DateTime.Now;
+                    }
+                    else
+                    {
+                        TimeSpan ts = DateTime.Now - this.start_buff_timer;
+                        Console.WriteLine(ts.TotalSeconds);
+                        this.start_buff_timer = DateTime.Now;
+                    }
+                    break;
+                default:
+                    CastBuff();break;
+                
+            }
+        }
+
+        private void CastBuff()
+        {
+            var toMaintain = this._controller.UserConfig_Spells?.BuffsToMaintain();
+            Dictionary<string, bool> toUpdate = new Dictionary<string, bool>();
+            foreach (string s in toMaintain)
+            {
+                if (s == "") continue;
+                toUpdate.Add(s, true);
+            }
+
+            foreach (Spell buff in this._player.Buffs.Values)
+            {
+                if (toUpdate.ContainsKey(buff.Name))
+                {
+                    toUpdate[buff.Name] = false;
+                }
+            }
+
+            foreach (var kvp in toUpdate)
+            {
+                if (kvp.Value)
+                {
+                    Spell s = MMudData.GetSpell(new Spell(kvp.Key));
+                    this._controller.SendLine(s.ShortName);
+                    break;
+                }
+            }
         }
 
         public bool Monitor_Rest {
@@ -233,26 +306,26 @@ namespace MMudTerm.Game
                     var player_health = (float)this._player.Stats.CurHits / (float)this._player.Stats.MaxHits;
                     if (player_health < 0.75)
                     {
-                        Debug.WriteLine("Player should rest");
+                        Console.WriteLine("Player should rest");
                         if (this._player.IsResting)
                         {
-                            Debug.WriteLine("Already resting!");
+                            Console.WriteLine("Already resting!");
                             return;
                         }
                         if (this._player.IsCombatEngaged)
                         {
-                            Debug.WriteLine("Player is in combat and can not rest");
+                            Console.WriteLine("Player is in combat and can not rest");
                             return;
                         }
                         if (this._current_room.AlsoHere.RoomContainsNPC())
                         {
-                            Debug.WriteLine("NPC in room, can't rest");
+                            Console.WriteLine("NPC in room, can't rest");
                             return;
                         }
 
                         if (this._current_combat.in_combat)
                         {
-                            Debug.WriteLine("Player is in comat and can not rest2");return;
+                            Console.WriteLine("Player is in comat and can not rest2");return;
                         }
                         this._controller.SendLine("rest");
                     }else if(player_health < 0.15)
@@ -271,7 +344,7 @@ namespace MMudTerm.Game
             {
                 if (!this._player.IsCombatEngaged)
                 {
-                    Entity e = this._current_room.AlsoHere.GetFirst("npc");
+                    Entity e = this._current_room.AlsoHere.GetFirst("baddie");
                     if(e is NPC)
                     {
                         if((e as NPC).Alignment == EnumNpcAlignment.L_GOOD)
@@ -299,16 +372,13 @@ namespace MMudTerm.Game
                 case EventType.CombatEngagedStart:
                     //this._player.IsCombatEngaged = true;
                     break;
-                case EventType.CombatEngagedStop:
-                    break;
-                case EventType.Combat:
-
-                case EventType.CombatMiss:
+                case EventType.CombatEngagedStop:  //combat off, we attack anything in the room again
+                case EventType.CombatMiss: //something might have swung at us and missed?
                     //this._controller.SendLine("get sil");
                     //this._controller.SendLine("get cop");
                     if (!this._player.IsCombatEngaged)
                     {
-                        this.NewGameEvent_Combat(EventType.Room);
+                        //this.NewGameEvent_Combat(EventType.Room);
                     }
                     break;
                 
@@ -329,8 +399,9 @@ namespace MMudTerm.Game
         {
             //Console.WriteLine("Processing: " + data.Trim());
             Match match = null;
-            EventType e = EventType.None;
+            List<(EventType, Object)> e = new List<(EventType, Object)> { (EventType.None, null) };
             this.result = EventType.None;
+            this.result_data = null;
 
             if (data == "") { return; }
 
@@ -348,32 +419,34 @@ namespace MMudTerm.Game
                 }
             }
 
-            Debug.WriteLine("------------------------------------");
-            Debug.WriteLine("Data: " + data.Trim() );
+            //Console.WriteLine("------------------------------------");
+            //Console.WriteLine("Data: " + data.Trim() );
             if (this._matcher.TryMatch(data, out match, out e))
             {
-                Debug.WriteLine($"--> {e} <--");
+                //Console.WriteLine($"--> {e} <--");
                 for (int i = 0; i < match.Groups.Count; ++i)
                 {
-                    Console.WriteLine($"\tMatch: {match.Groups[i].Value}");
+                    //Console.WriteLine($"\tMatch: {match.Groups[i].Value}");
                 }
                 callback(e, match, data);
             }
             else
             {
+                //need to check the messages database
+                
                 result = EventType.None;
                 var b4 = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                Debug.WriteLine("Not Matched");
+                //Console.WriteLine("Not Matched");
                 Console.ForegroundColor = b4;
                 
             }
-            Debug.WriteLine("------------------------------------\r\n");
+            //Console.WriteLine("------------------------------------\r\n");
         }
 
-        private void callback(EventType e, Match match, string data)
+        private void callback(List<(EventType, Object)> e, Match match, string data)
         {
-            switch (e)
+            switch (e[0].Item1)
             {
                 case EventType.Room:
                     ProcessRoom(match, data);
@@ -384,7 +457,9 @@ namespace MMudTerm.Game
                 case EventType.Inventory:
                     ProcessInventory(match, data);
                     break;
-                case EventType.Combat:
+                case EventType.CombatEngaged:
+                case EventType.CombatEngagedStart:
+                case EventType.CombatEngagedStop:
                     ProcessCombat(match, data);
                     break;
                 case EventType.Rest:
@@ -444,9 +519,6 @@ namespace MMudTerm.Game
                 case EventType.CombatMiss:
                     ProcessCombatDoMiss(match, data);
                     break;
-                case EventType.CombatHitPlayer:
-                case EventType.CombatMissPlayer:
-                    break;
                 case EventType.SomeoneLeftTheGame:
                     ProcessHungUp(match, data);
                     break;
@@ -486,15 +558,73 @@ namespace MMudTerm.Game
                     ProcessGossip(match, data);
                     break;
                 case EventType.MessagesThatMakeUsPauseWhileWalking:
-                    result = e;
+                case EventType.BuffSpellAlreadyCastRound:
+                    result = e[0].Item1;
                     break;
                 case EventType.SeeHiddenItem:
                     ProcessHiddenItems(match, data);
                     break;
+                case EventType.CombatEngagedEvilWarning:
+                    ProcessNotABaddie();
+                    break;
+                case EventType.MessageResponse:
+                    ProcessMessageResponse(match, data, e);
+                    break; 
+                case EventType.MessageResponseBuffStart:
+                    ProcessMessageResponseBuffStart(match, data, e);
+                    break;
+                case EventType.MessageResponseBuffEnd:
+                    ProcessMessageResponseBuffEnd(match, data, e);
+                    break;
                 default:
-                    Console.WriteLine("fix" + e)
-                        ; break;
+                    Console.WriteLine("fix" + e[0].Item1);
+                    break;
+            }
+        }
+       
 
+        private void ProcessMessageResponse(Match match, string data, object item2)
+        {
+            //MessageResponse msg = (item2 as MessageResponse);
+            //bool end = false;
+            //if (match.ToString() == msg.EndsWith) {
+            //    end = true;
+            //}
+
+            //if(match.Groups.Count == 3)
+            //{
+            //    var target = match.Groups[1].Value;
+            //    //var dmg = match.Groups[2].Value;
+            //    //if (target == "You")
+            //    //{
+            //    //    this._current_combat.PlayerHit(e, dmg, false);
+            //    //}
+            //    //else if (target == "you")
+            //    //{
+            //    //    this._current_combat.PlayerHitBy(e, dmg, false);
+            //    //}
+            //}
+
+            //if(match.Groups.Count == 2)
+            //{
+            //    var dmg = match.Groups[1].Value;
+            //}
+
+
+
+
+
+            
+            
+            
+        }
+
+        private void ProcessNotABaddie()
+        {
+            Entity e = this._current_room.AlsoHere.GetFirst("baddie");
+            if (e != null)
+            {
+                e.BaddieFlag = false;
             }
         }
 
@@ -620,6 +750,7 @@ namespace MMudTerm.Game
             }
         }
 
+        #region Buff/Debuff handling
         private void ProcessBuffSpellCastFailure(Match match, string arg2)
         {
             if(match.Success)
@@ -660,7 +791,7 @@ namespace MMudTerm.Game
                 {
                     target = this.CreateConcreteEntity(match.Groups[3].Value);
                 }
-                else if(spell.TargetType == EnumTargetType.SELF) {
+                else if(spell.TargetType == EnumTargetType.Self || spell.TargetType == EnumTargetType.SingleOrSelf) {
                     target = caster;
                 }
 
@@ -681,8 +812,67 @@ namespace MMudTerm.Game
                 else {
                     this.result = EventType.BuffSpellCastSuccess_3rdP;
                 }
+                this.lastSpell = spell;
+                this.lastSpellCaster = caster;
             }
         }
+
+        private void ProcessMessageResponseBuffEnd(Match match, string data, object item2)
+        {
+            var lst = (item2 as List<(EventType, Object)>);
+
+            MessageResponse msg = null;
+            if (lst.Count == 1)
+            {
+                msg = (lst[0].Item2 as MessageResponse);
+            }
+            else
+            {
+                //can be n possible spells, x-ref vs buffs
+                foreach(var possible_buff in lst)
+                {
+                    msg = (possible_buff.Item2 as MessageResponse);
+                    Spell buff2 = MMudData.GetSpell(new Spell(msg.Name));
+                    if (this._player.Buffs.ContainsKey(buff2.Name))
+                    {
+                        break; //found it
+                    }
+                }
+            }
+
+            Spell buff = MMudData.GetSpell(new Spell(msg.Name));
+            try
+            {
+                this._player.Buffs.Remove(buff.Name);
+            }
+            catch (Exception e)
+            {
+
+            }
+            this.result = EventType.BuffExpired;
+        }
+
+        private void ProcessMessageResponseBuffStart(Match match, string data, object item2)
+        {
+            //Hopefully we don't need this handlee, just the ends strings
+            //MessageResponse msg = (item2 as MessageResponse);
+
+            //Spell buff = MMudData.GetSpell(new Spell(msg.Name));
+            //try
+            //{
+            //    if (!this._player.Buffs.ContainsKey(buff.Name))
+            //    {
+            //        this._player.Buffs.Add(buff.Name, buff);
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+
+            //}
+            this.result = EventType.BuffSpellCastSuccess;
+        }
+        #endregion
+
 
         private void ProcessMovedOutOfRoom(Match match, string arg2)
         {
@@ -787,13 +977,14 @@ namespace MMudTerm.Game
             this.result = EventType.SomeoneLeftTheGame;
         }
 
+        #region Combat handling
         private void ProcessCombatDoHit(Match match, string arg2)
         {
             //TODO: if 1 is set we had a crit
 
             //You clobber giant rat for 12 damage!
             var attacker = match.Groups[1].Value.Trim();
-            var crit = match.Groups[2].Value;
+            var crit = match.Groups[2].Value.Trim();
             var target = match.Groups[3].Value.Trim();
             int dmg_done = int.Parse(match.Groups[4].Value);
 
@@ -810,7 +1001,7 @@ namespace MMudTerm.Game
             {
                 //3rd party attacking something, do we care?
             }
-            this.result = EventType.Combat;
+            this.result = EventType.CombatHit;
         }
 
         private Entity AddAttackerToRoom(string target)
@@ -846,8 +1037,10 @@ namespace MMudTerm.Game
             {
                 //3rd party attacking something, do we care?
             }
-            this.result = EventType.Combat;
+            this.result = EventType.CombatMiss;
         }
+        #endregion
+
 
         private void ProcessResting(Match match, string arg2)
         {
@@ -982,18 +1175,28 @@ namespace MMudTerm.Game
         {
             Dictionary<string, string> stats = new Dictionary<string, string>();
             this._player.Stats.CurHits = int.Parse(match.Groups[1].Value);
+            bool found_rest = false;
             if (match.Groups[2].Success)
             {
-                this._player.Stats.CurMana = int.Parse(match.Groups[2].Value);
+                if (match.Groups[2].Value == "Resting")
+                {
+                    found_rest = true;
+                }
+                else
+                {
+                    this._player.Stats.CurMana = int.Parse(match.Groups[2].Value);
+                }
             }
 
             if (match.Groups[3].Success)
             {
-                this._player.IsResting = match.Groups[3].Value == "Resting" ? true : false;
+                found_rest = true;
             }
-            else
+
+            this._player.IsResting = found_rest;
+            if (found_rest)
             {
-                this._player.IsResting = false;
+                this._player.IsCombatEngaged = false;
             }
 
             this.result = EventType.Tick;
@@ -1163,7 +1366,7 @@ namespace MMudTerm.Game
             }
 
             
-            tokens = tokens[0].Split(new string[] { "\nYou notice " }, StringSplitOptions.RemoveEmptyEntries);
+            tokens = tokens[0].Split(new string[] { "You notice " }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length > 1)
             {
                 room_info["items"] = tokens[1].Trim();
@@ -1175,12 +1378,12 @@ namespace MMudTerm.Game
                 room_info["desc"] = tokens[1].Trim();
             }
 
-            tokens = tokens[0].Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            room_info["name"] = tokens[tokens.Length -1].Trim();
+            var tokenss = tokens[0].Split(new string[] { "\r\n" }, StringSplitOptions.None);
+            room_info["name"] = tokenss[tokenss.Length -2].Trim();
 
-            if (tokens.Length == 2)
+            if (tokenss.Length > 2)
             {
-                room_info["cause"] = FigureOutCause_Room(tokens[0].Trim());
+                room_info["cause"] = FigureOutCause_Room(tokenss[tokenss.Length - 3].Trim());
             }
             else
             {
@@ -1190,20 +1393,72 @@ namespace MMudTerm.Game
             
             Room room = new Room();
             room.Name = room_info["name"];
+            room.Light = room_info["light"];
+            room.Cause = room_info["cause"];
+
+            
             if (room_info.ContainsKey("desc"))
             {
                 room.Description = room_info["desc"];
             }
 
-            AlsoHere entities = new AlsoHere();
             if (room_info.ContainsKey("here") && room_info["here"] != "")
             {
+                AlsoHere entities = new AlsoHere();
+                var fullNameCounts = new Dictionary<string, int>();
+                if (room.Cause == "crlf")
+                {
+                    //if we refreshed the current room, don't add all new 'alsohere', only add the delta.
+                    //this way the hp's of the 'also here' targets don't get reset to default
+                    entities = this._current_room.AlsoHere;
+                    //count what is in the current room, us FullName as the key, this is how we handle
+                    //two 'angry orc' Entities in the same room
+                    foreach (var e in entities)
+                    {
+                        if (fullNameCounts.ContainsKey(e.FullName))
+                        {
+                            fullNameCounts[e.FullName]++;
+                        }
+                        else
+                        {
+                            fullNameCounts.Add(e.FullName, 1);
+                        }
+                    }
+                }
+
+                List<Entity> newEntities = new List<Entity>();
+                //add the new Also here entites to the new AlsoHere collection as needed
                 foreach (string also_here in room_info["here"].Split(','))
                 {
                     Entity e = this.CreateConcreteEntity(also_here.Trim());
-                    entities.Add(e);
+                    newEntities.Add(e);
+                    if (fullNameCounts.TryGetValue(e.FullName, out int count))
+                    {
+                        int currentCountInAlsoHere = entities.Count(n => n.FullName == e.FullName);
+                        if (currentCountInAlsoHere < count)
+                        {
+                            entities.Add(e);
+                            fullNameCounts[e.FullName]++;
+                        }
+                    }
+                    else
+                    {
+                        //Name wasn't found add the new Entity to the Alsohere
+                        entities.Add(e);
+                        fullNameCounts.Add(e.FullName, 1);
+                    }
                 }
                 room.AlsoHere = entities;
+                // Remove entities that have left the room
+                foreach (var existingEntity in room.AlsoHere.ToList())
+                {
+                    if (!newEntities.Any(e => e.FullName == existingEntity.FullName))
+                    {
+                        room.AlsoHere.Remove(existingEntity);
+                    }
+                }
+
+                
             }
 
             if (room_info.ContainsKey("items") && room_info["items"] != "")
@@ -1218,10 +1473,8 @@ namespace MMudTerm.Game
                 room_exits.Add(room_exit);
             }
             room.RoomExits = room_exits;
-            room.Light = room_info["light"];
-            room.Cause = room_info["cause"];
 
-            if (room_info["cause"].StartsWith("look,"))
+            if (room.Cause.StartsWith("look,"))
             {
                 this._look_room = room;
                 this.result = EventType.RoomLook;
@@ -1260,7 +1513,7 @@ namespace MMudTerm.Game
             //this can be
             //CRLF
             //l|lo|loo|look dir
-            if(v == "\r\n")
+            if(v == "\r\n" || v == "")
             {
                 return "crlf";
             }
@@ -1629,7 +1882,7 @@ namespace MMudTerm.Game
             }
         }
 
-        internal void HandleNewGameEvent(EventType result)
+        internal void HandleNewGameEvent(EventType result, object data)
         {
             this.NewGameEvent.Invoke(result);
         }
@@ -1638,19 +1891,19 @@ namespace MMudTerm.Game
     //This will match a string against many different regex patterns
     public class RegexMatcher
     {
-        Dictionary<Regex, EventType> regexPatterns;
+        Dictionary<Regex, List<(EventType, Object)>> regexPatterns;
 
-        public RegexMatcher(Dictionary<string, EventType> common_patterns)
+        public RegexMatcher(Dictionary<string, List<(EventType, Object)>> common_patterns)
         {
-            this.regexPatterns = new Dictionary<Regex, EventType>();
-            foreach (KeyValuePair<string, EventType> kvp in common_patterns)
+            this.regexPatterns = new Dictionary<Regex, List<(EventType, Object)>>();
+            foreach (KeyValuePair<string, List<(EventType, Object)>> kvp in common_patterns)
             {
                 Regex r = new Regex(kvp.Key, RegexOptions.Compiled);
                 this.regexPatterns.Add(r, kvp.Value);
             }
         }
 
-        public bool TryMatch(string input, out Match match, out EventType callback)
+        public bool TryMatch(string input, out Match match, out List<(EventType, Object)> callback)
         {
             foreach (var r in regexPatterns)
             {
@@ -1664,7 +1917,7 @@ namespace MMudTerm.Game
             }
 
             match = null;
-            callback = EventType.None;
+            callback = new List<(EventType, Object)> { (EventType.None, null) };
             return false;
         }
     }

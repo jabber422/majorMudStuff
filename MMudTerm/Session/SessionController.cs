@@ -15,6 +15,7 @@ using System.Net.Sockets;
 using static MMudTerm.Session.SessionStateData.SessionStateInGame;
 using System.Linq.Expressions;
 using System.Security.Cryptography;
+using MMudTerm_Protocols.AnsiProtocolCmds;
 
 namespace MMudTerm.Session
 {
@@ -53,6 +54,7 @@ namespace MMudTerm.Session
         internal SessionState CurrentState { get { return this.m_currentSessionState; } }
 
         public bool EnterTheGame { get; internal set; }
+        public SpellUserControlState UserConfig_Spells { get; internal set; }
 
         internal MajorMudBbsGame _gameenv;
 
@@ -69,8 +71,31 @@ namespace MMudTerm.Session
             //if no input after 10 seconds, send a \r\n
             _exphr_start = DateTime.Now;
             this._gameenv = new MajorMudBbsGame(this);
+            this.UserConfig_Spells = new SpellUserControlState();
+            LoadPaths();
         }
 
+        private Task LoadPaths()
+        {
+            return Task.Run(() =>
+            {
+                PathsCache.Load();
+            });
+        }
+
+        private Task LoadMessages()
+        {
+            return Task.Run(() =>
+            {
+                try
+                {
+                    MessagesCache.Load();
+                }catch(Exception ex)
+                {
+
+                }
+            });
+        }
         private Task StartStateQueueWorkerThread(ManualResetEventSlim term_cmds_event, ConcurrentQueue<TermCmd> term_cmds)
         {
             //This is the thread that runs the game basically.  It will constantly look for new TermCmds and 
@@ -81,7 +106,6 @@ namespace MMudTerm.Session
                     while (this.running) // Replace with a proper condition for stopping
                     {
                         term_cmds_event.Wait();
-                        //Console.WriteLine("Unlocked");
 
                         Queue<TermCmd> cmds = new Queue<TermCmd>();
                         TermCmd cmd;
@@ -90,8 +114,16 @@ namespace MMudTerm.Session
                             cmds.Enqueue(cmd);
                         }
 
-                        // Process cmd
-                        this.m_currentSessionState = this.m_currentSessionState.HandleCommands(cmds);
+                        if (cmds.Count != 0)
+                        {
+
+                            this.m_currentSessionState = this.m_currentSessionState.HandleCommands(cmds);
+                        }
+                        else
+                        {
+                            //if we got here, we're probablly disconnecting
+                            continue;
+                        }
 
                         // Check if there are more items in the queue
                         if (term_cmds.IsEmpty)
@@ -105,9 +137,9 @@ namespace MMudTerm.Session
                     }
                 }catch(Exception ex)
                 {
-                    Debug.WriteLine(ex.ToString());
-                    Debug.WriteLine("handler Thread");
-                    Debug.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("handler Thread");
+                    Console.WriteLine(ex.StackTrace);
                 }
                     
             });
@@ -131,7 +163,16 @@ namespace MMudTerm.Session
                             cmds.Enqueue(cmd);
                         }
 
-                        this.m_sessionForm.Terminal.HandleCommands(cmds);
+                        if (cmds.Count != 0)
+                        {
+                            this.m_sessionForm.Terminal.HandleCommands(cmds);
+                        }
+                        else
+                        {
+                            //if we got here, we're probablly disconnecting
+                            continue;
+                        }
+
                         if (term_cmds.IsEmpty)
                         {
                             term_cmds_event.Reset();
@@ -144,9 +185,9 @@ namespace MMudTerm.Session
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.ToString());
-                    Debug.WriteLine("Terminal Thread");
-                    Debug.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("Terminal Thread");
+                    Console.WriteLine(ex.StackTrace);
                 }
             });
         }
@@ -206,9 +247,9 @@ namespace MMudTerm.Session
                 Console.WriteLine("Got 0 bytes!, Disconnected!");
             }catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
-                Debug.WriteLine("Rcvr Thread");
-                Debug.WriteLine(ex.StackTrace);
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("Rcvr Thread");
+                Console.WriteLine(ex.StackTrace);
             }
         }
         #endregion
@@ -289,18 +330,65 @@ namespace MMudTerm.Session
             this._gameenv?.idle_input_timer.Start();
             if (this.m_connObj != null && this.m_connObj.Connected)
             {
-                NetworkStream ns = this.m_connObj.GetStream();
-                lock (ns)
+                try
                 {
-                    ns.Write(p, 0, p.Length);
+                    NetworkStream ns = this.m_connObj.GetStream();
+                    lock (ns)
+                    {
+                        ns.Write(p, 0, p.Length);
+                    }
+                }catch(IOException ioex)
+                {
+                    //normally this is some form of disconnection, we need to clean up states and reset everything
+                    //this.terminal_term_cmds.Enqueue(new Term)
+                    this.SendTerminalMsg("You've been disconnected!");
+                    this.m_sessionForm.SetToDisconnectedState();
                 }
             }
         }
 
-        object send_buffer_timer_state = null;
+        //lets us write messages in Blue to the Term Window
+        public void SendTerminalMsg(string msg)
+        {
+            List<TermCmd> cmds = new List<TermCmd>();
+
+            cmds.Add(new AnsiGraphicsCmd(
+                new List<byte[]>() {
+                    new byte[] { 48 }, 
+                    //new byte[] { 51,52 },
+                    new byte[] { 52,52 },
+                })
+            );
+
+            Console.WriteLine(msg);
+            string[] msgs = msg.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (string m in msgs)
+            {
+                List<byte[]> why_did_i_use_an_array = new List<byte[]>();
+                why_did_i_use_an_array.Add(Encoding.ASCII.GetBytes(m));
+                TermStringDataCmd cmd = new TermStringDataCmd(why_did_i_use_an_array);
+
+                cmds.Add(cmd);
+                cmds.Add(new TermCarrigeReturnCmd());
+                cmds.Add(new TermNewLineCmd());
+            }
+            cmds.Add(new AnsiGraphicsCmd(
+                new List<byte[]>() {
+                    new byte[] { 48 },
+                    new byte[] { 49 },
+                    new byte[] { 51,55 },
+                })
+            );
+
+            foreach (TermCmd c in cmds)
+            {
+                this.terminal_term_cmds.Enqueue(c);
+            }
+            this.terminal_term_cmds_event.Set();
+        }
+
         System.Timers.Timer send_buffer_timer = null;
         private List<string> send_buffer = new List<string>();
-
         private bool running;
 
 
@@ -308,11 +396,11 @@ namespace MMudTerm.Session
         #endregion
         #endregion
         #region API of SessionView
+        //starts the connection process on a background thread
         public async Task<bool> ConnectAsync()
         {
             return await Task.Run(() =>
             {
-                // Perform intensive calculations
                 return Connect();
             });
         }
@@ -320,23 +408,33 @@ namespace MMudTerm.Session
         {
             //this needs to be threaded, connection fails lock up the gui thread for a long time
             this.running = true;
-            if (this.state_term_cmds_task == null)
-            {
-                this.state_term_cmds_task = StartStateQueueWorkerThread(state_term_cmds_event, state_term_cmds);
-            }
-            if (this.terminal_term_cmds_task == null)
-            {
-                this.terminal_term_cmds_task = StartTerminalQueueWorkerThread(terminal_term_cmds_event, terminal_term_cmds);
-            }
+            this.state_term_cmds_task?.Dispose();
+            this.state_term_cmds_task = StartStateQueueWorkerThread(state_term_cmds_event, state_term_cmds);
+
+            this.terminal_term_cmds_task?.Dispose();
+            this.terminal_term_cmds_task = StartTerminalQueueWorkerThread(terminal_term_cmds_event, terminal_term_cmds);
+ 
             this._gameenv?.idle_input_timer.Start();
 
-            bool result = false;
             this.m_currentSessionState = this.m_currentSessionState.Connect();
-            if(this.m_currentSessionState is SessionStateConnected) { 
-                result = true; 
+            if (this.m_currentSessionState is SessionStateConnected)
+            {
+                return true;
             }
-            return result;
             
+            this.running = false;
+            this.state_term_cmds_event.Set();
+            this.terminal_term_cmds_event.Set();
+
+            return false;
+        }
+
+        public async Task<bool> DisconnectAsync()
+        {
+            return await Task.Run(() =>
+            {
+                return Disconnect();
+            });
         }
 
         internal bool Disconnect()
@@ -346,6 +444,9 @@ namespace MMudTerm.Session
             if (this.m_currentSessionState is SessionStateOffline)
             {
                 this.running = false;
+                //release the two threads
+                this.state_term_cmds_event.Set();
+                this.terminal_term_cmds_event.Set();
                 //need to send a queue of commands, lets the awaits consume them, then let the thread end gracefully
                 this.state_term_cmds_task.Wait();
                 this.terminal_term_cmds_task.Wait();
@@ -363,7 +464,9 @@ namespace MMudTerm.Session
             try
             {
                 this.m_connObj?.Client.Disconnect(true);
-            } catch { }
+            } catch 
+            { 
+            }
             this.running = false;
             //this.m_currentSessionState.Disconnect();
             //this.m_SessionData.Dispose();
@@ -375,22 +478,6 @@ namespace MMudTerm.Session
             this.m_sessionForm.PathWalkerFinished();
         }
 
-        //internal void AddListener(NewGameEventHandler mummyScriptHandler)
-        //{
-        //    if(this.CurrentState is SessionStateInGame)
-        //    {
-        //        (this.CurrentState as SessionStateInGame).NewGameEvent += mummyScriptHandler;
-        //    }
-        //}
-
-
-
-        //internal void RemoveListender(NewGameEventHandler mummyScriptHandler)
-        //{
-        //    if (this.CurrentState is SessionStateInGame)
-        //    {
-        //        (this.CurrentState as SessionStateInGame).NewGameEvent -= mummyScriptHandler;
-        //    }
-        //}
+        
     }
 }

@@ -14,7 +14,7 @@ namespace MMudTerm_Protocols.AnsiProtocolCmds
     /// </summary>
     public class AnsiGraphicsCmd : TermCmd
     {
-        List<int> vals;
+        public List<int> vals;
 
         public AnsiGraphicsCmd(List<byte[]> values)
         {

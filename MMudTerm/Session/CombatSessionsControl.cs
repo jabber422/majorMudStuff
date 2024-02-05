@@ -40,7 +40,8 @@ namespace MMudTerm.Session
                     case EventType.Tick:
                         //this.UpdateTick();
                         break;
-                    case EventType.Combat:
+                    case EventType.CombatMiss:
+                    case EventType.CombatHit:
                         this.UpdateCombat();
                         break;
                 }
@@ -81,7 +82,6 @@ namespace MMudTerm.Session
             this._controller._gameenv._current_combat.Remove(to_remove);
         }
 
-
         private void UpdateCombat()
         {
             this.splitContainer1.Panel2.Controls.Clear();
@@ -93,16 +93,22 @@ namespace MMudTerm.Session
                 this.splitContainer1.Panel2.Controls.Add(csc);
             }
 
-            this.textBox_crit.Text = this._controller._gameenv._current_combat.player_crits.ToString();
-            this.textBox_hit.Text = this._controller._gameenv._current_combat.player_hits.ToString();
+            this.textBox_crit.Text = this._controller._gameenv._current_combat.player_crit_rate.ToString("F0") + "%";
+            this.textBox_miss.Text = this._controller._gameenv._current_combat.player_miss_rate.ToString("F0") + "%";
+            this.textBox_hit.Text = this._controller._gameenv._current_combat.player_hit_rate.ToString("F0") + "%";
             this.textBox_dodge.Text = this._controller._gameenv._current_combat.player_dodge.ToString();
-            this.textBox_hit_avg.Text = this._controller._gameenv._current_combat.player_misses.ToString();
-            
-            this.textBox_hit_rng_min.Text = this._controller._gameenv._current_combat.target_miss_player.ToString();
-            this.textBox_hit_rng_max.Text = this._controller._gameenv._current_combat.target_hit_player.ToString();
-            this.textBox_crit_rng_min.Text = this._controller._gameenv._current_combat.target_crit_player.ToString();
-            this.textBox_crit_rng_max.Text = this._controller._gameenv._current_combat.target_dodge_player.ToString();
 
+//            this.textBox_hit_avg.Text = this._controller._gameenv._current_combat.player_misses.ToString();
+            
+            this.textBox_hit_rng_min.Text = this._controller._gameenv._current_combat.player_min_damage.ToString();
+            this.textBox_hit_rng_max.Text = this._controller._gameenv._current_combat.player_max_damage.ToString();
+            this.textBox_hit_avg.Text = (this._controller._gameenv._current_combat.player_hit_average).ToString("F2");
+
+            this.textBox_crit_rng_min.Text = this._controller._gameenv._current_combat.player_min_crit_damage.ToString();
+            this.textBox_crit_rng_max.Text = this._controller._gameenv._current_combat.player_max_crit_damage.ToString();
+            this.textBox_crit_avg.Text = this._controller._gameenv._current_combat.player_crit_average.ToString("F2");
+
+            this.textBox_dodge.Text = (this._controller._gameenv._current_combat.player_dodge_rate).ToString("F0");
         }
     }
 }

@@ -7,6 +7,7 @@
         Priest=2,
         Druid=3,
         Bard=4,
-        Mystic=5
+        Mystic=5,
+        None = 6
     }
 }

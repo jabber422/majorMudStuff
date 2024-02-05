@@ -36,6 +36,10 @@ namespace MMudTerm
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             MMudTerm term = null;
+
+            
+
+
             
             try
             {
@@ -43,7 +47,7 @@ namespace MMudTerm
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message +"\r\n"+ ex.Source +"\r\n" + ex.StackTrace, "APP");
+                Console.WriteLine(ex.Message +"\r\n"+ ex.Source +"\r\n" + ex.StackTrace, "APP");
             }
             
             try
@@ -52,7 +56,7 @@ namespace MMudTerm
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.Message + "\r\n" + ex.Source + "\r\n" + ex.StackTrace, "APP");
+                Console.WriteLine(ex.Message + "\r\n" + ex.Source + "\r\n" + ex.StackTrace, "APP");
             }
 //#endif
 

@@ -53,6 +53,7 @@
             this.toolStripButton_get_all = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_equip_all = new System.Windows.Forms.ToolStripButton();
             this.sessionTermContainer = new System.Windows.Forms.Panel();
+            this.toolStripStatusLabel_block = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -65,7 +66,8 @@
             this.toolStripStatusLabel1_state,
             this.toolStripStatusLabel_status,
             this.toolStripStatusLabel__xphr,
-            this.toolStripStatusLabel_currentroom});
+            this.toolStripStatusLabel_currentroom,
+            this.toolStripStatusLabel_block});
             this.statusStrip1.Location = new System.Drawing.Point(0, 694);
             this.statusStrip1.MinimumSize = new System.Drawing.Size(0, 40);
             this.statusStrip1.Name = "statusStrip1";
@@ -302,6 +304,12 @@
             this.sessionTermContainer.Size = new System.Drawing.Size(1006, 663);
             this.sessionTermContainer.TabIndex = 2;
             // 
+            // toolStripStatusLabel_block
+            // 
+            this.toolStripStatusLabel_block.Name = "toolStripStatusLabel_block";
+            this.toolStripStatusLabel_block.Size = new System.Drawing.Size(118, 35);
+            this.toolStripStatusLabel_block.Text = "toolStripStatusLabel1";
+            // 
             // SessionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -350,5 +358,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton_get_all;
         private System.Windows.Forms.ToolStripButton toolStripButton_equip_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_block;
     }
 }

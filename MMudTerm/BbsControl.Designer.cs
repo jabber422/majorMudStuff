@@ -51,52 +51,56 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(298, 155);
+            this.groupBox1.Size = new System.Drawing.Size(221, 128);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "BBS Info";
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(238, 117);
+            this.button_save.Location = new System.Drawing.Point(145, 93);
             this.button_save.Name = "button_save";
-            this.button_save.Size = new System.Drawing.Size(54, 34);
+            this.button_save.Size = new System.Drawing.Size(70, 29);
             this.button_save.TabIndex = 6;
             this.button_save.Text = "Save";
             this.button_save.UseVisualStyleBackColor = true;
+            this.button_save.Click += new System.EventHandler(this.button_save_Click);
             this.button_save.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox_name_MouseClick);
             // 
             // textBox_port
             // 
-            this.textBox_port.Location = new System.Drawing.Point(85, 85);
+            this.textBox_port.Location = new System.Drawing.Point(71, 67);
             this.textBox_port.Name = "textBox_port";
-            this.textBox_port.Size = new System.Drawing.Size(207, 26);
+            this.textBox_port.Size = new System.Drawing.Size(144, 26);
             this.textBox_port.TabIndex = 5;
             this.textBox_port.Text = "23";
             this.textBox_port.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox_name_MouseClick);
+            this.textBox_port.TextChanged += new System.EventHandler(this.textBox_name_TextChanged);
             // 
             // textBox_address
             // 
-            this.textBox_address.Location = new System.Drawing.Point(85, 55);
+            this.textBox_address.Location = new System.Drawing.Point(71, 41);
             this.textBox_address.Name = "textBox_address";
-            this.textBox_address.Size = new System.Drawing.Size(207, 26);
+            this.textBox_address.Size = new System.Drawing.Size(144, 26);
             this.textBox_address.TabIndex = 4;
             this.textBox_address.Text = "bbs.bearfather.net";
             this.textBox_address.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox_name_MouseClick);
+            this.textBox_address.TextChanged += new System.EventHandler(this.textBox_name_TextChanged);
             // 
             // textBox_name
             // 
-            this.textBox_name.Location = new System.Drawing.Point(85, 23);
+            this.textBox_name.Location = new System.Drawing.Point(71, 15);
             this.textBox_name.Name = "textBox_name";
-            this.textBox_name.Size = new System.Drawing.Size(207, 26);
+            this.textBox_name.Size = new System.Drawing.Size(144, 26);
             this.textBox_name.TabIndex = 3;
             this.textBox_name.Text = "guinea pig";
             this.textBox_name.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBox_name_MouseClick);
+            this.textBox_name.TextChanged += new System.EventHandler(this.textBox_name_TextChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 88);
+            this.label3.Location = new System.Drawing.Point(0, 70);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 20);
             this.label3.TabIndex = 2;
@@ -105,7 +109,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 58);
+            this.label2.Location = new System.Drawing.Point(0, 44);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 20);
             this.label2.TabIndex = 1;
@@ -114,7 +118,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 26);
+            this.label1.Location = new System.Drawing.Point(0, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 20);
             this.label1.TabIndex = 0;
@@ -122,11 +126,11 @@
             // 
             // BbsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.groupBox1);
             this.Name = "BbsControl";
-            this.Size = new System.Drawing.Size(304, 161);
+            this.Size = new System.Drawing.Size(226, 139);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

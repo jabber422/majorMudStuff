@@ -14,6 +14,8 @@ using MMudTerm.Game;
 using System.Threading.Tasks;
 using System.IO;
 using System.Linq.Expressions;
+using System.Security.AccessControl;
+using System.Diagnostics.Eventing.Reader;
 
 namespace MMudTerm.Session
 {
@@ -105,6 +107,9 @@ namespace MMudTerm.Session
             this.toolStripItems.Add(toolStripButton_getcoins);
 
 
+            
+
+
 
 
 
@@ -187,7 +192,7 @@ namespace MMudTerm.Session
                 msg = new byte[] { (byte)e.KeyChar };
             }
 
-            if (this.cur_key.KeyCode == Keys.Enter)
+            if (this.cur_key.KeyCode == Keys.Enter || msg[msg.Length-1] == '\n')
             {
                 this.m_controller.user_has_send_blocked = 0;
             }else if(this.cur_key.KeyCode == Keys.Back)
@@ -219,12 +224,21 @@ namespace MMudTerm.Session
             }
             else
             {
-                if(this.m_controller.Disconnect())
-                {
-                    this.toolStripConnectBtn.Checked = false;
-                }
+                await this.m_controller.DisconnectAsync();
                 this.toolStripConnectBtn.Image = GetIcon(3);
                 this.toolStripConnectBtn.Checked = false;
+            }
+        }
+
+        public void SetToDisconnectedState()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(SetToDisconnectedState));
+            }
+            else
+            {
+                toolStripConnectBtn_Click(this, null);
             }
         }
 
@@ -349,7 +363,7 @@ namespace MMudTerm.Session
             //these are here because this form uses both of them in the status bar
             switch (token)
             {
-                case EventType.Combat:
+                case EventType.CombatEngaged:
                     UpdateCombat();
                     break;
                 case EventType.Tick:
@@ -358,6 +372,21 @@ namespace MMudTerm.Session
                 case EventType.Room:
                     UpdateRoomName();
                     break;
+                default:
+                    UpdateBlocked();
+                    break;
+            }
+        }
+
+        private void UpdateBlocked()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateBlocked));
+            }
+            else
+            {
+                this.toolStripStatusLabel_block.Text = this.m_controller.user_has_send_blocked.ToString();
             }
         }
 
@@ -372,9 +401,9 @@ namespace MMudTerm.Session
                 if (this.m_controller._gameenv?._current_room != null)
                 {
                     string known_room = "";
-                    if (PathingCache.Rooms != null)
+                    if (PathsCache.Rooms != null)
                     {
-                        if (PathingCache.Rooms.ContainsValue(this.m_controller._gameenv._current_room.MegaMudRoomHash))
+                        if (PathsCache.Rooms.ContainsValue(this.m_controller._gameenv._current_room.MegaMudRoomHash))
                         {
                             known_room = "KNOWN ROOM - ";
                         }
@@ -493,7 +522,9 @@ namespace MMudTerm.Session
                 toolStripButton_stop.Checked = true;
                 toolStripButton_go.Checked = false;
                 toolStripButton_loop.Checked = false;
-                this._current_path.Active = false;
+                if (this._current_path != null) {
+                    this._current_path.Active = false;
+                }
             }
         }
 
@@ -549,25 +580,27 @@ namespace MMudTerm.Session
                 if (room_to_loop_from == null) return null;
             }
             
-            long to_room_hash = PathingCache.Rooms[room_to_loop_from];
+            long to_room_hash = PathsCache.Rooms[room_to_loop_from];
 
             List<MudPath> path = null;
+            int path_type = 1;
             if (curren_room_hash == to_room_hash)
             {
                 //we are here, start looping
-                path = PathingCache.GetLoop(to_room_hash);
+                path = PathsCache.GetLoop(to_room_hash);
             }
             else
             {
                 this.room_to_loop = room_to_loop_from;
                 //we need to walk there
-                path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+                path = PathsCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
                 if (path.Count == 0) return null;
+                path_type = 2;
             }
             
             
 
-            return new PathWalker(path, this.m_controller, true); 
+            return new PathWalker(path, this.m_controller, path_type); 
         }
 
         private PathWalker GoTo()
@@ -576,9 +609,9 @@ namespace MMudTerm.Session
             string room_to_walk_to = AskWhere();
             if (room_to_walk_to == null) return null;
 
-            long to_room_hash = PathingCache.Rooms[room_to_walk_to];
+            long to_room_hash = PathsCache.Rooms[room_to_walk_to];
             List<MudPath> path = null;
-            path = PathingCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
+            path = PathsCache.Graph.GetShortestPath(curren_room_hash, to_room_hash);
             if(path.Count == 0) return null;
 
             return new PathWalker(path, this.m_controller);

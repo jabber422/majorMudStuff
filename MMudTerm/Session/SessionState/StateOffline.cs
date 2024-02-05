@@ -37,13 +37,13 @@ namespace MMudTerm.Session.SessionStateData
             this.m_controller.m_decoder = new MMudTerm_Protocols.AnsiProtocolCmds.AnsiProtocolDecoder();
             try
             {
-                this.SendTerminalMsg("Connecting...");
+                this.m_controller.SendTerminalMsg("Connecting...");
                 this.m_controller.m_connObj.Connect(this.m_controller.m_SessionData.ConnectionInfo.IpA, this.m_controller.m_SessionData.ConnectionInfo.Port);
             }
             catch (Exception e)
             {
                 string msg = "Connection Failed! \r\n " + e.Message;
-                this.SendTerminalMsg(msg);
+                this.m_controller.SendTerminalMsg(msg);
                 return this;
             }
             //start the rcvr thread
@@ -51,44 +51,7 @@ namespace MMudTerm.Session.SessionStateData
             return new SessionStateConnected(this);
         }
 
-        private void SendTerminalMsg(string msg)
-        {
-            List<TermCmd> cmds = new List<TermCmd>();
-            
-            cmds.Add(new AnsiGraphicsCmd(
-                new List<byte[]>() { 
-                    new byte[] { 48 }, 
-                    //new byte[] { 51,52 },
-                    new byte[] { 52,52 },
-                })
-            );
-
-            Debug.WriteLine(msg);
-            string[] msgs = msg.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string m in msgs)
-            {
-                List<byte[]> why_did_i_use_an_array = new List<byte[]>();
-                why_did_i_use_an_array.Add(Encoding.ASCII.GetBytes(m));
-                TermStringDataCmd cmd = new TermStringDataCmd(why_did_i_use_an_array);
-
-                cmds.Add(cmd);
-                cmds.Add(new TermCarrigeReturnCmd());
-                cmds.Add(new TermNewLineCmd());
-            }
-            cmds.Add(new AnsiGraphicsCmd(
-                new List<byte[]>() {
-                    new byte[] { 48 },
-                    new byte[] { 49 },
-                    new byte[] { 51,55 },
-                })
-            );
-
-            foreach (TermCmd c in cmds)
-            {
-                this.m_controller.terminal_term_cmds.Enqueue(c);
-            }
-            this.m_controller.terminal_term_cmds_event.Set();         
-        }
+        
 
         internal override SessionState Disconnect()
         {

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,16 +17,20 @@ namespace MMudTerm
     public partial class BbsAccountPlayerControl : UserControl
     {
         private LogonAutomationMsgRspControl logonAutomationMsgRspControl1;
-        private LogonAutomationMsgRspControl logonAutomationMsgRspControl4;
-        private LogonAutomationMsgRspControl logonAutomationMsgRspControl3;
         private LogonAutomationMsgRspControl logonAutomationMsgRspControl2;
+        private LogonAutomationMsgRspControl logonAutomationMsgRspControl3;
+        private LogonAutomationMsgRspControl logonAutomationMsgRspControl4;
         private LogonAutomationMsgRspControl logonAutomationMsgRspControl5;
+
+        private LogonAutomationMsgRspControl[] controls;
         private MMudTerm mMudTerm;
+        private string bbsname;
 
         //CON,chysasbbs.ddns.net,23^M
-        public BbsAccountPlayerControl(MMudTerm mMudTerm)
+        public BbsAccountPlayerControl(MMudTerm mMudTerm, string name)
         {
             this.mMudTerm = mMudTerm;
+            this.bbsname = name;
             InitializeComponent();
             this.groupBox_bbs_account.SuspendLayout();
             this.SuspendLayout();
@@ -56,35 +62,31 @@ namespace MMudTerm
             this.logonAutomationMsgRspControl3.Location = new System.Drawing.Point(98, this.logonAutomationMsgRspControl2.Location.Y + 20);
             this.logonAutomationMsgRspControl3.Msg = "(TOP)";
             this.logonAutomationMsgRspControl3.Name = "logonAutomationMsgRspControl3";
-            this.logonAutomationMsgRspControl3.Rsp = "m\\r\\n";
-            
+            this.logonAutomationMsgRspControl3.Rsp = "m\r\n";            
             this.logonAutomationMsgRspControl3.TabIndex = 21;
-            // 
-            // logonAutomationMsgRspControl4
-            // 
-            //this.logonAutomationMsgRspControl4 = new LogonAutomationMsgRspControl();
-            //this.logonAutomationMsgRspControl4.IsEnabled = true;
-            //this.logonAutomationMsgRspControl4.Location = new System.Drawing.Point(98, this.logonAutomationMsgRspControl3.Location.Y + 20);
-            //this.logonAutomationMsgRspControl4.Msg = "[MAJORMUD]:";
-            //this.logonAutomationMsgRspControl4.Name = "logonAutomationMsgRspControl4";
-            //this.logonAutomationMsgRspControl4.Rsp = "e\\r\\n";
-            
-            //this.logonAutomationMsgRspControl4.TabIndex = 22;
+
+            this.logonAutomationMsgRspControl4 = new LogonAutomationMsgRspControl();
+            this.logonAutomationMsgRspControl4.IsEnabled = false;
+            this.logonAutomationMsgRspControl4.Location = new System.Drawing.Point(98, this.logonAutomationMsgRspControl3.Location.Y + 20);
+            this.logonAutomationMsgRspControl4.Msg = "";
+            this.logonAutomationMsgRspControl4.Name = "logonAutomationMsgRspControl4";
+            this.logonAutomationMsgRspControl4.Rsp = "";
+            this.logonAutomationMsgRspControl4.TabIndex = 22;
 
             this.logonAutomationMsgRspControl5 = new LogonAutomationMsgRspControl();
             this.logonAutomationMsgRspControl5.IsEnabled = false;
-            this.logonAutomationMsgRspControl5.Location = new System.Drawing.Point(98, this.logonAutomationMsgRspControl3.Location.Y + 20);
+            this.logonAutomationMsgRspControl5.Location = new System.Drawing.Point(98, this.logonAutomationMsgRspControl4.Location.Y + 20);
             this.logonAutomationMsgRspControl5.Msg = "";
             this.logonAutomationMsgRspControl5.Name = "logonAutomationMsgRspControl5";
             this.logonAutomationMsgRspControl5.Rsp = "";
-            
             this.logonAutomationMsgRspControl5.TabIndex = 23;
-
             this.groupBox_bbs_account.Controls.Add(this.logonAutomationMsgRspControl1);
             this.groupBox_bbs_account.Controls.Add(this.logonAutomationMsgRspControl5);
             this.groupBox_bbs_account.Controls.Add(this.logonAutomationMsgRspControl4);
             this.groupBox_bbs_account.Controls.Add(this.logonAutomationMsgRspControl3);
             this.groupBox_bbs_account.Controls.Add(this.logonAutomationMsgRspControl2);
+
+            controls = new LogonAutomationMsgRspControl[5] { logonAutomationMsgRspControl1, logonAutomationMsgRspControl2, logonAutomationMsgRspControl3, logonAutomationMsgRspControl4, logonAutomationMsgRspControl5, };
 
             int cnt = 5;
 
@@ -96,16 +98,48 @@ namespace MMudTerm
             this.ResumeLayout(false);
         }
 
+        public BbsAccountData SaveData()
+        {
+            var data = new  BbsAccountData();
+            foreach(Control c in this.groupBox_bbs_account.Controls)
+            {
+                if(!(c is LogonAutomationMsgRspControl))
+                {
+                    continue;
+                }
+
+                var logoncontrol = (c as LogonAutomationMsgRspControl);
+                data.LogonControls.Add(logoncontrol.SaveData());
+                data.Name = this.textBox_name.Text;
+            }
+            return data;
+        }
+
+        public void LoadData(BbsAccountData data)
+        {
+            //this.groupBox_bbs_account.Controls.Remove(this.logonAutomationMsgRspControl1);
+            //this.groupBox_bbs_account.Controls.Remove(this.logonAutomationMsgRspControl2);
+            //this.groupBox_bbs_account.Controls.Remove(this.logonAutomationMsgRspControl3);
+            //this.groupBox_bbs_account.Controls.Remove(this.logonAutomationMsgRspControl4);
+            //this.groupBox_bbs_account.Controls.Remove(this.logonAutomationMsgRspControl5);
+            for (int i = 0; i < data.LogonControls.Count; i++)
+            {
+                this.controls[i].LoadData(data.LogonControls[i]);
+            }
+            this.textBox_name.Text = data.Name;
+        }
+
         public int ID { get; set; }
         
         //by default this is just Character, once we log into the game this can be updated
         public string CharacterGameName { get { return this.groupBox_bbs_account.Text; }
-            set { this.groupBox_bbs_account.Text = value; } }
+            set { this.groupBox_bbs_account.Text = value; }
+        }
 
         private void button_connect_Click(object sender, EventArgs e)
         {
             this.ID = this.mMudTerm.CreateNewSession(this.GetData(), this.GetHashCode());
-            if(this.ID == -1) { return; } //con failed
+            if (this.ID == -1) { return; } //con failed
 
             //we need to tell our handler/controller we want to connect, and we need the logon automation info
             foreach (Control c in this.Controls[0].Controls)
@@ -122,6 +156,12 @@ namespace MMudTerm
                     }
                 }
             }
+
+            var data = this.SaveData();
+
+            var d = Directory.GetCurrentDirectory();
+            var p = Path.Combine(d, "BBS", this.bbsname, data.Name +".xml");
+            MMudTerm.SerializeToXmlAndWriteToFile(data, p);
         }
 
         //For every logonAuto control in the bbs account, collect the Msg and Rsp's
@@ -168,6 +208,17 @@ namespace MMudTerm
                     }
                 }
             }
+        }
+    }
+    [Serializable]
+    public class BbsAccountData
+    {
+        public List<LogonRspData> LogonControls { get; set; }
+        public string Name { get;  set; }
+
+        public BbsAccountData()
+        {
+            this.LogonControls = new List<LogonRspData>();
         }
     }
 }

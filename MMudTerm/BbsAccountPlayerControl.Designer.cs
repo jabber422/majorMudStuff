@@ -35,6 +35,7 @@
             this.button_connect = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.textBox_name = new System.Windows.Forms.TextBox();
             this.groupBox_bbs_account.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -67,6 +68,7 @@
             // 
             // groupBox_bbs_account
             // 
+            this.groupBox_bbs_account.Controls.Add(this.textBox_name);
             this.groupBox_bbs_account.Controls.Add(this.button_connect);
             this.groupBox_bbs_account.Controls.Add(this.label5);
             this.groupBox_bbs_account.Controls.Add(this.label4);
@@ -109,6 +111,14 @@
             this.label4.TabIndex = 7;
             this.label4.Text = "Reply";
             // 
+            // textBox_name
+            // 
+            this.textBox_name.Location = new System.Drawing.Point(11, 25);
+            this.textBox_name.Name = "textBox_name";
+            this.textBox_name.Size = new System.Drawing.Size(100, 26);
+            this.textBox_name.TabIndex = 19;
+            this.textBox_name.Text = "Darmius";
+            // 
             // BbsAccountPlayerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -131,5 +141,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button_connect;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox_name;
     }
 }

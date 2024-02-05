@@ -183,8 +183,8 @@
             // 
             // CombatSessionControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label_tar_hp_max);
             this.Controls.Add(this.label_tar_hp_value);

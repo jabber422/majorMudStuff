@@ -1,4 +1,5 @@
-﻿using MMudObjects;
+﻿using MmeDatabaseReader;
+using MMudObjects;
 using MMudTerm.Game;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace MMudTerm.Session
         public SessionController _controller = null;
         
         CombatSessionsControl combatSessionsControl1 = null;
+        private SpellsUserControl spellsControl;
+        private MacrosUserControl macrosControl;
+        private HealthControl healthControl;
 
         public SessionGameInfo(SessionController controller)
         {
@@ -32,6 +36,16 @@ namespace MMudTerm.Session
 
             InitializeComponent();
             this.tabPage_combat.Controls.Add(this.combatSessionsControl1);
+
+            this.spellsControl = new SpellsUserControl(this._controller);
+            this.tabPage_spells.Controls.Add(spellsControl);
+
+            this.macrosControl = new MacrosUserControl(this._controller);
+
+            this.healthControl = new HealthControl(this._controller);
+            this.tabPage5.Controls.Add(this.healthControl);
+
+
         }
 
         public void Update(EventType token)
@@ -72,7 +86,7 @@ namespace MMudTerm.Session
                         break;
                     case EventType.Tick:
                         this.UpdateTick();
-                        if(this._controller._gameenv._player.Buffs?.Count > 0) UpdateBuffs();
+                        if(this._controller._gameenv._player.Buffs?.Count > 0) spellsControl.UpdateBuffs();
                         break;
                     case EventType.PickUpCoins:
                     case EventType.DropCoins:
@@ -87,8 +101,9 @@ namespace MMudTerm.Session
                     case EventType.BoughtSomething:
                         this.UpdateInventory();
                         break;
-                    case EventType.Combat:
-                        this.UpdateCombat();
+                    case EventType.CombatHit:
+                    case EventType.CombatMiss:
+                        this.combatSessionsControl1.Update(token);
                         break;
                     case EventType.Gossip:
                         this.richTextBox1.WordWrap = true;
@@ -104,7 +119,7 @@ namespace MMudTerm.Session
                     //case EventType.BuffSpellCastSuccess_3rdP:
                     case EventType.BuffSpellCastSuccess:
                     case EventType.BuffExpired:
-                        UpdateBuffs();
+                        spellsControl.UpdateBuffs();
                         break;
                     default:
                         //Console.WriteLine($"Not used: {token}");
@@ -113,21 +128,7 @@ namespace MMudTerm.Session
             }
         }
 
-        private void UpdateBuffs()
-        {
-            for(int i=0;i< this._controller._gameenv._player.Buffs?.Count;i++)
-            {
-                Spell spell = this._controller._gameenv._player.Buffs.Values.ElementAt(i);
-                var label = this.groupBox_buffs.Controls.Find($"label_buff_{i+1}", true).FirstOrDefault();
-                var label_time = this.groupBox_buffs.Controls.Find($"label_buff_{i+1}_time", true).FirstOrDefault();
-                label.Text = spell.Name;
-                TimeSpan ts = DateTime.Now - spell.CastTime;
-                float coef = (float)spell.DurInc;
-
-                float dur = ((spell.Duration * 4) + (coef * (float)this._controller._gameenv._player.Stats.Level));
-                label_time.Text = ts.TotalSeconds.ToString("F0") + "  " + dur.ToString("F0");
-            }
-        }
+        
 
 
         private void UpdateTick()
@@ -160,13 +161,11 @@ namespace MMudTerm.Session
             foreach (Entity e in cur_room.AlsoHere)
             {
                 if (e == null) { continue; }
-                if (e.Verb != "")
-                {
-                    also_here += $"({e.Verb}) ";
-                }
-
-                also_here += e.Name + ", ";
+                var bad = e.BaddieFlag ? "!" : "";
+                also_here += $"{bad}{e.FullName}{bad}, ";
             }
+
+            also_here = also_here.Length >= 2 ? also_here.Remove(also_here.Length - 2) : also_here;
             textBox_alsohere_value.Text = also_here;
 
             label_exits_value.Text = GetExits(cur_room);
@@ -231,15 +230,8 @@ namespace MMudTerm.Session
             label_lr_exits.Text = GetExits(cur_room);
 
             this.label_lr_hash.Text = cur_room.MegaMudRoomHash.ToString("X");
-
-            
         }
 
-    
-        private void UpdateCombat()
-        {
-            this.combatSessionsControl1.Update(EventType.Combat);
-        }
 
         public void UpdateStats()
         {
@@ -447,15 +439,15 @@ namespace MMudTerm.Session
             dataGridView2.ReadOnly = false;
             dataGridView2.EditMode = DataGridViewEditMode.EditOnEnter;
 
-            var editableList = _controller._gameenv._matcher.RegexListwMacros()
-            .Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
-            .ToList();
+            //var editableList = _controller._gameenv._matcher.RegexListwMacros()
+            //.Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
+            //.ToList();
 
-            dataGridView2.DataSource = editableList;
-            dataGridView2.CellEndEdit += dataGridView2_CellEndEdit;
+            //dataGridView2.DataSource = editableList;
+            //dataGridView2.CellEndEdit += dataGridView2_CellEndEdit;
 
-            this.dataGridView2.AutoGenerateColumns = true;
-            this.dataGridView2.Refresh();
+            //this.dataGridView2.AutoGenerateColumns = true;
+            //this.dataGridView2.Refresh();
         }
 
         private void dataGridView2_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -467,23 +459,23 @@ namespace MMudTerm.Session
                 var newKey = grid.Rows[rowIndex].Cells[0].Value.ToString();
                 var newValue = (EventType)grid.Rows[rowIndex].Cells[1].Value;
 
-                var editableList = _controller._gameenv._matcher.RegexListwMacros()
-                .Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
-                .ToList();
-                // Update the list
-                editableList[rowIndex].Key = newKey;
-                editableList[rowIndex].Value = newValue;
+                //var editableList = _controller._gameenv._matcher.RegexListwMacros()
+                //.Select(kvp => new EditableKeyValuePair { Key = kvp.Key, Value = kvp.Value })
+                //.ToList();
+                //// Update the list
+                //editableList[rowIndex].Key = newKey;
+                //editableList[rowIndex].Value = newValue;
 
-                // Update the original dictionary
-                // Note: This assumes that the keys are unique and handles key changes.
-                var oldKey = _controller._gameenv._matcher.RegexListwMacros().ElementAt(rowIndex).Key;
-                if (!oldKey.Equals(newKey))
-                {
-                    _controller._gameenv._matcher.RegexListwMacros().Remove(oldKey);
-                }
-                _controller._gameenv._matcher.RegexListwMacros()[newKey] = newValue;
+                //// Update the original dictionary
+                //// Note: This assumes that the keys are unique and handles key changes.
+                //var oldKey = _controller._gameenv._matcher.RegexListwMacros().ElementAt(rowIndex).Key;
+                //if (!oldKey.Equals(newKey))
+                //{
+                //    _controller._gameenv._matcher.RegexListwMacros().Remove(oldKey);
+                //}
+                //_controller._gameenv._matcher.RegexListwMacros()[newKey] = newValue;
 
-                _controller._gameenv._matcher.Reload();
+                //_controller._gameenv._matcher.Reload();
             }
         }
 
@@ -492,6 +484,8 @@ namespace MMudTerm.Session
             this._controller._gameenv._gossips.Clear();
             this.richTextBox1.Text = "";
         }
+
+        
     }
 
     public class EditableKeyValuePair

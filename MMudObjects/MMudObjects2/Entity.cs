@@ -21,6 +21,7 @@ namespace MMudObjects
             {
 
             }
+            name = name.Replace("\r\n", " ").Trim();
             string verb_pattern_entity = "nasty|big|angry|happy|nasty|fierce|small|large|fat|thin|short|tall";
             string noun = $"(?:({verb_pattern_entity}))?" + @"(.*)";
             Match match = Regex.Match(name, noun);
@@ -42,7 +43,7 @@ namespace MMudObjects
                 this.Verb = "";                
             }
         }
-        public virtual string Name { get; private set; }
+        public virtual string Name { get; protected set; }
 
         public virtual string FullName { get { return $"{this.Verb} {this.Name}".Trim(); } }
         public virtual string Verb { get; private set; }
@@ -56,7 +57,7 @@ namespace MMudObjects
             if (obj is Entity other)
             {
                 Console.WriteLine($"Comparing {this.Name} to {other.Name}");
-                return this.Name == other.Name; // Example comparison
+                return this.FullName == other.FullName; // Example comparison
             }
             return false;
         }
@@ -71,7 +72,7 @@ namespace MMudObjects
             this.RegenRooms = new List<Room>();
         }
 
-        public NPC(Entity e) :base(e.Name)
+        public NPC(Entity e) :base(e.FullName)
         {
             this.Abilities = new List<ItemAbility>();
             this.Attacks = new List<MonsterAttackInfo>();
@@ -242,6 +243,8 @@ namespace MMudObjects
 
     public class Player : Entity
     {
+        public List<MessageResponse> ActiveMessage = new List<MessageResponse>();
+
         public Room Room { get; set; }
 
         public virtual double Exp
@@ -255,7 +258,21 @@ namespace MMudObjects
 
         public Player(string name) : base(name)
         {
+            if (this.Name.Trim().EndsWith("*"))
+            {
+                this.Name = this.Name.Remove(this.Name.Length - 1);
+            }
+
             this.Stats = new PlayerStats();
+            
+            var tokens = this.Name.Split(' ');
+            if(tokens.Length == 2)
+            {
+                this.Name = tokens[0];
+                this.Stats.LastName = tokens[1];
+            }
+
+            
             this.Room = new Room();
             this.Inventory = new Inventory();
             //this.Equipped = new EquippedItemsInfo();
@@ -299,6 +316,11 @@ namespace MMudObjects
         public bool Online { get; set; }
         public double GainedExp { get; set; }
         public string CombatEngagedCause { get; set; }
+        public bool IsDiseased { get; set; }
+        public bool IsPosioned { get; set; }
+        public bool IsConfused { get; set; }
+        public bool IsBlind { get; set; }
+
     }
 }
 
@@ -404,7 +426,7 @@ public class PlayerStats
 
 
     //non stat block stuff
-    public string FirstName { get { return this.Name.Split(new char[] { ' ' })[0]; } }
+    public string FirstName { get { return this.Name.Split(' ')[0]; } }
     public string LastName
     {
         get;set;

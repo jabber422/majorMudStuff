@@ -30,6 +30,18 @@
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox_accy = new System.Windows.Forms.GroupBox();
+            this.textBox_dodge = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox_crit_avg = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox_crit_rng_max = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox_crit_rng_min = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.textBox_crit = new System.Windows.Forms.TextBox();
+            this.label_crit = new System.Windows.Forms.Label();
+            this.textBox_hit_avg = new System.Windows.Forms.TextBox();
+            this.label_hit_avg = new System.Windows.Forms.Label();
             this.textBox_hit_rng_max = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox_hit_rng_min = new System.Windows.Forms.TextBox();
@@ -42,18 +54,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label_roomname_value = new System.Windows.Forms.Label();
             this.label_roomname = new System.Windows.Forms.Label();
-            this.label_hit_avg = new System.Windows.Forms.Label();
-            this.textBox_hit_avg = new System.Windows.Forms.TextBox();
-            this.textBox_crit_avg = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox_crit_rng_max = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox_crit_rng_min = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.textBox_crit = new System.Windows.Forms.TextBox();
-            this.label_crit = new System.Windows.Forms.Label();
-            this.textBox_dodge = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -75,7 +75,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.label_roomname_value);
             this.splitContainer1.Panel1.Controls.Add(this.label_roomname);
             this.splitContainer1.Size = new System.Drawing.Size(870, 639);
-            this.splitContainer1.SplitterDistance = 158;
+            this.splitContainer1.SplitterDistance = 253;
             this.splitContainer1.TabIndex = 0;
             // 
             // groupBox_accy
@@ -102,14 +102,121 @@
             this.groupBox_accy.Controls.Add(this.label_miss);
             this.groupBox_accy.Location = new System.Drawing.Point(463, 3);
             this.groupBox_accy.Name = "groupBox_accy";
-            this.groupBox_accy.Size = new System.Drawing.Size(404, 152);
+            this.groupBox_accy.Size = new System.Drawing.Size(404, 158);
             this.groupBox_accy.TabIndex = 86;
             this.groupBox_accy.TabStop = false;
             this.groupBox_accy.Text = "Accuracy";
             // 
+            // textBox_dodge
+            // 
+            this.textBox_dodge.Location = new System.Drawing.Point(65, 119);
+            this.textBox_dodge.Name = "textBox_dodge";
+            this.textBox_dodge.ReadOnly = true;
+            this.textBox_dodge.Size = new System.Drawing.Size(53, 26);
+            this.textBox_dodge.TabIndex = 19;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(7, 122);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 20);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "Dodge";
+            // 
+            // textBox_crit_avg
+            // 
+            this.textBox_crit_avg.Location = new System.Drawing.Point(339, 87);
+            this.textBox_crit_avg.Name = "textBox_crit_avg";
+            this.textBox_crit_avg.ReadOnly = true;
+            this.textBox_crit_avg.Size = new System.Drawing.Size(53, 26);
+            this.textBox_crit_avg.TabIndex = 17;
+            this.textBox_crit_avg.Text = "100%";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(297, 90);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 20);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "Avg";
+            // 
+            // textBox_crit_rng_max
+            // 
+            this.textBox_crit_rng_max.Location = new System.Drawing.Point(236, 87);
+            this.textBox_crit_rng_max.Name = "textBox_crit_rng_max";
+            this.textBox_crit_rng_max.ReadOnly = true;
+            this.textBox_crit_rng_max.Size = new System.Drawing.Size(49, 26);
+            this.textBox_crit_rng_max.TabIndex = 15;
+            this.textBox_crit_rng_max.Text = "9999";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(221, 90);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(14, 20);
+            this.label4.TabIndex = 14;
+            this.label4.Text = "-";
+            // 
+            // textBox_crit_rng_min
+            // 
+            this.textBox_crit_rng_min.Location = new System.Drawing.Point(178, 87);
+            this.textBox_crit_rng_min.Name = "textBox_crit_rng_min";
+            this.textBox_crit_rng_min.ReadOnly = true;
+            this.textBox_crit_rng_min.Size = new System.Drawing.Size(37, 26);
+            this.textBox_crit_rng_min.TabIndex = 13;
+            this.textBox_crit_rng_min.Text = "999";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(133, 90);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(39, 20);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Rng";
+            // 
+            // textBox_crit
+            // 
+            this.textBox_crit.Location = new System.Drawing.Point(65, 87);
+            this.textBox_crit.Name = "textBox_crit";
+            this.textBox_crit.ReadOnly = true;
+            this.textBox_crit.Size = new System.Drawing.Size(53, 26);
+            this.textBox_crit.TabIndex = 11;
+            this.textBox_crit.Text = "100%";
+            // 
+            // label_crit
+            // 
+            this.label_crit.AutoSize = true;
+            this.label_crit.Location = new System.Drawing.Point(7, 90);
+            this.label_crit.Name = "label_crit";
+            this.label_crit.Size = new System.Drawing.Size(33, 20);
+            this.label_crit.TabIndex = 10;
+            this.label_crit.Text = "Crit";
+            // 
+            // textBox_hit_avg
+            // 
+            this.textBox_hit_avg.Location = new System.Drawing.Point(339, 55);
+            this.textBox_hit_avg.Name = "textBox_hit_avg";
+            this.textBox_hit_avg.ReadOnly = true;
+            this.textBox_hit_avg.Size = new System.Drawing.Size(53, 26);
+            this.textBox_hit_avg.TabIndex = 9;
+            this.textBox_hit_avg.Text = "100%";
+            // 
+            // label_hit_avg
+            // 
+            this.label_hit_avg.AutoSize = true;
+            this.label_hit_avg.Location = new System.Drawing.Point(297, 58);
+            this.label_hit_avg.Name = "label_hit_avg";
+            this.label_hit_avg.Size = new System.Drawing.Size(36, 20);
+            this.label_hit_avg.TabIndex = 8;
+            this.label_hit_avg.Text = "Avg";
+            // 
             // textBox_hit_rng_max
             // 
-            this.textBox_hit_rng_max.Location = new System.Drawing.Point(231, 55);
+            this.textBox_hit_rng_max.Location = new System.Drawing.Point(236, 55);
             this.textBox_hit_rng_max.Name = "textBox_hit_rng_max";
             this.textBox_hit_rng_max.ReadOnly = true;
             this.textBox_hit_rng_max.Size = new System.Drawing.Size(49, 26);
@@ -119,7 +226,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(216, 58);
+            this.label1.Location = new System.Drawing.Point(221, 58);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(14, 20);
             this.label1.TabIndex = 6;
@@ -181,8 +288,8 @@
             // label_also_here_value
             // 
             this.label_also_here_value.AutoSize = true;
-            this.label_also_here_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_also_here_value.Location = new System.Drawing.Point(108, 34);
+            this.label_also_here_value.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_also_here_value.Location = new System.Drawing.Point(108, 26);
             this.label_also_here_value.Name = "label_also_here_value";
             this.label_also_here_value.Size = new System.Drawing.Size(72, 19);
             this.label_also_here_value.TabIndex = 85;
@@ -191,8 +298,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(3, 34);
+            this.label2.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(3, 26);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(99, 19);
             this.label2.TabIndex = 84;
@@ -201,8 +308,8 @@
             // label_roomname_value
             // 
             this.label_roomname_value.AutoSize = true;
-            this.label_roomname_value.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_roomname_value.Location = new System.Drawing.Point(108, 15);
+            this.label_roomname_value.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_roomname_value.Location = new System.Drawing.Point(108, 3);
             this.label_roomname_value.Name = "label_roomname_value";
             this.label_roomname_value.Size = new System.Drawing.Size(72, 19);
             this.label_roomname_value.TabIndex = 83;
@@ -211,124 +318,17 @@
             // label_roomname
             // 
             this.label_roomname.AutoSize = true;
-            this.label_roomname.Font = new System.Drawing.Font("Consolas", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label_roomname.Location = new System.Drawing.Point(3, 15);
+            this.label_roomname.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label_roomname.Location = new System.Drawing.Point(3, 3);
             this.label_roomname.Name = "label_roomname";
             this.label_roomname.Size = new System.Drawing.Size(99, 19);
             this.label_roomname.TabIndex = 82;
             this.label_roomname.Text = "Room Name:";
             // 
-            // label_hit_avg
-            // 
-            this.label_hit_avg.AutoSize = true;
-            this.label_hit_avg.Location = new System.Drawing.Point(297, 58);
-            this.label_hit_avg.Name = "label_hit_avg";
-            this.label_hit_avg.Size = new System.Drawing.Size(36, 20);
-            this.label_hit_avg.TabIndex = 8;
-            this.label_hit_avg.Text = "Avg";
-            // 
-            // textBox_hit_avg
-            // 
-            this.textBox_hit_avg.Location = new System.Drawing.Point(339, 55);
-            this.textBox_hit_avg.Name = "textBox_hit_avg";
-            this.textBox_hit_avg.ReadOnly = true;
-            this.textBox_hit_avg.Size = new System.Drawing.Size(53, 26);
-            this.textBox_hit_avg.TabIndex = 9;
-            this.textBox_hit_avg.Text = "100%";
-            // 
-            // textBox_crit_avg
-            // 
-            this.textBox_crit_avg.Location = new System.Drawing.Point(339, 87);
-            this.textBox_crit_avg.Name = "textBox_crit_avg";
-            this.textBox_crit_avg.ReadOnly = true;
-            this.textBox_crit_avg.Size = new System.Drawing.Size(53, 26);
-            this.textBox_crit_avg.TabIndex = 17;
-            this.textBox_crit_avg.Text = "100%";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(297, 90);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 20);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "Avg";
-            // 
-            // textBox_crit_rng_max
-            // 
-            this.textBox_crit_rng_max.Location = new System.Drawing.Point(231, 87);
-            this.textBox_crit_rng_max.Name = "textBox_crit_rng_max";
-            this.textBox_crit_rng_max.ReadOnly = true;
-            this.textBox_crit_rng_max.Size = new System.Drawing.Size(49, 26);
-            this.textBox_crit_rng_max.TabIndex = 15;
-            this.textBox_crit_rng_max.Text = "9999";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(216, 90);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(14, 20);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "-";
-            // 
-            // textBox_crit_rng_min
-            // 
-            this.textBox_crit_rng_min.Location = new System.Drawing.Point(178, 87);
-            this.textBox_crit_rng_min.Name = "textBox_crit_rng_min";
-            this.textBox_crit_rng_min.ReadOnly = true;
-            this.textBox_crit_rng_min.Size = new System.Drawing.Size(37, 26);
-            this.textBox_crit_rng_min.TabIndex = 13;
-            this.textBox_crit_rng_min.Text = "999";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(133, 90);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(39, 20);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Rng";
-            // 
-            // textBox_crit
-            // 
-            this.textBox_crit.Location = new System.Drawing.Point(65, 87);
-            this.textBox_crit.Name = "textBox_crit";
-            this.textBox_crit.ReadOnly = true;
-            this.textBox_crit.Size = new System.Drawing.Size(53, 26);
-            this.textBox_crit.TabIndex = 11;
-            this.textBox_crit.Text = "100%";
-            // 
-            // label_crit
-            // 
-            this.label_crit.AutoSize = true;
-            this.label_crit.Location = new System.Drawing.Point(7, 90);
-            this.label_crit.Name = "label_crit";
-            this.label_crit.Size = new System.Drawing.Size(33, 20);
-            this.label_crit.TabIndex = 10;
-            this.label_crit.Text = "Crit";
-            // 
-            // textBox_dodge
-            // 
-            this.textBox_dodge.Location = new System.Drawing.Point(65, 119);
-            this.textBox_dodge.Name = "textBox_dodge";
-            this.textBox_dodge.ReadOnly = true;
-            this.textBox_dodge.Size = new System.Drawing.Size(53, 26);
-            this.textBox_dodge.TabIndex = 19;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 122);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(57, 20);
-            this.label6.TabIndex = 18;
-            this.label6.Text = "Dodge";
-            // 
             // CombatSessionsControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Controls.Add(this.splitContainer1);
             this.Name = "CombatSessionsControl";
             this.Size = new System.Drawing.Size(870, 639);

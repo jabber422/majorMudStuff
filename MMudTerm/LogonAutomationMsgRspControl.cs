@@ -21,6 +21,22 @@ namespace MMudTerm
             InitializeComponent();
         }
 
+        public LogonRspData SaveData()
+        {
+            var data = new LogonRspData();
+            data.Msg = this.Msg;
+            data.Rsp = this.Rsp;
+            data.IsEnabled = this.IsEnabled;
+            return data;
+        }
+
+        public void LoadData(LogonRspData data)
+        {
+            this.Msg = data.Msg;
+            this.Rsp = data.Rsp; 
+            this.IsEnabled = data.IsEnabled;
+        }
+
         public Tuple<string, string> GetMessage() {
             if(!this.checkBox3.Checked) { return null; }
 
@@ -46,5 +62,13 @@ namespace MMudTerm
             }
             return null;
         }
+    }
+
+    [Serializable]
+    public class LogonRspData
+    {
+        public bool IsEnabled { get; set; }
+        public string Rsp { get; set; }
+        public string Msg { get; set; }
     }
 }

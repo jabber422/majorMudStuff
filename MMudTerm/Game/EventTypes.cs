@@ -14,7 +14,7 @@ namespace MMudTerm.Game
         RoomSomethingMovedOut,
 
 
-        Combat,
+        //Combat,
         CombatEngaged,
         CombatEngagedStart,
         CombatEngagedStop,
@@ -63,9 +63,9 @@ namespace MMudTerm.Game
         CombatEngaged_3rdP,
         CombatHit,
         CombatMiss,
-        CombatHitYou,
-        CombatHitPlayer,
-        CombatMissPlayer,
+        //CombatHitYou,
+        //CombatHitPlayer,
+        //CombatMissPlayer,
         DoorStateChange,
         DoorLocked,
         TelepathRcvd,
@@ -77,5 +77,13 @@ namespace MMudTerm.Game
         PlayerBlind,
         SpellBook,
         SeeHiddenItem,
+        CombatEngagedEvilWarning,
+        BuffSpellAlreadyCastRound,
+        MessageResponse,
+        MessageResponseEndsWith,
+        MessageResponseBuffStart,
+        MessageResponseBuffEnd,
+        RoomLightToLow,
+        SearchNothing,
     }
 }

@@ -55,6 +55,14 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputPath>bin\x86\Release\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -133,11 +141,23 @@
     <EmbeddedResource Include="Session\CombatSessionsControl.resx">
       <DependentUpon>CombatSessionsControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Session\GameMessageControl.resx">
+      <DependentUpon>GameMessageControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Session\GotoLoopSelectForm.resx">
       <DependentUpon>GotoLoopSelectForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Session\HealthControl.resx">
+      <DependentUpon>HealthControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Session\InventoryRowControl.resx">
       <DependentUpon>InventoryRowControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Session\MacrosUserControl.resx">
+      <DependentUpon>MacrosUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Session\MessagesResponsesControl.resx">
+      <DependentUpon>MessagesResponsesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Session\SessionConfigForm.resx">
       <DependentUpon>SessionConfigForm.cs</DependentUpon>
@@ -153,6 +173,12 @@
     <EmbeddedResource Include="Session\SessionGameInfo.resx">
       <DependentUpon>SessionGameInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Session\SpellsUserControl.resx">
+      <DependentUpon>SpellsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="res\Messages.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="res\Paths\AADEASYL.mp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -6092,12 +6118,24 @@
       <DependentUpon>CombatSessionsControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Session\EquipAllScript.cs" />
+    <Compile Include="Session\GameMessageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Session\GameMessageControl.Designer.cs">
+      <DependentUpon>GameMessageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Session\GetAllScript.cs" />
     <Compile Include="Session\GotoLoopSelectForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Session\GotoLoopSelectForm.Designer.cs">
       <DependentUpon>GotoLoopSelectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Session\HealthControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Session\HealthControl.Designer.cs">
+      <DependentUpon>HealthControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Session\InventoryRowControl.cs">
       <SubType>UserControl</SubType>
@@ -6106,6 +6144,19 @@
       <DependentUpon>InventoryRowControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Session\Macros.cs" />
+    <Compile Include="Session\MacrosUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Session\MacrosUserControl.Designer.cs">
+      <DependentUpon>MacrosUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Session\MessagesCache.cs" />
+    <Compile Include="Session\MessagesResponsesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Session\MessagesResponsesControl.Designer.cs">
+      <DependentUpon>MessagesResponsesControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Session\PathWalker.cs" />
     <Compile Include="Session\SessionConfigForm.cs">
       <SubType>Form</SubType>
@@ -6137,6 +6188,12 @@
     </Compile>
     <Compile Include="Session\SessionForm.Designer.cs">
       <DependentUpon>SessionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Session\SpellsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Session\SpellsUserControl.Designer.cs">
+      <DependentUpon>SpellsUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Terminal\CircularScreenBuffer.cs" />
     <Compile Include="Terminal\TermAnsiGraphic.cs" />

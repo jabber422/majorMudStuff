@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using MMudTerm_Protocols.AnsiProtocolCmds;
 using MMudTerm_Protocols;
 using MMudTerm.Session;
+using System.Diagnostics.Eventing.Reader;
 
 namespace MMudTerm.Terminal
 {
@@ -159,7 +160,14 @@ namespace MMudTerm.Terminal
         private void DoRefresh()
         {
             if (this.IsDisposed) return;
-            this.Refresh();
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(DoRefresh));
+            }
+            else
+            {
+                this.Refresh();
+            }
         }
 
         //should be the last thing called after commands are entered
@@ -242,8 +250,8 @@ namespace MMudTerm.Terminal
                     cmd.DoCommand(this.grid);
                 }
             }
-            //cross thread invoke
-            this.Invoke(refresh);
+            
+            this.DoRefresh();
             heartbeat.Start();
         }
 

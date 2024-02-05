@@ -54,13 +54,14 @@ namespace MMudTerm.Session.SessionStateData
                     //this state is always trying to change to the mud menu state
                     if (this_cmd.Contains(move_to_mud_menu_state))
                     {
-                        if (this.m_controller.EnterTheGame)
+                        if (this.m_controller._gameenv.Monitor_On)
                         {
                             this.m_controller.SendLine("enter");
                             return new SessionStateInGame(this);
                         }
                         else
                         {
+                            this.m_controller.SendTerminalMsg("Not Entering the Game");
                             Console.WriteLine("Not entering the game");
                         }
                     }else if (this_cmd.Contains("[HP=") || this_cmd.Contains("Obvious exits:")) {

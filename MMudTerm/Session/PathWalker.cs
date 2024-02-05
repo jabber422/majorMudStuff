@@ -13,17 +13,17 @@ namespace MMudTerm.Session
         int path_index = 0;
         int step_index = 0;
         private MudPath endroom;
-        private bool is_loop;
+        private int path_type;  //0 = goto, 1= loop, 2= goto/then loop
 
         public bool Active { get; set; }
 
-        public PathWalker(List<MudPath> path, SessionController m_controller, bool is_loop = false)
+        public PathWalker(List<MudPath> path, SessionController m_controller, int path_type = 0)
         {
             this.path = path;
             this.m_controller = m_controller;
             this.m_controller._gameenv.NewGameEvent += _gameenv_NewGameEvent;
             this.endroom = this.path[this.path.Count - 1];
-            this.is_loop = is_loop;
+            this.path_type = path_type;
             this.Active = true;
         }
 
@@ -68,14 +68,14 @@ namespace MMudTerm.Session
                 if (this.m_controller._gameenv._player.IsCombatEngaged)
                 {
                     //in combat and comat is on, don't move
-                    Debug.WriteLine("Won't move, in combat and combat is on");
+                    Console.WriteLine("Won't move, in combat and combat is on");
                     return;
                 }
                 else if (this.m_controller._gameenv._current_room.AlsoHere.GetFirst("baddie") != null)
                 {
                     //not in combat and combat is on, but there is something int he room to kill
 
-                    Debug.WriteLine("Won't move, in combat and combat is on");
+                    Console.WriteLine("Won't move, in combat and combat is on");
                     return;
                 }
                 else
@@ -87,21 +87,21 @@ namespace MMudTerm.Session
             if(player_health < 0.75) { return; }
             if (this.m_controller._gameenv._player.IsResting && this.m_controller._gameenv.Monitor_Rest && player_health < 0.75)
             {
-                Debug.WriteLine("Won't move, need to rest and resting is on");
+                Console.WriteLine("Won't move, need to rest and resting is on");
                 return;
             }
 
             var current_room = this.m_controller._gameenv._current_room;
             if(current_room.MegaMudRoomHash == this.endroom.EndRoomHashCode)
             {
-                if (this.is_loop)
+                if (this.path_type == 1)
                 {
                     if(path.Count == path_index)
                     {
                         path_index--;
                     }
                 }
-                else
+                else if(this.path_type == 0 || this.path_type == 2)
                 {
                     //done
                     this.m_controller._gameenv.NewGameEvent -= _gameenv_NewGameEvent;
@@ -133,10 +133,13 @@ namespace MMudTerm.Session
                         path_index++;
                     }
                 }
+                else
+                {
+                }
             }
             catch(Exception e)
             {
-                Debug.WriteLine(e);
+                Console.WriteLine($"PathWalker: {e}");
             }
             
             

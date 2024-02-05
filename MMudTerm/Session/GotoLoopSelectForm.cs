@@ -32,7 +32,7 @@ namespace MMudTerm.Session
 
         private void GotoLoopSelectForm_Load(object sender, EventArgs e)
         {
-            var lst = PathingCache.Load();
+            var lst = PathsCache.Load();
 
             Dictionary<string, TreeNode> zone_hash = new Dictionary<string, TreeNode>();
             foreach (var item in lst)
@@ -111,7 +111,7 @@ namespace MMudTerm.Session
         }
     }
 
-    public static class PathingCache
+    public static class PathsCache
     {
         //This is a list of MudPath objects, basically *.mp file
         static public List<MudPath> MudPaths { get; set; }
@@ -259,7 +259,7 @@ namespace MMudTerm.Session
         {
             // Implement logic to retrieve the MudPath object that represents the path from 'fromHashCode' to 'toHashCode'
             // This might involve searching through a collection of MudPath objects to find the one that matches these hash codes
-            foreach(var path in PathingCache.Load())
+            foreach(var path in PathsCache.Load())
             {
                 if (path.StartRoomHashCode == fromHashCode &&
                     path.EndRoomHashCode == toHashCode)
@@ -312,7 +312,7 @@ namespace MMudTerm.Session
             bool not_done = true;
             using (StreamReader sr = new StreamReader(file))
             {
-                //Debug.WriteLine(this.Name);
+                //Console.WriteLine(this.Name);
                 while (!sr.EndOfStream)
                 {
                     var line = sr.ReadLine();
@@ -326,7 +326,7 @@ namespace MMudTerm.Session
                     else if(idx == 1 && line.StartsWith("["))
                     {
                         this.Start = new MudPathRoom(line.Trim('[', ']'));
-                        //Debug.WriteLine(this.Start.RoomZone + " " + this.Start.RoomName);
+                        //Console.WriteLine(this.Start.RoomZone + " " + this.Start.RoomName);
                     }
                     else if (idx == 2 && line.StartsWith("["))
                     {

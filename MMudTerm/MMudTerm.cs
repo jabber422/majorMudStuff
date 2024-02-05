@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using MMudTerm.Session;
+using System.Xml.Serialization;
 
 namespace MMudTerm
 {
@@ -16,24 +19,24 @@ namespace MMudTerm
     {
         Dictionary<int, SessionForm> m_sessions;
         Dictionary<BbsControl, Dictionary<int, BbsAccountPlayerControl>> m_bbs_controls;
-        BbsControl selected_bbs_control= null;
+        BbsControl selected_bbs_control = null;
 
         public MMudTerm()
         {
             InitializeComponent();
             m_sessions = new Dictionary<int, SessionForm>();
             m_bbs_controls = new Dictionary<BbsControl, Dictionary<int, BbsAccountPlayerControl>>();
-            BbsControl bbsControl1 = new BbsControl(this);
-            bbsControl1.Location = new System.Drawing.Point(3, 3);
-            bbsControl1.Name = "bbsControl1";
-            bbsControl1.SelectedBbsControl(true);
-            this.selected_bbs_control = bbsControl1;
-            bbsControl1.TabIndex = 0;
-            this.m_bbs_controls.Add(bbsControl1, new Dictionary<int, BbsAccountPlayerControl>());
-            this.splitContainer1.SuspendLayout();
-            this.splitContainer1.Panel1.Controls.Add(bbsControl1);
-            this.splitContainer1.ResumeLayout(false);
-            this.PerformLayout();
+            //BbsControl bbsControl1 = new BbsControl(this);
+            //bbsControl1.Location = new System.Drawing.Point(3, 3);
+            //bbsControl1.Name = "bbsControl1";
+            //bbsControl1.SelectedBbsControl(true);
+            //this.selected_bbs_control = bbsControl1;
+            //bbsControl1.TabIndex = 0;
+            //this.m_bbs_controls.Add(bbsControl1, new Dictionary<int, BbsAccountPlayerControl>());
+            //this.splitContainer1.SuspendLayout();
+            //this.splitContainer1.Panel1.Controls.Add(bbsControl1);
+            //this.splitContainer1.ResumeLayout(false);
+            //this.PerformLayout();
         }
 
         #region widget handlers
@@ -66,7 +69,7 @@ namespace MMudTerm
         }
         #endregion
 
-       
+
 
         //move to central util
         private bool CheckIsEmptyString(string addressString)
@@ -81,13 +84,18 @@ namespace MMudTerm
 
         private void button_new_char_Click(object sender, EventArgs e)
         {
-            BbsAccountPlayerControl control = new BbsAccountPlayerControl(this);
+            CreateNewCharControl();
+        }
+
+        public BbsAccountPlayerControl CreateNewCharControl()
+        {
+            BbsAccountPlayerControl control = new BbsAccountPlayerControl(this, this.selected_bbs_control.BbsName);
 
             int current_char_count = this.m_bbs_controls[this.selected_bbs_control].Count;
-            
-            control.Location = new System.Drawing.Point(7, 26+(current_char_count *150));
+
+            control.Location = new System.Drawing.Point(7, 26 + (current_char_count * 150));
             control.Name = "char" + current_char_count;
-            control.TabIndex = 1+ current_char_count;
+            control.TabIndex = 1 + current_char_count;
 
             this.m_bbs_controls[this.selected_bbs_control].Add(control.GetHashCode(), control);
 
@@ -98,6 +106,7 @@ namespace MMudTerm
 
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.ResumeLayout(false);
+            return control;
         }
 
         internal int CreateNewSession(List<Tuple<string, string>> list, int bbs_control_hash = 0)
@@ -125,7 +134,6 @@ namespace MMudTerm
             {
 
             }
-            
 
             SessionForm newSessionForm = new SessionForm(newData);
             newSessionForm.FormClosed += NewSessionForm_FormClosed;
@@ -157,14 +165,20 @@ namespace MMudTerm
 
         private void Button_newbbs_Click(object sender, EventArgs e)
         {
+            CreateNewBbsControl();
+        }
+
+        private BbsControl CreateNewBbsControl()
+        {
             BbsControl newbbs = new BbsControl(this);
-            newbbs.Location = new System.Drawing.Point(3 +(200 * this.m_bbs_controls.Count), 3);
+            newbbs.Location = new System.Drawing.Point(3 + (newbbs.Size.Width * this.m_bbs_controls.Count), 3);
             newbbs.Name = "bbsControl";
             this.m_bbs_controls.Add(newbbs, new Dictionary<int, BbsAccountPlayerControl>());
             SelectedBbsControl(newbbs);
             this.splitContainer1.Panel1.Controls.Add(newbbs);
             this.splitContainer1.Panel2.Controls.Clear();
             this.splitContainer1.Panel2.Controls.Add(button_new_character);
+            return newbbs;
         }
 
         internal void SelectedBbsControl(BbsControl sender)
@@ -187,5 +201,69 @@ namespace MMudTerm
                 this.splitContainer1.Panel2.Controls.Add(control);
             }
         }
+
+        private void MMudTerm_Load(object sender, EventArgs e)
+        {
+            var d = Directory.GetCurrentDirectory();
+            var p = Path.Combine(d, "BBS");
+            if (Directory.Exists(p))
+            {
+                var dirs = Directory.GetDirectories(p);
+                foreach (var dir in dirs)
+                {
+                    p = Path.Combine(dir, "bbs.xml");
+                    if(!File.Exists(p)) { continue; }
+
+                    var data = (BbsControlData)MMudTerm.SerializeFromXmlFile(typeof(BbsControlData), p);
+
+                    var newbbs = CreateNewBbsControl();
+                    newbbs.LoadData(data);
+
+                    p = Path.Combine(d, "BBS", dir);
+                    var files = Directory.GetFiles(p);
+                    foreach(var file in files)
+                    {
+                        if (file.EndsWith("bbs.xml")) continue;
+                        var data2 = (BbsAccountData)MMudTerm.SerializeFromXmlFile(typeof(BbsAccountData), file);
+                        var charcontrol = CreateNewCharControl();
+                        charcontrol.LoadData(data2);
+                    }
+                }
+            }
+        }
+
+        public static void SerializeToXmlAndWriteToFile(Object o, string filePath)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(o.GetType());
+
+                using (var writer = new StreamWriter(filePath))
+                {
+                    serializer.Serialize(writer, o);
+                }
+            }catch (Exception ex)
+            {
+
+            }
+        }
+
+        public static Object SerializeFromXmlFile(Type t, string filePath)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(t);
+
+                using (var reader = new StreamReader(filePath))
+                {
+                    return serializer.Deserialize(reader);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
+

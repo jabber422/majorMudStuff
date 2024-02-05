@@ -89,7 +89,6 @@ namespace MmeDatabaseReader
         {
             try
             {
-                var d = Directory.GetCurrentDirectory();
                 using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
                 {
                     myConnection.Open();
@@ -107,33 +106,7 @@ namespace MmeDatabaseReader
                             DataTable myDataTable = new DataTable();
                             myDataTable.Load(reader);
 
-                            DataRow row = myDataTable.Rows[0];
-                            //var type = (EnumItemType)Enum.Parse(typeof(EnumItemType), row["ItemType"].ToString());
-
-                            spell.Id = int.Parse(row["Number"].ToString());
-                            spell.Name = row["Name"].ToString();
-                            spell.ShortName = row["Short"].ToString();
-                            spell.MagicType = (EnumMagicType)Enum.Parse(typeof(EnumMagicType), row["Magery"].ToString());
-                            spell.Level = int.Parse(row["ReqLevel"].ToString());
-                            spell.Mana = int.Parse(row["ManaCost"].ToString());
-                            spell.Difficulty = int.Parse(row["Diff"].ToString());
-                            spell.TargetType = (EnumTargetType)Enum.Parse(typeof(EnumTargetType), row["Targets"].ToString());
-                            spell.AttackType = (EnumAttackType)Enum.Parse(typeof(EnumTargetType), row["AttType"].ToString());
-                            spell.Duration = int.Parse(row["Dur"].ToString());
-                            spell.MaxIncLVLs = int.Parse(row["MaxIncLVLs"].ToString());
-                            spell.DurIncLVLs = int.Parse(row["DurIncLVLs"].ToString());
-                            spell.DurInc = int.Parse(row["DurInc"].ToString());
-
-
-                            for (int i = 0; i < 10; i++)
-                            {
-                                var abil = new ItemAbility();
-                                abil.Abililty = int.Parse(row[$"Abil-{i}"].ToString());
-                                abil.Value = int.Parse(row[$"AbilVal-{i}"].ToString());
-                                spell.Abilities.Add(abil);
-                            }
-
-                            return spell;
+                            return new Spell(myDataTable.Rows[0]);
                         }
                     }
                 }
@@ -145,6 +118,65 @@ namespace MmeDatabaseReader
             }
         }
 
+        public static EnumMagicType GetMagery(Player player)
+        {
+            try{
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString)){
+                    myConnection.Open();
+                    string getDbName = @"" +
+                        "SELECT *" +
+                        "FROM   Classes " +
+                        $"WHERE(Name = '{player.Stats.Class}')";
+
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection)) { 
+                        using (OleDbDataReader reader = cmd.ExecuteReader()) {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
+
+                            DataRow row = myDataTable.Rows[0];
+                            return (EnumMagicType)Enum.Parse(typeof(EnumMagicType), row["MageryType"].ToString());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetMagery error occurred: " + ex.Message);
+                return EnumMagicType.None;
+            }
+        }
+
+        public static int GetMageryLevel(Player player)
+        {
+            try
+            {
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
+                {
+                    myConnection.Open();
+                    string getDbName = @"" +
+                        "SELECT *" +
+                        "FROM   Classes " +
+                        $"WHERE(Name = '{player.Stats.Class}')";
+
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
+                    {
+                        using (OleDbDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
+
+                            DataRow row = myDataTable.Rows[0];
+                            return int.Parse(row["MageryLVL"].ToString());
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GetMagery error occurred: " + ex.Message);
+                return 0;
+            }
+        }
 
         public static Entity GetNpc(Entity e)
         {
@@ -201,5 +233,48 @@ namespace MmeDatabaseReader
                 return e;
             }
         }
+
+        public static List<Spell> GetSpellList(Player player)
+        {
+            var magictype = MMudData.GetMagery(player);
+            var magiclevel = MMudData.GetMageryLevel(player);
+
+            List<Spell> spells = new List<Spell>();
+            try
+            {
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
+                {
+                    myConnection.Open();
+
+                    string getDbName = @"" +
+                        "SELECT * " +
+                        "FROM Spells " +
+                        $"WHERE(Magery = {(int)magictype} AND MageryLVL > 0 AND MageryLVL <= {magiclevel} and ReqLevel <= {player.Stats.Level})";
+
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
+                    {
+                        using (OleDbDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
+                            
+                            foreach(DataRow row in myDataTable.Rows)
+                            {
+                                spells.Add(new Spell(row));
+                            }                          
+
+                            return spells;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Spell error occurred: " + ex.Message);
+                return spells;
+            }
+        }
+    
+        
     }
 }
