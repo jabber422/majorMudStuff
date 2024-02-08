@@ -35,6 +35,7 @@
             this.toolStripStatusLabel_status = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel__xphr = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel_currentroom = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel_block = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripConnectBtn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -53,7 +54,7 @@
             this.toolStripButton_get_all = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton_equip_all = new System.Windows.Forms.ToolStripButton();
             this.sessionTermContainer = new System.Windows.Forms.Panel();
-            this.toolStripStatusLabel_block = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripButton_light = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -110,6 +111,12 @@
             this.toolStripStatusLabel_currentroom.Size = new System.Drawing.Size(118, 35);
             this.toolStripStatusLabel_currentroom.Text = "toolStripStatusLabel3";
             // 
+            // toolStripStatusLabel_block
+            // 
+            this.toolStripStatusLabel_block.Name = "toolStripStatusLabel_block";
+            this.toolStripStatusLabel_block.Size = new System.Drawing.Size(118, 35);
+            this.toolStripStatusLabel_block.Text = "toolStripStatusLabel1";
+            // 
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -130,7 +137,8 @@
             this.toolStripButton_getcoins,
             this.toolStripButton1,
             this.toolStripButton_get_all,
-            this.toolStripButton_equip_all});
+            this.toolStripButton_equip_all,
+            this.toolStripButton_light});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
@@ -304,11 +312,15 @@
             this.sessionTermContainer.Size = new System.Drawing.Size(1006, 663);
             this.sessionTermContainer.TabIndex = 2;
             // 
-            // toolStripStatusLabel_block
+            // toolStripButton_light
             // 
-            this.toolStripStatusLabel_block.Name = "toolStripStatusLabel_block";
-            this.toolStripStatusLabel_block.Size = new System.Drawing.Size(118, 35);
-            this.toolStripStatusLabel_block.Text = "toolStripStatusLabel1";
+            this.toolStripButton_light.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButton_light.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_light.Image")));
+            this.toolStripButton_light.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_light.Name = "toolStripButton_light";
+            this.toolStripButton_light.Size = new System.Drawing.Size(28, 28);
+            this.toolStripButton_light.Text = "toolStripButton2";
+            this.toolStripButton_light.Click += new System.EventHandler(this.toolStripButton_light_Click);
             // 
             // SessionForm
             // 
@@ -319,7 +331,6 @@
             this.Controls.Add(this.sessionTermContainer);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "SessionForm";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SessionView_FormClosing);
@@ -359,5 +370,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton_equip_all;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel_block;
+        private System.Windows.Forms.ToolStripButton toolStripButton_light;
     }
 }

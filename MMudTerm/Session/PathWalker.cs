@@ -68,14 +68,14 @@ namespace MMudTerm.Session
                 if (this.m_controller._gameenv._player.IsCombatEngaged)
                 {
                     //in combat and comat is on, don't move
-                    Console.WriteLine("Won't move, in combat and combat is on");
+                    Console.WriteLine($"{this.GetType().Name}: Won't move, in combat and combat is on");
                     return;
                 }
                 else if (this.m_controller._gameenv._current_room.AlsoHere.GetFirst("baddie") != null)
                 {
                     //not in combat and combat is on, but there is something int he room to kill
 
-                    Console.WriteLine("Won't move, in combat and combat is on");
+                    Console.WriteLine($"{this.GetType().Name}: Won't move, in combat and combat is on");
                     return;
                 }
                 else
@@ -87,7 +87,7 @@ namespace MMudTerm.Session
             if(player_health < 0.75) { return; }
             if (this.m_controller._gameenv._player.IsResting && this.m_controller._gameenv.Monitor_Rest && player_health < 0.75)
             {
-                Console.WriteLine("Won't move, need to rest and resting is on");
+                Console.WriteLine($"{this.GetType().Name}: Won't move, need to rest and resting is on");
                 return;
             }
 
@@ -139,7 +139,7 @@ namespace MMudTerm.Session
             }
             catch(Exception e)
             {
-                Console.WriteLine($"PathWalker: {e}");
+                Console.WriteLine($"{this.GetType().Name}: {e}");
             }
             
             

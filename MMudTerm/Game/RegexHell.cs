@@ -252,6 +252,7 @@ namespace MMudTerm.Game
             patterns.Add(@"The MOB VERBS at PLAYER with ");
             patterns.Add(@"The MOB VERBS (?:at|for) PLAYER!");
             patterns.Add(@"The MOB VERBS at PLAYER, but PLAYER dodges? out of the way!");
+            patterns.Add(@"PLAYER VERBS at PLAYER, but glance off it's armour!");
             //when we miss, or another player
             patterns.Add(@"PLAYER VERBS at MOB with ");
             patterns.Add(@"PLAYER VERBS at MOB!");

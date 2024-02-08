@@ -40,40 +40,10 @@ namespace MmeDatabaseReader
                         {
                             DataTable myDataTable = new DataTable();
                             myDataTable.Load(reader);
-
                             DataRow row = myDataTable.Rows[0];
-                            var type = (EnumItemType)Enum.Parse(typeof(EnumItemType), row["ItemType"].ToString());
-          
-                            item.Id = int.Parse(row["Number"].ToString());
-                            item.Limit = int.Parse(row["Limit"].ToString());
-                            item.Encum = int.Parse(row["Encum"].ToString());
-                            item.Type = type;
-                            item.Price = int.Parse(row["Price"].ToString());
-                            item.Currency = int.Parse(row["Currency"].ToString());
-                            item.MinDamage = int.Parse(row["Min"].ToString());
-                            item.MaxDamage = int.Parse(row["Max"].ToString());
-                            item.AC = int.Parse(row["ArmourClass"].ToString());
-                            item.DR = int.Parse(row["DamageResist"].ToString());
-                            item.WeaponType = (EnumWeaponType)Enum.Parse(typeof(EnumWeaponType), row["WeaponType"].ToString());
-                            item.ArmorType = (EnumArmorType)Enum.Parse(typeof(EnumArmorType), row["ArmourType"].ToString());
-                            item.EquipmentSlot = (EnumEquipmentSlot)Enum.Parse(typeof(EnumEquipmentSlot), row["Worn"].ToString());
-                            item.Accuracy = int.Parse(row["Accy"].ToString());
-                            item.Gettable = int.Parse(row["Gettable"].ToString()) == 1 ? true : false;
-                            item.Strength = int.Parse(row["StrReq"].ToString());
-                            item.Speed = int.Parse(row["Speed"].ToString());
 
 
-                            for (int i = 0; i < 20; i++)
-                            {
-                                var abil = new ItemAbility();
-                                abil.Abililty = int.Parse(row[$"Abil-{i}"].ToString());
-                                abil.Value = int.Parse(row[$"AbilVal-{i}"].ToString());
-                                item.Abilities.Add(abil);
-                            }
-
-                            item.ObtainedFrom = row[$"Obtained From"].ToString();
-
-                            return item;
+                            return RowToItem(row, item);
                         }
                     }
                 }
@@ -120,15 +90,15 @@ namespace MmeDatabaseReader
 
         public static EnumMagicType GetMagery(Player player)
         {
-            try{
-                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString)){
+            try {
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString)) {
                     myConnection.Open();
                     string getDbName = @"" +
                         "SELECT *" +
                         "FROM   Classes " +
                         $"WHERE(Name = '{player.Stats.Class}')";
 
-                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection)) { 
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection)) {
                         using (OleDbDataReader reader = cmd.ExecuteReader()) {
                             DataTable myDataTable = new DataTable();
                             myDataTable.Load(reader);
@@ -217,7 +187,7 @@ namespace MmeDatabaseReader
                             npc.CharmLevel = int.Parse(row["CharmLVL"].ToString());
 
                             npc.BaddieFlag = true;
-                            if(npc.Alignment == EnumNpcAlignment.GOOD || npc.Alignment == EnumNpcAlignment.L_GOOD )
+                            if (npc.Alignment == EnumNpcAlignment.GOOD || npc.Alignment == EnumNpcAlignment.L_GOOD)
                             {
                                 npc.BaddieFlag = false;
                             }
@@ -257,11 +227,11 @@ namespace MmeDatabaseReader
                         {
                             DataTable myDataTable = new DataTable();
                             myDataTable.Load(reader);
-                            
-                            foreach(DataRow row in myDataTable.Rows)
+
+                            foreach (DataRow row in myDataTable.Rows)
                             {
                                 spells.Add(new Spell(row));
-                            }                          
+                            }
 
                             return spells;
                         }
@@ -274,7 +244,77 @@ namespace MmeDatabaseReader
                 return spells;
             }
         }
-    
-        
+
+        public static List<Item> GetTorches()
+        {
+            List<Item> items = new List<Item>();
+            try
+            {
+                var d = Directory.GetCurrentDirectory();
+                using (OleDbConnection myConnection = new OleDbConnection(myConnectionString))
+                {
+                    myConnection.Open();
+
+                    string getDbName = @"" +
+                        "SELECT *" +
+                        "FROM   Items " +
+                        $"WHERE(ItemType = '6')";
+
+
+                    using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
+                    {
+                        using (OleDbDataReader reader = cmd.ExecuteReader())
+                        {
+                            DataTable myDataTable = new DataTable();
+                            myDataTable.Load(reader);
+
+                            foreach (DataRow row in myDataTable.Rows)
+                            {
+                                items.Add(RowToItem(row, new Item(row["Name"].ToString())));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) 
+            { Console.WriteLine(ex.Message); return null; }
+            return items;
+        }
+
+        private static Item RowToItem(DataRow row, Item item)
+        {
+            //
+            var type = (EnumItemType)Enum.Parse(typeof(EnumItemType), row["ItemType"].ToString());
+
+            item.Id = int.Parse(row["Number"].ToString());
+            item.Limit = int.Parse(row["Limit"].ToString());
+            item.Encum = int.Parse(row["Encum"].ToString());
+            item.Type = type;
+            item.Price = int.Parse(row["Price"].ToString());
+            item.Currency = int.Parse(row["Currency"].ToString());
+            item.MinDamage = int.Parse(row["Min"].ToString());
+            item.MaxDamage = int.Parse(row["Max"].ToString());
+            item.AC = int.Parse(row["ArmourClass"].ToString());
+            item.DR = int.Parse(row["DamageResist"].ToString());
+            item.WeaponType = (EnumWeaponType)Enum.Parse(typeof(EnumWeaponType), row["WeaponType"].ToString());
+            item.ArmorType = (EnumArmorType)Enum.Parse(typeof(EnumArmorType), row["ArmourType"].ToString());
+            item.EquipmentSlot = (EnumEquipmentSlot)Enum.Parse(typeof(EnumEquipmentSlot), row["Worn"].ToString());
+            item.Accuracy = int.Parse(row["Accy"].ToString());
+            item.Gettable = int.Parse(row["Gettable"].ToString()) == 1 ? true : false;
+            item.Strength = int.Parse(row["StrReq"].ToString());
+            item.Speed = int.Parse(row["Speed"].ToString());
+
+
+            for (int i = 0; i < 20; i++)
+            {
+                var abil = new ItemAbility();
+                abil.Abililty = int.Parse(row[$"Abil-{i}"].ToString());
+                abil.Value = int.Parse(row[$"AbilVal-{i}"].ToString());
+                item.Abilities.Add(abil);
+            }
+
+            item.ObtainedFrom = row[$"Obtained From"].ToString();
+            return item;
+        }
     }
 }

@@ -48,6 +48,7 @@ namespace MMudTerm.Game
         private DateTime start_buff_timer;
         private Spell lastSpell;
         private Entity lastSpellCaster;
+        private bool monitor_light;
 
         public delegate void NewGameEventHandler(EventType message);
         public event NewGameEventHandler NewGameEvent;
@@ -110,6 +111,7 @@ namespace MMudTerm.Game
             {
                 if (value)
                 {
+                    this._player.IsCombatEngaged = false;
                     this.NewGameEvent += NewGameEvent_Combat;
                     AttackFirstNpcInRoom();
                 }
@@ -296,6 +298,51 @@ namespace MMudTerm.Game
             }
         }
 
+        public bool Monitor_Light
+        {
+            get { return this.monitor_light; }
+            internal set
+            {
+                if (value)
+                {
+                    this.NewGameEvent += NewGameEvent_Light;
+                }
+                else
+                {
+                    this.NewGameEvent -= NewGameEvent_Light;
+                }
+                this.monitor_light = value;
+            }
+        }
+
+        private void NewGameEvent_Light(EventType message)
+        {
+            switch (message)
+            {
+                case EventType.RoomLightToLow:
+                    ProvideLight();
+                    break;
+            }
+        }
+
+        private void ProvideLight()
+        {
+            //do we have any spells?
+            //do we have items
+            List<Item> torches = MMudData.GetTorches();
+            List<Item> torches_found_in_inv = this._player.Inventory.GetAny(torches);
+            if(torches_found_in_inv.Count == 0)
+            {
+                Console.WriteLine("MonitorLight: No torches found in the Players Inv");
+            }
+
+            //sort this by cost?
+            var sortedItems = torches_found_in_inv.OrderBy(item => item.Price * item.Currency).ToList();
+            Item torch = sortedItems[0];
+            this._controller.Send($"use {torch.Name}");
+
+        }
+
         private void NewGameEvent_Health(EventType message)
         {
             switch (message)
@@ -306,26 +353,26 @@ namespace MMudTerm.Game
                     var player_health = (float)this._player.Stats.CurHits / (float)this._player.Stats.MaxHits;
                     if (player_health < 0.75)
                     {
-                        Console.WriteLine("Player should rest");
+                        Console.WriteLine($"{this.GetType().Name}: Player should rest");
                         if (this._player.IsResting)
                         {
-                            Console.WriteLine("Already resting!");
+                            Console.WriteLine($"{this.GetType().Name}: Already resting!");
                             return;
                         }
                         if (this._player.IsCombatEngaged)
                         {
-                            Console.WriteLine("Player is in combat and can not rest");
+                            Console.WriteLine($"{this.GetType().Name}: Player is in combat and can not rest");
                             return;
                         }
                         if (this._current_room.AlsoHere.RoomContainsNPC())
                         {
-                            Console.WriteLine("NPC in room, can't rest");
+                            Console.WriteLine($"{this.GetType().Name}: NPC in room, can't rest");
                             return;
                         }
 
                         if (this._current_combat.in_combat)
                         {
-                            Console.WriteLine("Player is in comat and can not rest2");return;
+                            Console.WriteLine($"{this.GetType().Name}: Player is in comat and can not rest2");return;
                         }
                         this._controller.SendLine("rest");
                     }else if(player_health < 0.15)
@@ -349,7 +396,7 @@ namespace MMudTerm.Game
                     {
                         if((e as NPC).Alignment == EnumNpcAlignment.L_GOOD)
                         {
-                            Console.WriteLine($"Won't Attack - {e.Name} is {(e as NPC).Alignment}");
+                            Console.WriteLine($"{this.GetType().Name}: Won't Attack - {e.Name} is {(e as NPC).Alignment}");
                             return;
                         }
                     }
@@ -419,8 +466,8 @@ namespace MMudTerm.Game
                 }
             }
 
-            //Console.WriteLine("------------------------------------");
-            //Console.WriteLine("Data: " + data.Trim() );
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine("Data: " + data.Trim() );
             if (this._matcher.TryMatch(data, out match, out e))
             {
                 //Console.WriteLine($"--> {e} <--");
@@ -437,11 +484,11 @@ namespace MMudTerm.Game
                 result = EventType.None;
                 var b4 = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Red;
-                //Console.WriteLine("Not Matched");
+                Console.WriteLine("Not Matched");
                 Console.ForegroundColor = b4;
                 
             }
-            //Console.WriteLine("------------------------------------\r\n");
+            Console.WriteLine("------------------------------------\r\n");
         }
 
         private void callback(List<(EventType, Object)> e, Match match, string data)
@@ -576,12 +623,19 @@ namespace MMudTerm.Game
                 case EventType.MessageResponseBuffEnd:
                     ProcessMessageResponseBuffEnd(match, data, e);
                     break;
+                case EventType.RoomLightToLow:
+                    ProcessRoomLightToLow(match, data, e);
+                    break;
                 default:
-                    Console.WriteLine("fix" + e[0].Item1);
+                    Console.WriteLine("fix: " + e[0].Item1);
                     break;
             }
         }
-       
+
+        private void ProcessRoomLightToLow(Match match, string data, List<(EventType, object)> e)
+        {
+            this.result = EventType.RoomLightToLow;
+        }
 
         private void ProcessMessageResponse(Match match, string data, object item2)
         {

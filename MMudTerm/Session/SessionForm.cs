@@ -91,10 +91,18 @@ namespace MMudTerm.Session
             this.toolStripButton_combat.Image = GetIcon(19);
             this.toolStripButton_rest.Image = GetIcon(21);
             this.toolStripButton_buff.Image = GetIcon(22);
+            this.toolStripButton_light.Image = GetIcon(23);
             this.toolStripButton_get.Image = GetIcon(24);
             this.toolStripButton_getcoins.Image = GetIcon(25);
             this.toolStripButton_get_all.Image = GetIcon(44);
             this.toolStripButton_equip_all.Image = GetIcon(46);
+
+            this.toolStripButton_combat.Checked = true;
+            this.toolStripButton_rest.Checked = true;
+            this.toolStripButton_buff.Checked = true;
+            this.toolStripButton_light.Checked = true;
+            //this.toolStripButton_get.Image = GetIcon(24);
+            this.toolStripButton_getcoins.Checked = true;
 
             //these get locked by all on/all
             this.toolStripItems.Add(toolStripButton_go);
@@ -103,6 +111,7 @@ namespace MMudTerm.Session
             this.toolStripItems.Add(toolStripButton_combat);
             this.toolStripItems.Add(toolStripButton_rest);
             this.toolStripItems.Add(toolStripButton_buff);
+            this.toolStripItems.Add(toolStripButton_light);
             this.toolStripItems.Add(toolStripButton_get);
             this.toolStripItems.Add(toolStripButton_getcoins);
 
@@ -143,6 +152,26 @@ namespace MMudTerm.Session
             m_gameInfo.Show();
 
             this.m_controller.EnterTheGame = this.toolStripButton_all_monitors.Checked;
+
+            this.toolStripButton_combat.Checked = true;
+            this.toolStripButton_rest.Checked = true;
+            this.toolStripButton_buff.Checked = true;
+            this.toolStripButton_light.Checked = true;
+            //this.toolStripButton_get.Image = GetIcon(24);
+            this.toolStripButton_getcoins.Checked = true;
+
+            this.m_controller._gameenv.Monitor_Combat = true;
+            this.m_controller._gameenv.Monitor_Rest = true;
+            this.m_controller._gameenv.Monitor_Buff = true;
+            this.m_controller._gameenv.Monitor_Light = true;
+            this.m_controller._gameenv.Monitor_GetCoins = true;
+            
+            
+
+
+
+
+
         }
 
         private void M_gameInfo_FormClosing(object sender, FormClosingEventArgs e)
@@ -659,5 +688,9 @@ namespace MMudTerm.Session
             }
         }
 
+        private void toolStripButton_light_Click(object sender, EventArgs e)
+        {
+            this.m_controller._gameenv.Monitor_Light = this.toolStripButton_light.Checked;
+        }
     }
 }

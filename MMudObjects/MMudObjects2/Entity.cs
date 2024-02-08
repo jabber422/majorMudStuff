@@ -238,7 +238,16 @@ namespace MMudObjects
             }
         }
 
-       
+        public List<Item> GetAny(List<Item> torches)
+        {
+            List<Item> items_in_inv = this.items.Values.ToList();
+            //impl
+
+            // Use LINQ to find the intersection of the two lists
+            List<Item> foundItems = items_in_inv.Where(invItem => torches.Any(searchItem => searchItem.Id == invItem.Id)).ToList();
+
+            return foundItems;
+        }
     }
 
     public class Player : Entity
