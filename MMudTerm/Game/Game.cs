@@ -339,7 +339,7 @@ namespace MMudTerm.Game
             //sort this by cost?
             var sortedItems = torches_found_in_inv.OrderBy(item => item.Price * item.Currency).ToList();
             Item torch = sortedItems[0];
-            this._controller.Send($"use {torch.Name}");
+            this._controller.Send($"use {torch.Name}\r");
 
         }
 

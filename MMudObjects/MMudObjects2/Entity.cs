@@ -244,7 +244,7 @@ namespace MMudObjects
             //impl
 
             // Use LINQ to find the intersection of the two lists
-            List<Item> foundItems = items_in_inv.Where(invItem => torches.Any(searchItem => searchItem.Id == invItem.Id)).ToList();
+            List<Item> foundItems = items_in_inv.Where(invItem => torches.Any(searchItem => searchItem.Name == invItem.Name)).ToList();
 
             return foundItems;
         }

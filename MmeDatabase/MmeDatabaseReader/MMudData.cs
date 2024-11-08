@@ -258,7 +258,7 @@ namespace MmeDatabaseReader
                     string getDbName = @"" +
                         "SELECT *" +
                         "FROM   Items " +
-                        $"WHERE(ItemType = '6')";
+                        $"WHERE(ItemType = 6)";
 
 
                     using (OleDbCommand cmd = new OleDbCommand(getDbName, myConnection))
